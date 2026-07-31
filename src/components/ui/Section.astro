@@ -1,0 +1,26 @@
+---
+interface Props {
+  bg?: "base" | "raised";
+  class?: string;
+}
+
+const { bg = "base", class: className } = Astro.props;
+---
+
+<section class:list={["section", `section--${bg}`, className]}>
+  <slot />
+</section>
+
+<style>
+  .section {
+    padding-block: var(--section-y);
+  }
+
+  .section--base {
+    background-color: var(--bg-0);
+  }
+
+  .section--raised {
+    background-color: var(--bg-1);
+  }
+</style>

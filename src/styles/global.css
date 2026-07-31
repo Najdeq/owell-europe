@@ -1,1 +1,81 @@
 @import "tailwindcss";
+@import "./tokens.css";
+
+@import "@fontsource-variable/archivo";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/jetbrains-mono";
+
+@theme {
+  --color-bg-0: var(--bg-0);
+  --color-bg-1: var(--bg-1);
+  --color-bg-2: var(--bg-2);
+  --color-bg-3: var(--bg-3);
+  --color-gold: var(--gold);
+  --color-gold-bright: var(--gold-bright);
+  --color-gold-deep: var(--gold-deep);
+  --color-steel: var(--steel);
+  --color-steel-dim: var(--steel-dim);
+  --color-ink: var(--text);
+  --color-ink-2: var(--text-2);
+  --color-ink-muted: var(--text-muted);
+
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-mono: var(--font-mono);
+
+  --radius-sm: var(--radius-sm);
+  --radius-DEFAULT: var(--radius);
+  --radius-lg: var(--radius-lg);
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--bg-0);
+  color: var(--text);
+  font-family: var(--font-body);
+  line-height: var(--lh-body);
+}
+
+::selection {
+  background-color: var(--gold);
+  color: var(--bg-0);
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-0);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--bg-3);
+  border-radius: var(--radius-lg);
+  border: 3px solid var(--bg-0);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--steel-dim);
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

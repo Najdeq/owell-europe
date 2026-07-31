@@ -1,0 +1,78 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<div class:list={["prose", className]}>
+  <slot />
+</div>
+
+<style>
+  .prose {
+    max-width: var(--maxw-prose);
+    color: var(--text-2);
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+  }
+
+  .prose :global(h2) {
+    margin-top: var(--sp-12);
+    margin-bottom: var(--sp-4);
+    font-family: var(--font-display);
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .prose :global(h2:first-child) {
+    margin-top: 0;
+  }
+
+  .prose :global(h3) {
+    margin-top: var(--sp-8);
+    margin-bottom: var(--sp-3);
+    font-family: var(--font-display);
+    font-size: var(--fs-lead);
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .prose :global(p) {
+    margin-bottom: var(--sp-4);
+  }
+
+  .prose :global(ul),
+  .prose :global(ol) {
+    margin-bottom: var(--sp-4);
+    padding-left: var(--sp-6);
+  }
+
+  .prose :global(li) {
+    margin-bottom: var(--sp-2);
+  }
+
+  .prose :global(a) {
+    color: var(--gold);
+    text-underline-offset: 0.2em;
+  }
+
+  .prose :global(a:hover) {
+    color: var(--gold-bright);
+  }
+
+  .prose :global(strong) {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .prose :global(hr) {
+    margin-block: var(--sp-8);
+    border: none;
+    border-top: 1px solid var(--hairline-soft);
+  }
+</style>

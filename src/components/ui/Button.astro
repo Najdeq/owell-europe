@@ -1,0 +1,78 @@
+---
+interface Props {
+  href: string;
+  variant?: "primary" | "ghost" | "link";
+  external?: boolean;
+  class?: string;
+}
+
+const { href, variant = "primary", external = false, class: className } = Astro.props;
+
+const externalAttrs = external
+  ? { target: "_blank", rel: "noopener noreferrer" }
+  : {};
+---
+
+<a
+  href={href}
+  class:list={["btn", `btn--${variant}`, className]}
+  {...externalAttrs}
+>
+  <slot />
+</a>
+
+<style>
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-2);
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: var(--fs-body);
+    line-height: 1;
+    text-decoration: none;
+    border-radius: var(--radius);
+    transition:
+      background-color var(--dur) var(--ease),
+      border-color var(--dur) var(--ease),
+      color var(--dur) var(--ease);
+  }
+
+  .btn--primary {
+    padding: var(--sp-3) var(--sp-6);
+    background-color: var(--gold);
+    color: var(--bg-0);
+    border: 1px solid var(--gold);
+  }
+
+  .btn--primary:hover {
+    background-color: var(--gold-bright);
+    border-color: var(--gold-bright);
+  }
+
+  .btn--ghost {
+    padding: var(--sp-3) var(--sp-6);
+    background-color: transparent;
+    color: var(--text);
+    border: 1px solid var(--hairline);
+  }
+
+  .btn--ghost:hover {
+    border-color: var(--gold);
+    color: var(--gold-bright);
+  }
+
+  .btn--link {
+    padding: 0;
+    background-color: transparent;
+    color: var(--gold);
+    border: none;
+    border-bottom: 1px solid transparent;
+  }
+
+  .btn--link:hover {
+    color: var(--gold-bright);
+    border-bottom-color: currentColor;
+  }
+</style>

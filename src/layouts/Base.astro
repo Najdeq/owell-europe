@@ -1,0 +1,78 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+  noindex?: boolean;
+}
+
+const { title, description, ogImage, noindex = false } = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const resolvedOgImage = ogImage
+  ? new URL(ogImage, Astro.site)
+  : new URL("/og-default.jpg", Astro.site);
+---
+
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0F0E0C" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={canonicalURL} />
+
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={resolvedOgImage} />
+    <meta property="og:locale" content="pl_PL" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={resolvedOgImage} />
+
+    <meta name="generator" content={Astro.generator} />
+
+    <slot name="head" />
+  </head>
+  <body>
+    <a href="#content" class="skip-link">Przejdź do treści</a>
+
+    <slot />
+  </body>
+</html>
+
+<style>
+  .skip-link {
+    position: absolute;
+    top: -100%;
+    left: var(--sp-4);
+    z-index: 100;
+    padding: var(--sp-3) var(--sp-6);
+    background-color: var(--gold);
+    color: var(--bg-0);
+    font-family: var(--font-mono);
+    font-size: var(--fs-small);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    border-radius: var(--radius-sm);
+    transition: top var(--dur) var(--ease);
+  }
+
+  .skip-link:focus-visible {
+    top: var(--sp-4);
+  }
+</style>
