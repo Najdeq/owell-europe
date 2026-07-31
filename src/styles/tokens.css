@@ -1,0 +1,197 @@
+/* ==========================================================================
+   OWELL EUROPE — DESIGN TOKENS
+   Wklej do: src/styles/tokens.css
+   Importuj w: src/styles/global.css  →  @import "./tokens.css";
+
+   ZASADA: żaden komponent nie używa wartości hex bezpośrednio.
+   Wszystko przez var(--nazwa).
+   ========================================================================== */
+
+:root {
+  /* ------------------------------------------------------------------
+     TŁA — hierarchia głębi
+     Wyżej w hierarchii = jaśniejsze tło. Nie używamy cieni do budowania
+     warstw. Baza jest ciepła (domieszka brązu), nie neutralnie szara —
+     to odróżnia stronę od generycznego "dark mode".
+     ------------------------------------------------------------------ */
+  --bg-0: #0F0E0C;   /* baza strony, sekcje główne */
+  --bg-1: #171613;   /* sekcje naprzemienne, stopka */
+  --bg-2: #1F1E1A;   /* karty, panele */
+  --bg-3: #2A2925;   /* karta w stanie hover, elementy podniesione */
+
+  /* ------------------------------------------------------------------
+     AKCENT CIEPŁY — złoto
+     Biżuteria interfejsu: CTA, cienkie linie, ikony, focus.
+     Nigdy jako tło sekcji, nigdy jako kolor akapitu.
+     ------------------------------------------------------------------ */
+  --gold: #C9A227;         /* akcent podstawowy, obramowania, ikony */
+  --gold-bright: #E8CD7A;  /* hover, focus ring, nagłówki akcentowane */
+  --gold-deep: #8A6E1E;    /* cień w gradiencie metalicznym */
+
+  /* ------------------------------------------------------------------
+     AKCENT CHŁODNY — stal
+     Drugi materiał palety. Dane techniczne, etykiety, mikro-tekst.
+     Obecność chłodnej stali obok ciepłego złota jest tym, co ratuje
+     paletę przed schematem "ciemne tło + jeden jaskrawy akcent".
+     ------------------------------------------------------------------ */
+  --steel: #8E99A4;
+  --steel-dim: #5C646C;
+
+  /* ------------------------------------------------------------------
+     TEKST
+     ------------------------------------------------------------------ */
+  --text: #F3F0E9;         /* akapity, nagłówki — ciepła biel, nie #FFF */
+  --text-2: #A9A49A;       /* opisy, tekst drugorzędny */
+  --text-muted: #878179;   /* metadane, podpisy — patrz uwaga o kontraście */
+
+  /* ------------------------------------------------------------------
+     LINIE I STANY
+     ------------------------------------------------------------------ */
+  --hairline: rgba(201, 162, 39, 0.24);   /* złota linia 1px */
+  --hairline-soft: rgba(243, 240, 233, 0.08);
+  --focus: var(--gold-bright);
+  --error: #E5484D;
+  --success: #4CA97A;
+
+  /* Gradient metaliczny — TYLKO punktowo (logo, mała ramka, przycisk).
+     Nigdy jako tło dużej powierzchni. */
+  --gold-metal: linear-gradient(
+    135deg,
+    #E8CD7A 0%,
+    #C9A227 42%,
+    #8A6E1E 58%,
+    #E8CD7A 100%
+  );
+
+  /* Poświata elementu sygnaturowego (rim light). Sterowana z JS przez
+     --rim-x / --rim-y. Trzymaj alfę nisko — to odbicie światła na stali,
+     nie neon. */
+  --rim-x: 50%;
+  --rim-y: 40%;
+  --rim: radial-gradient(
+    620px circle at var(--rim-x) var(--rim-y),
+    rgba(232, 205, 122, 0.13),
+    transparent 62%
+  );
+
+  /* ------------------------------------------------------------------
+     TYPOGRAFIA
+     ------------------------------------------------------------------ */
+  --font-display: "Archivo Variable", "Archivo", system-ui, sans-serif;
+  --font-body: "Inter Variable", "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, monospace;
+
+  /* Skala typograficzna — modularna, iloraz ~1.333 */
+  --fs-display: clamp(2.75rem, 6vw, 4.5rem);   /* H1 */
+  --fs-h2:      clamp(2rem, 3.6vw, 2.75rem);
+  --fs-h3:      clamp(1.375rem, 2vw, 1.75rem);
+  --fs-lead:    clamp(1.0625rem, 1.4vw, 1.25rem);
+  --fs-body:    1rem;
+  --fs-small:   0.875rem;
+  --fs-micro:   0.75rem;                        /* eyebrow, etykiety mono */
+
+  --lh-tight: 1.08;    /* duże nagłówki */
+  --lh-snug:  1.25;    /* mniejsze nagłówki */
+  --lh-body:  1.65;    /* akapity */
+
+  --tracking-display: -0.02em;   /* duże nagłówki zaciskamy */
+  --tracking-body: 0;
+  --tracking-mono: 0.08em;       /* mono uppercase rozstrzelone */
+
+  /* ------------------------------------------------------------------
+     ODSTĘPY — skala 4px
+     ------------------------------------------------------------------ */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-6: 1.5rem;
+  --sp-8: 2rem;
+  --sp-12: 3rem;
+  --sp-16: 4rem;
+  --sp-24: 6rem;
+  --sp-32: 8rem;
+
+  /* Padding pionowy sekcji — responsywny */
+  --section-y: clamp(4rem, 9vw, 8rem);
+
+  /* ------------------------------------------------------------------
+     UKŁAD
+     ------------------------------------------------------------------ */
+  --maxw: 75rem;              /* 1200px */
+  --maxw-prose: 42rem;        /* kolumna tekstu na stronach prawnych */
+  --gutter: clamp(1.25rem, 4vw, 2.5rem);
+
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-lg: 16px;          /* maksimum — bez "bąbelków" */
+
+  /* ------------------------------------------------------------------
+     RUCH
+     ------------------------------------------------------------------ */
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --dur-fast: 140ms;
+  --dur: 260ms;
+  --dur-slow: 420ms;
+}
+
+/* ==========================================================================
+   MAPOWANIE NA TAILWIND v4
+   Skopiuj ten blok do src/styles/global.css POD importem tokens.css.
+   Dzięki temu działają klasy typu bg-bg-2, text-gold, font-display.
+   ==========================================================================
+
+@theme {
+  --color-bg-0: var(--bg-0);
+  --color-bg-1: var(--bg-1);
+  --color-bg-2: var(--bg-2);
+  --color-bg-3: var(--bg-3);
+  --color-gold: var(--gold);
+  --color-gold-bright: var(--gold-bright);
+  --color-steel: var(--steel);
+  --color-steel-dim: var(--steel-dim);
+  --color-ink: var(--text);
+  --color-ink-2: var(--text-2);
+  --color-ink-muted: var(--text-muted);
+
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-mono: var(--font-mono);
+
+  --radius-sm: var(--radius-sm);
+  --radius-DEFAULT: var(--radius);
+  --radius-lg: var(--radius-lg);
+}
+
+   ========================================================================== */
+
+
+/* ==========================================================================
+   KONTRAST WCAG — wartości wyliczone, nie szacowane
+   Próg AA: 4.5:1 tekst normalny · 3:1 tekst duży (≥24px lub ≥18.5px bold)
+            i elementy interfejsu. Próg AAA: 7:1.
+   ==========================================================================
+
+   NA TLE --bg-0 (#0F0E0C):
+     --text        #F3F0E9   16.9:1   ✅ AAA
+     --text-2      #A9A49A    7.8:1   ✅ AAA
+     --text-muted  #878179    5.0:1   ✅ AA
+     --gold        #C9A227    8.0:1   ✅ AAA
+     --gold-bright #E8CD7A   12.4:1   ✅ AAA
+     --steel       #8E99A4    6.7:1   ✅ AA (blisko AAA)
+
+   NA TLE --bg-2 (#1F1E1A) — karty i panele:
+     --text        #F3F0E9   14.6:1   ✅ AAA
+     --text-2      #A9A49A    6.7:1   ✅ AA
+     --text-muted  #878179    4.3:1   ⚠️  NIE przechodzi AA dla tekstu normalnego
+     --gold        #C9A227    6.9:1   ✅ AA
+     --steel       #8E99A4    5.8:1   ✅ AA
+
+   ⚠️ JEDYNA PUŁAPKA W TEJ PALECIE:
+   --text-muted stosuj wyłącznie na --bg-0 i --bg-1.
+   Wewnątrz kart (--bg-2, --bg-3) najciemniejszym dozwolonym tekstem
+   jest --text-2. To jedyne miejsce, gdzie ta paleta może obsunąć się
+   poniżej AA — pilnuj go.
+
+   Uwaga: kontrast nie zaokrągla się w górę. 4.47:1 to porażka, nie "prawie".
+   ========================================================================== */
