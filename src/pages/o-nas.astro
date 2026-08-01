@@ -1,0 +1,216 @@
+---
+import { Image } from "astro:assets";
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import BreadcrumbSchema from "../components/BreadcrumbSchema.astro";
+import Container from "../components/ui/Container.astro";
+import Section from "../components/ui/Section.astro";
+import { site } from "../data/site.ts";
+import lifestyleCzajnik from "../assets/marka/lifestyle-czajnik.png";
+import lifestyleBlender from "../assets/marka/lifestyle-blender.png";
+import lifestyleStrzyzarka from "../assets/marka/lifestyle-strzyzarka.png";
+
+const breadcrumbs = [
+  { name: "Owell", path: "/" },
+  { name: "O nas", path: "/o-nas" },
+];
+
+const zdjecia = [
+  { src: lifestyleCzajnik, alt: "Czajnik Owell OW 1360 w codziennym użyciu w kuchni" },
+  { src: lifestyleBlender, alt: "Blender ręczny Owell OW 4634 podczas przygotowania smoothie" },
+  { src: lifestyleStrzyzarka, alt: "Strzyżarka Owell OW 2859 podczas pielęgnacji psa" },
+];
+
+const cyklSekund = 5;
+const totalDuration = zdjecia.length * cyklSekund;
+const segmentPct = 100 / zdjecia.length;
+const fadeInPct = Math.min(2, segmentPct * 0.15);
+const holdEndPct = segmentPct - fadeInPct;
+
+const visualKeyframes = `
+  @keyframes o-nas-carousel {
+    0% { opacity: 0; }
+    ${fadeInPct.toFixed(3)}% { opacity: 1; }
+    ${holdEndPct.toFixed(3)}% { opacity: 1; }
+    ${segmentPct.toFixed(3)}% { opacity: 0; }
+    100% { opacity: 0; }
+  }
+`;
+---
+
+<Base
+  title="O nas — Owell"
+  description="Owell projektuje małe AGD do codziennego użytku. Zobacz, skąd jesteśmy, w co wierzymy i jak pracujemy."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title">O nas</h1>
+
+        <div class="visual" style={`--visual-cykl: ${totalDuration}s`}>
+          {zdjecia.map((zdjecie, i) => (
+            <Image
+              src={zdjecie.src}
+              alt={zdjecie.alt}
+              width={1600}
+              height={893}
+              class="visual-img"
+              style={`animation-delay: ${i * cyklSekund}s`}
+            />
+          ))}
+
+          <div class="visual-overlay">
+            <div class="visual-text">
+              <p>
+                Owell to marka rozwijana w ramach Adler Europe Group — grupy z ponad 30-letnią historią w produkcji
+                małego AGD, obecnej na polskim rynku od 2002 roku. W portfolio grupy znajdują się też marki Adler
+                Europe, Camry Premium i Mesko Home, a łącznie stworzyły one ponad 800 produktów sprzedawanych w
+                ponad 60 krajach. Produkty Owell przechodzą te same rygorystyczne procedury kontroli jakości i mają
+                pełną dokumentację zgodności z unijnymi wymogami bezpieczeństwa (GPSR) — szczegóły i dane producenta
+                znajdziesz na stronie <a href="/bezpieczenstwo-produktu">bezpieczeństwa produktu</a>.
+              </p>
+
+              <p>
+                Wierzymy, że sprzęt do domu nie musi krzyczeć, żeby być dobry. Wolimy jedno przemyślane rozwiązanie
+                niż dziesięć funkcji, z których korzysta się raz. Dlatego każdy produkt przechodzi te same pytania:
+                czy to realnie ułatwia codzienność, czy wytrzyma regularne użytkowanie i czy w razie problemu da się
+                to zgłosić bez przekierowań między infoliniami.
+              </p>
+
+              <p>
+                Sprzedajemy przez sklep internetowy — bez sieci salonów stacjonarnych, co pozwala trzymać ceny niżej
+                bez obniżania jakości komponentów. Zamówienia złożone do 18:30 wysyłamy tego samego dnia, z
+                gwarancją dostawy InPostem. Każdy produkt ma kartę GPSR z pełnymi danymi producenta oraz{" "}
+                {site.gwarancjaMiesiace}-miesięczną gwarancję — bez wyjątków i bez drobnego druku.
+              </p>
+            </div>
+          </div>
+        </div>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style set:html={visualKeyframes} is:global></style>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .visual {
+    position: relative;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--hairline);
+    overflow: hidden;
+  }
+
+  .visual-img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* Na mobile pokazujemy tylko pierwsze zdjęcie, statycznie — karuzela
+     (position:absolute + animacja) włącza się dopiero na desktopie. */
+  .visual-img:not(:first-of-type) {
+    display: none;
+  }
+
+  .visual-overlay {
+    padding: var(--sp-8);
+    background-color: var(--bg-0);
+  }
+
+  .visual-text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .visual-text a {
+    color: var(--gold);
+    text-underline-offset: 0.2em;
+  }
+
+  .visual-text a:hover {
+    color: var(--gold-bright);
+  }
+
+  /* Nachodzenie tekstu na zdjęcie w gradiencie + zanikanie po najechaniu —
+     tylko na desktopie. Na mobile to zwykły, czytelny stos: zdjęcie, potem
+     tekst na pełnym, nieprzezroczystym tle (bez hover, bo na dotyku i tak
+     nie zadziała, a nachodzący tekst byłby nieczytelny). */
+  @media (min-width: 960px) {
+    .visual {
+      min-height: 26rem;
+    }
+
+    .visual-img,
+    .visual-img:not(:first-of-type) {
+      display: block;
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      animation: o-nas-carousel var(--visual-cykl) ease-in-out infinite;
+    }
+
+    .visual-overlay {
+      /* position:relative (nie absolute) celowo — dzięki temu ten blok
+         zostaje w normalnym przepływie i to ON ustala wysokość .visual
+         (rodzica), zamiast być docinany do sztywnej wysokości. Zdjęcie
+         (position:absolute) rozciąga się na całą tę wysokość. */
+      position: relative;
+      display: flex;
+      align-items: center;
+      min-height: 100%;
+      padding: var(--sp-16);
+      background: linear-gradient(
+        to right,
+        var(--bg-0) 0%,
+        var(--bg-0) 42%,
+        transparent 78%
+      );
+      transition: opacity 900ms var(--ease);
+    }
+
+    .visual-text {
+      max-width: 30rem;
+    }
+
+    .visual:hover .visual-overlay {
+      opacity: 0;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .visual-img {
+        animation: none !important;
+        opacity: 0;
+      }
+
+      .visual-img:first-of-type {
+        opacity: 1;
+      }
+    }
+  }
+</style>

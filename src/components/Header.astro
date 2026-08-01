@@ -8,7 +8,7 @@ import logoLight from "../assets/marka/logo-transparent.png";
 
 const menu = [
   { label: "Produkty", href: "/produkty" },
-  { label: "Marka", href: "/marka" },
+  { label: "O nas", href: "/o-nas" },
   { label: "Wsparcie", href: "/wsparcie" },
   { label: "Gdzie kupić", href: "/gdzie-kupic" },
   { label: "Kontakt", href: "/kontakt" },
@@ -117,20 +117,59 @@ const menu = [
   .nav-desktop ul {
     display: flex;
     align-items: center;
-    gap: var(--sp-8);
+    gap: var(--sp-2);
     list-style: none;
   }
 
   .nav-desktop a {
-    font-size: var(--fs-small);
-    font-weight: 500;
-    color: var(--text-2);
+    position: relative;
+    display: inline-block;
+    padding: var(--sp-2) var(--sp-4);
+    font-size: var(--fs-body);
+    font-weight: 600;
+    color: var(--text);
     text-decoration: none;
     transition: color var(--dur) var(--ease);
   }
 
+  .nav-desktop a::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: var(--radius);
+    background-color: var(--bg-2);
+    opacity: 0;
+    transform: scale(0.85);
+    transition:
+      opacity var(--dur) var(--ease),
+      transform var(--dur) var(--ease);
+  }
+
+  .nav-desktop a::after {
+    content: "";
+    position: absolute;
+    left: var(--sp-4);
+    right: var(--sp-4);
+    bottom: 6px;
+    height: 2px;
+    background-color: var(--gold-bright);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--dur-slow) var(--ease);
+  }
+
   .nav-desktop a:hover {
     color: var(--gold-bright);
+  }
+
+  .nav-desktop a:hover::before {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .nav-desktop a:hover::after {
+    transform: scaleX(1);
   }
 
   .header-cta {

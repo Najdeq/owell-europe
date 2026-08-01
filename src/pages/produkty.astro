@@ -1,0 +1,215 @@
+---
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import BreadcrumbSchema from "../components/BreadcrumbSchema.astro";
+import Container from "../components/ui/Container.astro";
+import Section from "../components/ui/Section.astro";
+
+import fotoOw1360b from "../assets/produkty/hero/ow-1360b.jpg";
+import fotoOw3097 from "../assets/produkty/hero/ow-3097.jpg";
+import fotoOw3300 from "../assets/produkty/hero/ow-3300.jpg";
+import fotoOw4634 from "../assets/produkty/hero/ow-4634.jpg";
+import fotoOw8805 from "../assets/produkty/hero/ow-8805.jpg";
+
+const breadcrumbs = [
+  { name: "Owell", path: "/" },
+  { name: "Produkty", path: "/produkty" },
+];
+
+const wszystkieProdukty = await getCollection("produkty");
+const znajdzProdukt = (slug: string) => wszystkieProdukty.find((p) => p.id === slug);
+
+const fotki: Record<string, ImageMetadata> = {
+  "ow-1360b": fotoOw1360b,
+  "ow-3097": fotoOw3097,
+  "ow-3300": fotoOw3300,
+  "ow-4634": fotoOw4634,
+  "ow-8805": fotoOw8805,
+};
+
+const kategorieRaw = [
+  { nazwa: "Czajnik elektryczny", slug: "ow-1360b" },
+  { nazwa: "Rozdrabniacze i szatkownice", slug: "ow-4819" },
+  { nazwa: "Grzejnik elektryczny", slug: null },
+  { nazwa: "Lodówka turystyczna", slug: "ow-8805" },
+  { nazwa: "Maszynka do strzyżenia włosów", slug: "ow-2856" },
+  { nazwa: "Strzyżarka dla zwierząt", slug: "ow-2859" },
+  { nazwa: "Blender ręczny", slug: "ow-4634" },
+  { nazwa: "Blender kielichowy", slug: null },
+  { nazwa: "Czyścik parowy", slug: null },
+  { nazwa: "Pralko-wirówka turystyczna", slug: "ow-8058" },
+  { nazwa: "Koce i poduszki elektryczne", slug: null },
+  { nazwa: "Opiekacz do kanapek", slug: "ow-3300" },
+];
+
+const kategorie = kategorieRaw.map((k) => ({
+  ...k,
+  produkt: k.slug ? znajdzProdukt(k.slug) : undefined,
+  foto: k.slug ? fotki[k.slug] : undefined,
+}));
+---
+
+<Base
+  title="Produkty — Owell"
+  description="Kategorie produktów Owell: małe AGD do kuchni, pielęgnacji i podróży, z przykładowym modelem z każdej kategorii."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title">Produkty</h1>
+        <p class="page-lead">
+          Kategorie sprzętu, który projektujemy. Przy każdej — jeden przykładowy model z oferty.
+        </p>
+
+        <div class="grid">
+          {kategorie.map((k) => (
+            <article class:list={["karta", { "karta--puste": !k.produkt }]}>
+              <div class="karta-foto">
+                {k.foto ? (
+                  <Image src={k.foto} alt={k.produkt!.data.nazwa} width={640} height={480} class="foto-img" />
+                ) : k.produkt ? (
+                  <div class="foto-placeholder">
+                    <span class="foto-placeholder-label">{k.produkt.data.model}</span>
+                  </div>
+                ) : (
+                  <div class="foto-placeholder foto-placeholder--puste">
+                    <span class="foto-placeholder-label">Wkrótce w ofercie</span>
+                  </div>
+                )}
+              </div>
+
+              <div class="karta-tresc">
+                <h2 class="karta-nazwa">{k.nazwa}</h2>
+                {k.produkt ? (
+                  <p class="karta-opis">{k.produkt.data.tagline}</p>
+                ) : (
+                  <p class="karta-opis karta-opis--puste">Wkrótce w ofercie.</p>
+                )}
+              </div>
+            </article>
+          ))}
+        </div>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .page-lead {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    max-width: var(--maxw-prose);
+    font-size: var(--fs-lead);
+    color: var(--text-2);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-6);
+  }
+
+  .karta {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-2);
+    border: 1px solid var(--hairline-soft);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: border-color var(--dur) var(--ease);
+  }
+
+  .karta:hover {
+    border-color: var(--gold);
+  }
+
+  .karta--puste {
+    opacity: 0.7;
+  }
+
+  .karta-foto {
+    aspect-ratio: 4 / 3;
+    background-color: var(--photo-bg);
+  }
+
+  .foto-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .foto-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  .foto-placeholder--puste {
+    background-color: var(--bg-1);
+  }
+
+  .foto-placeholder-label {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+  }
+
+  .karta-tresc {
+    padding: var(--sp-6);
+  }
+
+  .karta-nazwa {
+    font-family: var(--font-display);
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .karta-opis {
+    margin-top: var(--sp-2);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .karta-opis--puste {
+    color: var(--text-muted);
+    font-style: italic;
+  }
+
+  @media (min-width: 720px) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1100px) {
+    .grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

@@ -1,0 +1,71 @@
+---
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import BreadcrumbSchema from "../components/BreadcrumbSchema.astro";
+import Container from "../components/ui/Container.astro";
+import Section from "../components/ui/Section.astro";
+import Prose from "../components/ui/Prose.astro";
+
+const breadcrumbs = [
+  { name: "Owell", path: "/" },
+  { name: "Informacja AI Act", path: "/informacja-ai" },
+];
+---
+
+<Base
+  title="Informacja AI Act — Owell"
+  description="Informacja o wykorzystaniu sztucznej inteligencji do przygotowania wizualizacji produktów, zgodnie z unijnym Aktem o AI."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title">Informacja AI Act</h1>
+
+        <Prose>
+          <p>
+            Wizualizacje produktów na tej stronie zostały przygotowane z wykorzystaniem technologii sztucznej
+            inteligencji. Powstały one na podstawie rzeczywistych zdjęć produktów oraz projektów ich opakowań.
+          </p>
+
+          <p>
+            Informację tę publikujemy w związku z obowiązkami wynikającymi z art. 50 Rozporządzenia Parlamentu
+            Europejskiego i Rady (UE) 2024/1689 ustanawiającego zharmonizowane przepisy dotyczące sztucznej
+            inteligencji (Akt o AI).
+          </p>
+
+          <h2>Dlaczego o tym informujemy?</h2>
+          <ul>
+            <li><strong>Transparentność</strong> — szanujemy Twoje prawo do wiedzy o pochodzeniu grafik.</li>
+            <li><strong>Zgodność z prawem</strong> — wypełniamy obowiązki informacyjne unijnego Aktu o AI (AI Act).</li>
+            <li><strong>Precyzja</strong> — dbamy o to, aby cyfrowe grafiki dokładnie odzwierciedlały realny produkt.</li>
+          </ul>
+
+          <p>
+            Jeśli masz pytania dotyczące pochodzenia konkretnej grafiki, napisz do nas — dane kontaktowe znajdziesz
+            w <a href="/bezpieczenstwo-produktu">informacjach o bezpieczeństwie produktu</a>.
+          </p>
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+</style>
