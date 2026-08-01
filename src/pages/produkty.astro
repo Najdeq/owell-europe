@@ -73,7 +73,7 @@ const kategorie = kategorieRaw.map((k) => ({
             <article class:list={["karta", { "karta--puste": !k.produkt }]}>
               <div class="karta-foto">
                 {k.foto ? (
-                  <Image src={k.foto} alt={k.produkt!.data.nazwa} width={640} height={480} class="foto-img" />
+                  <Image src={k.foto} alt={k.produkt!.data.nazwa} width={640} height={640} class="foto-img" />
                 ) : k.produkt ? (
                   <div class="foto-placeholder">
                     <span class="foto-placeholder-label">{k.produkt.data.model}</span>
@@ -85,12 +85,11 @@ const kategorie = kategorieRaw.map((k) => ({
                 )}
               </div>
 
-              <div class="karta-tresc">
+              <div class="karta-info">
                 <h2 class="karta-nazwa">{k.nazwa}</h2>
-                {k.produkt ? (
-                  <p class="karta-opis">{k.produkt.data.tagline}</p>
-                ) : (
-                  <p class="karta-opis karta-opis--puste">Wkrótce w ofercie.</p>
+                <p class="karta-tagline">{k.produkt ? k.produkt.data.tagline : "Wkrótce w ofercie."}</p>
+                {k.produkt && (
+                  <p class="karta-opis">{k.produkt.data.opis.split("\n\n")[0]}</p>
                 )}
               </div>
             </article>
@@ -128,26 +127,61 @@ const kategorie = kategorieRaw.map((k) => ({
     gap: var(--sp-6);
   }
 
+  .grid {
+    /* Karty rosną na hover ponad sąsiadów (transform, bez zmiany layoutu) —
+       trzeba miejsca nad/pod siatką, żeby się nie ucinały. */
+    padding-block: var(--sp-8);
+  }
+
   .karta {
-    display: flex;
-    flex-direction: column;
-    background-color: var(--bg-2);
-    border: 1px solid var(--hairline-soft);
+    position: relative;
+    aspect-ratio: 1 / 1;
     border-radius: var(--radius-lg);
     overflow: hidden;
-    transition: border-color var(--dur) var(--ease);
+    border: 1px solid var(--hairline-soft);
+    cursor: default;
+    /* Punkt skalowania u góry — karta rośnie w dół, nigdy nie nachodzi na
+       treść nad siatką (nagłówek, lead). */
+    transform-origin: center top;
+    transition:
+      transform 480ms var(--ease),
+      border-color var(--dur) var(--ease),
+      box-shadow var(--dur) var(--ease);
   }
 
   .karta:hover {
+    transform: scale(2.3);
     border-color: var(--gold);
+    box-shadow: 0 0 0 1px var(--gold), 0 40px 80px -20px rgba(0, 0, 0, 0.65);
+    z-index: 10;
   }
 
-  .karta--puste {
-    opacity: 0.7;
+  /* Karta w skali 2.3 potrafi wyjść poza ekran w poziomie, jeśli rośnie od
+     środka skrajnej kolumny — przesuwamy punkt skalowania do wewnętrznej
+     krawędzi (pion zostaje zawsze "top"). */
+  @media (min-width: 1000px) {
+    .karta:nth-child(4n + 1) {
+      transform-origin: left top;
+    }
+
+    .karta:nth-child(4n) {
+      transform-origin: right top;
+    }
+  }
+
+  @media (min-width: 640px) and (max-width: 999px) {
+    .karta:nth-child(odd) {
+      transform-origin: left top;
+    }
+
+    .karta:nth-child(even) {
+      transform-origin: right top;
+    }
   }
 
   .karta-foto {
-    aspect-ratio: 4 / 3;
+    position: absolute;
+    inset: 0;
     background-color: var(--photo-bg);
   }
 
@@ -156,6 +190,11 @@ const kategorie = kategorieRaw.map((k) => ({
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform var(--dur-slow) var(--ease);
+  }
+
+  .karta:hover .foto-img {
+    transform: scale(1.08);
   }
 
   .foto-placeholder {
@@ -178,38 +217,78 @@ const kategorie = kategorieRaw.map((k) => ({
     color: var(--steel);
   }
 
-  .karta-tresc {
-    padding: var(--sp-6);
+  .karta--puste .karta-foto {
+    opacity: 0.6;
+  }
+
+  .karta-info {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: var(--sp-5);
+    background: linear-gradient(
+      to top,
+      var(--bg-0) 0%,
+      rgba(15, 14, 12, 0.85) 55%,
+      transparent 100%
+    );
   }
 
   .karta-nazwa {
     font-family: var(--font-display);
-    font-size: var(--fs-h3);
+    font-size: var(--fs-lead);
     font-weight: 600;
     color: var(--text);
   }
 
-  .karta-opis {
-    margin-top: var(--sp-2);
+  .karta-tagline {
+    margin-top: var(--sp-1);
     font-size: var(--fs-small);
     line-height: var(--lh-body);
     color: var(--text-2);
   }
 
-  .karta-opis--puste {
+  .karta--puste .karta-tagline {
     color: var(--text-muted);
     font-style: italic;
   }
 
-  @media (min-width: 720px) {
+  .karta-opis {
+    max-height: 0;
+    margin-top: 0;
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+    opacity: 0;
+    overflow: hidden;
+    transition:
+      max-height 480ms var(--ease),
+      opacity 480ms var(--ease),
+      margin-top 480ms var(--ease);
+  }
+
+  .karta:hover .karta-opis {
+    max-height: 16rem;
+    margin-top: var(--sp-3);
+    opacity: 1;
+  }
+
+  @media (min-width: 640px) {
     .grid {
       grid-template-columns: repeat(2, 1fr);
     }
   }
 
-  @media (min-width: 1100px) {
+  @media (min-width: 1000px) {
     .grid {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .karta,
+    .foto-img,
+    .karta-opis {
+      transition: none !important;
     }
   }
 </style>
