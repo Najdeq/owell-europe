@@ -1,0 +1,167 @@
+---
+import { getCollection } from "astro:content";
+import Section from "../ui/Section.astro";
+import Button from "../ui/Button.astro";
+import Eyebrow from "../ui/Eyebrow.astro";
+import { site } from "../../data/site.ts";
+
+const produkty = await getCollection("produkty");
+const produktWideo = produkty.find((p) => p.id === "ow-3300");
+const wideoAlt = produktWideo
+  ? `${produktWideo.data.nazwa} — ${produktWideo.data.tagline}`
+  : "Produkt Owell";
+
+const fakty = [
+  { wartosc: String(produkty.length), etykieta: "produktów w ofercie" },
+  { wartosc: "24 mies.", etykieta: "gwarancji" },
+  { wartosc: "2025", etykieta: "rok założenia marki" },
+];
+---
+
+<Section bg="base" class="hero">
+  <div class="hero-inner">
+    <div class="hero-content">
+      <Eyebrow>Małe AGD · Projektowane w Europie</Eyebrow>
+      <h1 class="hero-title">Marka AGD, którą można sprawdzić.</h1>
+      <p class="hero-lead">
+        Pełne dane producenta, karta GPSR i {site.gwarancjaMiesiace} miesiące gwarancji przy każdym produkcie.
+        Nic nie chowamy za regulaminem.
+      </p>
+
+      <div class="hero-cta">
+        <Button href="/gdzie-kupic" variant="primary">Gdzie kupić</Button>
+        <Button href="/marka" variant="ghost">Poznaj markę</Button>
+      </div>
+
+      <dl class="hero-fakty">
+        {fakty.map((f) => (
+          <div class="fakt">
+            <dt>{f.etykieta}</dt>
+            <dd>{f.wartosc}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+
+    <div class="hero-media">
+      <div class="hero-media-frame">
+        <video
+          class="hero-video"
+          aria-label={wideoAlt}
+          src="/video/ow-3300.mp4"
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="metadata"
+        />
+      </div>
+    </div>
+  </div>
+</Section>
+
+<style>
+  .hero-inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    gap: var(--sp-12);
+    width: 100%;
+    max-width: 100rem;
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  .hero-content {
+    max-width: var(--maxw-prose);
+  }
+
+  .hero-title {
+    margin-top: var(--sp-4);
+    font-family: var(--font-display);
+    font-size: var(--fs-display);
+    font-weight: 600;
+    line-height: var(--lh-tight);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .hero-lead {
+    margin-top: var(--sp-6);
+    font-size: var(--fs-lead);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .hero-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-4);
+    margin-top: var(--sp-8);
+  }
+
+  .hero-fakty {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-8);
+    margin-top: var(--sp-12);
+    padding-top: var(--sp-6);
+    border-top: 1px solid var(--hairline-soft);
+  }
+
+  .fakt dd {
+    font-family: var(--font-mono);
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    color: var(--gold-bright);
+  }
+
+  .fakt dt {
+    margin-top: var(--sp-1);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+  }
+
+  .hero-media {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .hero-media-frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background-color: var(--photo-bg);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--hairline);
+    overflow: hidden;
+  }
+
+  .hero-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hero-media,
+  .hero-media-frame {
+    max-width: 100%;
+  }
+
+  @media (min-width: 960px) {
+    .hero-inner {
+      grid-template-columns: 0.7fr 1.3fr;
+      gap: var(--sp-16);
+    }
+
+    .hero-media {
+      justify-content: flex-end;
+    }
+  }
+</style>

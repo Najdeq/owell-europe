@@ -1,0 +1,90 @@
+---
+import Container from "../ui/Container.astro";
+import Section from "../ui/Section.astro";
+import Eyebrow from "../ui/Eyebrow.astro";
+import { site } from "../../data/site.ts";
+---
+
+<Section bg="base" id="gdzie-kupic">
+  <Container>
+    <div class="panel">
+      <Eyebrow>Gdzie kupić</Eyebrow>
+      <h2 class="section-title">Wszystkie produkty w jednym miejscu</h2>
+      <p class="lead">
+        Kupujesz bezpośrednio w naszym sklepie internetowym — bez pośredników i bez porównywania ofert na kilku platformach.
+      </p>
+
+      <a
+        href={site.sklep}
+        target="_blank"
+        rel="noopener noreferrer"
+        data-marketplace="sklep"
+        data-platforma="Sklep internetowy"
+        data-lokalizacja="sekcja"
+        class="cta"
+      >
+        Przejdź do sklepu →
+      </a>
+    </div>
+  </Container>
+</Section>
+
+<style>
+  .panel {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--sp-6);
+    padding: var(--sp-12) var(--sp-8);
+    background-color: var(--bg-2);
+    border: 1px solid var(--gold);
+    border-radius: var(--radius-lg);
+  }
+
+  .section-title {
+    max-width: var(--maxw-prose);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .lead {
+    max-width: var(--maxw-prose);
+    font-size: var(--fs-lead);
+    color: var(--text-2);
+  }
+
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--sp-4) var(--sp-8);
+    margin-top: var(--sp-2);
+    font-size: var(--fs-lead);
+    font-weight: 500;
+    color: var(--ink-on-gold);
+    background-color: var(--gold-surface);
+    border: 1px solid var(--gold-surface);
+    border-radius: var(--radius);
+    text-decoration: none;
+    transition:
+      background-color var(--dur) var(--ease),
+      border-color var(--dur) var(--ease);
+  }
+
+  .cta:hover {
+    background-color: var(--gold-surface-hover);
+    border-color: var(--gold-surface-hover);
+  }
+
+  @media (min-width: 720px) {
+    .panel {
+      align-items: center;
+      text-align: center;
+      padding: var(--sp-16);
+    }
+  }
+</style>

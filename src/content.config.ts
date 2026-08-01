@@ -32,12 +32,7 @@ const produkty = defineCollection({
       osobaOdpowiedzialnaUE: z.string().optional(),
       ostrzezenia: z.array(z.string()).optional(),
     }),
-    gdzieKupic: z.array(
-      z.object({
-        platforma: z.enum(["allegro", "temu", "tiktok-shop"]),
-        url: z.string(),
-      })
-    ),
+    gdzieKupic: z.string(),
     kolejnosc: z.number(),
     opublikowany: z.boolean().default(true),
   }),

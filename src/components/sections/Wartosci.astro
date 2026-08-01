@@ -1,0 +1,111 @@
+---
+import Container from "../ui/Container.astro";
+import Section from "../ui/Section.astro";
+import Eyebrow from "../ui/Eyebrow.astro";
+
+const filary = [
+  {
+    tytul: "Design",
+    opis: "Formy projektujemy tak, by pasowały do kuchni za pięć lat, nie tylko dziś. Prosta bryła, spokojne proporcje, minimum ozdobników.",
+    icon: "design",
+  },
+  {
+    tytul: "Jakość",
+    opis: "Materiały i podzespoły dobieramy pod kątem codziennej eksploatacji, nie jednorazowego testu na pudełku. Każdy model ma kartę GPSR z pełnymi danymi producenta.",
+    icon: "jakosc",
+  },
+  {
+    tytul: "Serwis",
+    opis: "Instrukcje i kontakt serwisowy są dostępne po polsku, bez przekierowań między infoliniami. Zgłoszenie trafia bezpośrednio do nas, nie do automatu.",
+    icon: "serwis",
+  },
+];
+---
+
+<Section bg="raised">
+  <Container>
+    <Eyebrow>Dlaczego Owell</Eyebrow>
+    <h2 class="section-title">Trzy filary każdego produktu</h2>
+
+    <div class="grid">
+      {filary.map((f) => (
+        <article class="filar">
+          <div class="icon" aria-hidden="true">
+            {f.icon === "design" && (
+              <svg viewBox="0 0 32 32" fill="none" stroke="var(--gold)" stroke-width="1.5">
+                <circle cx="16" cy="16" r="10" stroke-linecap="round" />
+                <path d="M16 6v6M16 20v6M6 16h6M20 16h6" stroke-linecap="round" />
+              </svg>
+            )}
+            {f.icon === "jakosc" && (
+              <svg viewBox="0 0 32 32" fill="none" stroke="var(--gold)" stroke-width="1.5">
+                <path d="M16 4 27 9v8c0 7-4.7 11.7-11 15C9.7 28.7 5 24 5 17V9l11-5Z" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M11 16l3.5 3.5L21 12" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            )}
+            {f.icon === "serwis" && (
+              <svg viewBox="0 0 32 32" fill="none" stroke="var(--gold)" stroke-width="1.5">
+                <path d="M18.7 6.3a5 5 0 0 0-6.8 6.8L4 21v3h3l7.9-7.9a5 5 0 0 0 6.8-6.8l-3.2 3.2-3-3 3.2-3.2Z" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            )}
+          </div>
+          <h3 class="filar-tytul">{f.tytul}</h3>
+          <p class="filar-opis">{f.opis}</p>
+        </article>
+      ))}
+    </div>
+  </Container>
+</Section>
+
+<style>
+  .section-title {
+    margin-top: var(--sp-4);
+    max-width: var(--maxw-prose);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-12);
+    margin-top: var(--sp-12);
+  }
+
+  .icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .filar-tytul {
+    margin-top: var(--sp-4);
+    font-family: var(--font-display);
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .filar-opis {
+    margin-top: var(--sp-3);
+    max-width: 32rem;
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  @media (min-width: 720px) {
+    .grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--sp-8);
+    }
+  }
+</style>

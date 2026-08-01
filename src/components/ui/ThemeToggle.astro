@@ -1,0 +1,106 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<button
+  type="button"
+  class:list={["theme-toggle", className]}
+  data-theme-toggle
+  aria-label="Przełącz na jasny motyw"
+>
+  <svg class="icon icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+    <circle cx="12" cy="12" r="4.5" stroke-linecap="round" />
+    <path
+      d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"
+      stroke-linecap="round"
+    />
+  </svg>
+  <svg class="icon icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+    <path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z" stroke-linecap="round" stroke-linejoin="round" />
+  </svg>
+</button>
+
+<style>
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    background-color: transparent;
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    color: var(--text-2);
+    cursor: pointer;
+    transition:
+      border-color var(--dur) var(--ease),
+      color var(--dur) var(--ease);
+  }
+
+  .theme-toggle:hover {
+    border-color: var(--gold);
+    color: var(--gold-bright);
+  }
+
+  .icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .icon-moon {
+    display: none;
+  }
+
+  :global(html[data-theme="light"]) .icon-sun {
+    display: none;
+  }
+
+  :global(html[data-theme="light"]) .icon-moon {
+    display: block;
+  }
+</style>
+
+<script>
+  const STORAGE_KEY = "owell-theme";
+
+  const buttons = document.querySelectorAll<HTMLButtonElement>(
+    "[data-theme-toggle]"
+  );
+
+  const applyTheme = (theme: "light" | "dark") => {
+    if (theme === "light") {
+      document.documentElement.setAttribute("data-theme", "light");
+    } else {
+      document.documentElement.removeAttribute("data-theme");
+    }
+
+    const meta = document.getElementById("theme-color-meta");
+    meta?.setAttribute("content", theme === "light" ? "#FAF7F1" : "#0F0E0C");
+
+    const label =
+      theme === "light" ? "Przełącz na ciemny motyw" : "Przełącz na jasny motyw";
+    buttons.forEach((btn) => btn.setAttribute("aria-label", label));
+  };
+
+  const currentTheme = () =>
+    document.documentElement.getAttribute("data-theme") === "light"
+      ? "light"
+      : "dark";
+
+  applyTheme(currentTheme());
+
+  buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const next = currentTheme() === "light" ? "dark" : "light";
+      applyTheme(next);
+      try {
+        localStorage.setItem(STORAGE_KEY, next);
+      } catch (e) {}
+    });
+  });
+</script>

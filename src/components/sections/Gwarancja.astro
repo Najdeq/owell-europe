@@ -1,0 +1,175 @@
+---
+import Container from "../ui/Container.astro";
+import Section from "../ui/Section.astro";
+import Eyebrow from "../ui/Eyebrow.astro";
+import { site } from "../../data/site.ts";
+
+const czasReakcji = "24h";
+
+const punkty = [
+  `Gwarancja obejmuje wady materiałowe i produkcyjne przez cały okres ${site.gwarancjaMiesiace} miesięcy od zakupu.`,
+  "Zgłoszenie przyjmujemy mailowo, bezpośrednio — bez infolinii i bez przekierowań.",
+  "Zamówienia złożone do 18:30 wysyłamy tego samego dnia, z gwarancją dostawy InPostem.",
+];
+---
+
+<Section bg="raised">
+  <Container>
+    <div class="panel">
+      <div class="panel-glowne">
+        <Eyebrow>Gwarancja i serwis</Eyebrow>
+        <p class="liczba">
+          {site.gwarancjaMiesiace}
+          <span class="jednostka">miesięcy gwarancji</span>
+        </p>
+        <p class="opis">
+          Każdy produkt Owell objęty jest {site.gwarancjaMiesiace}-miesięczną gwarancją. Zgłoszenia serwisowe
+          obsługujemy po polsku, bez przekierowań między infoliniami.
+        </p>
+
+        <ul class="punkty">
+          {punkty.map((p) => <li>{p}</li>)}
+        </ul>
+      </div>
+
+      <div class="panel-detale">
+        <div class="detal">
+          <p class="detal-liczba">{czasReakcji}</p>
+          <p class="detal-podpis">Czas reakcji serwisu</p>
+        </div>
+
+        <div class="linki">
+          <a href="/instrukcje" class="link">Instrukcje obsługi →</a>
+          <a href="/gwarancja" class="link">Karta gwarancyjna →</a>
+        </div>
+      </div>
+    </div>
+  </Container>
+</Section>
+
+<style>
+  .panel {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-8);
+    padding: var(--sp-8);
+    background-color: var(--bg-1);
+    border: 1px solid var(--gold);
+    border-radius: var(--radius-lg);
+  }
+
+  .liczba {
+    margin-top: var(--sp-4);
+    display: flex;
+    align-items: baseline;
+    gap: var(--sp-3);
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 8vw, 5rem);
+    font-weight: 600;
+    line-height: var(--lh-tight);
+    letter-spacing: var(--tracking-display);
+    color: var(--gold-bright);
+  }
+
+  .jednostka {
+    font-family: var(--font-mono);
+    font-size: var(--fs-small);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+  }
+
+  .opis {
+    margin-top: var(--sp-4);
+    max-width: 32rem;
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .punkty {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+    max-width: 32rem;
+    margin-top: var(--sp-4);
+    padding-left: var(--sp-4);
+    list-style: none;
+  }
+
+  .punkty li {
+    position: relative;
+    padding-left: var(--sp-4);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .punkty li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.6em;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background-color: var(--gold);
+  }
+
+  .panel-detale {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-6);
+    padding-top: var(--sp-6);
+    border-top: 1px solid var(--hairline-soft);
+  }
+
+  .detal-liczba {
+    font-family: var(--font-mono);
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .detal-podpis {
+    margin-top: var(--sp-1);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+  }
+
+  .linki {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+  }
+
+  .link {
+    font-size: var(--fs-small);
+    font-weight: 500;
+    color: var(--gold);
+    text-decoration: none;
+  }
+
+  .link:hover {
+    color: var(--gold-bright);
+  }
+
+  @media (min-width: 720px) {
+    .panel {
+      grid-template-columns: 1.2fr 1fr;
+      padding: var(--sp-12);
+      align-items: center;
+    }
+
+    .panel-detale {
+      padding-top: 0;
+      padding-left: var(--sp-8);
+      border-top: none;
+      border-left: 1px solid var(--hairline-soft);
+    }
+  }
+</style>

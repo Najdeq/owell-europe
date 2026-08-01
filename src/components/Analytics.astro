@@ -1,0 +1,126 @@
+---
+const gaId = import.meta.env.PUBLIC_GA_ID ?? "";
+---
+
+<script define:vars={{ gaId }}>
+  // Cała logika musi się powtórzyć po astro:page-load (nowa strona = nowe
+  // linki [data-marketplace] w DOM), dlatego jest owinięta w nazwaną funkcję
+  // zamiast jednorazowego IIFE podpiętego pod DOMContentLoaded.
+  function setupAnalytics() {
+    var STORAGE_KEY = "owell-consent";
+    var CONSENT_VERSION = 1;
+
+    function readConsent() {
+      try {
+        var raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return null;
+        var parsed = JSON.parse(raw);
+        if (!parsed || parsed.version !== CONSENT_VERSION) return null;
+        return parsed;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function injectGA() {
+      // Brak zmiennej środowiskowej = nic się nie ładuje, bez błędu w konsoli.
+      if (!gaId) return;
+      if (window.__owellGaInjected) return;
+      window.__owellGaInjected = true;
+
+      var script = document.createElement("script");
+      script.async = true;
+      script.src = "https://www.googletagmanager.com/gtag/js?id=" + gaId;
+      document.head.appendChild(script);
+
+      if (typeof window.gtag === "function") {
+        window.gtag("js", new Date());
+        window.gtag("config", gaId);
+      }
+    }
+
+    function maybeInjectGA() {
+      var consent = readConsent();
+      if (consent && consent.analytics) injectGA();
+    }
+
+    // ---- UTM na linkach wychodzących do marketplace/sklepu ----
+    var UTM_STATIC = {
+      utm_source: "owelleurope.com",
+      utm_medium: "referral",
+      utm_campaign: "brandsite",
+    };
+
+    function appendUtm(link) {
+      var href = link.getAttribute("href") || "";
+      if (!href || href.charAt(0) === "#") return;
+
+      var url;
+      try {
+        url = new URL(href, window.location.origin);
+      } catch (e) {
+        return; // np. jeszcze nieuzupełniony placeholder URL
+      }
+
+      if (url.searchParams.has("utm_source")) return;
+
+      Object.keys(UTM_STATIC).forEach(function (key) {
+        url.searchParams.set(key, UTM_STATIC[key]);
+      });
+      url.searchParams.set(
+        "utm_content",
+        link.getAttribute("data-marketplace") || "nieznana"
+      );
+
+      link.setAttribute("href", url.toString());
+    }
+
+    // ---- Śledzenie kliknięć — główny KPI strony ----
+    function trackClick(event) {
+      var link = event.currentTarget;
+      var consent = readConsent();
+      if (!consent || !consent.analytics) return;
+      if (typeof window.gtag !== "function") return;
+
+      var params = {
+        platforma: link.getAttribute("data-marketplace") || "",
+        lokalizacja: link.getAttribute("data-lokalizacja") || "nieznana",
+      };
+      var produkt = link.getAttribute("data-produkt");
+      if (produkt) params.produkt = produkt;
+
+      window.gtag("event", "marketplace_click", params);
+    }
+
+    function setupMarketplaceLinks() {
+      var links = document.querySelectorAll("[data-marketplace]");
+      links.forEach(function (link) {
+        appendUtm(link);
+
+        // Zabezpieczenie przed podwójnym podpięciem tego samego węzła —
+        // po ponownym setupAnalytics() (astro:page-load) mogą to być te
+        // same elementy, jeśli nawigacja nie wymieniła całego <body>.
+        if (link.dataset.owellTrackBound === "true") return;
+        link.dataset.owellTrackBound = "true";
+        link.addEventListener("click", trackClick);
+      });
+    }
+
+    maybeInjectGA();
+    setupMarketplaceLinks();
+
+    // "window" przeżywa nawigacje Astro (w przeciwieństwie do <body>), więc
+    // ten listener podpinamy tylko raz, niezależnie ile razy odpali się
+    // setupAnalytics().
+    if (!window.__owellConsentListenerBound) {
+      window.__owellConsentListenerBound = true;
+      window.addEventListener("owell:consent-change", function (event) {
+        if (event.detail && event.detail.analytics) injectGA();
+        setupMarketplaceLinks();
+      });
+    }
+  }
+
+  setupAnalytics();
+  document.addEventListener("astro:page-load", setupAnalytics);
+</script>

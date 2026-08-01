@@ -1,0 +1,130 @@
+---
+import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
+import Container from "../ui/Container.astro";
+import Section from "../ui/Section.astro";
+import Eyebrow from "../ui/Eyebrow.astro";
+import detalPlaceholder from "../../assets/produkty/placeholder-detal.svg";
+
+const produkty = await getCollection("produkty");
+
+const argumenty = [
+  {
+    liczba: "24",
+    jednostka: "miesiące",
+    opis: "gwarancji na każdy produkt objęty ochroną.",
+  },
+  {
+    liczba: String(produkty.length),
+    jednostka: "modeli",
+    opis: "w aktualnej ofercie, każdy z pełną kartą GPSR.",
+  },
+  {
+    liczba: "15",
+    jednostka: "lat",
+    opis: "doświadczenia w projektowaniu sprzętu AGD.",
+  },
+  {
+    liczba: "23",
+    jednostka: "rynki w UE",
+    opis: "do których trafiają produkty Owell.",
+  },
+];
+---
+
+<Section bg="raised">
+  <Container class="dlaczego-inner">
+    <div class="dlaczego-media">
+      <Image
+        src={detalPlaceholder}
+        alt="[DO UZUPEŁNIENIA: zdjęcie detalu materiału]"
+        width={720}
+        height={880}
+      />
+    </div>
+
+    <div class="dlaczego-content">
+      <Eyebrow>Dowody, nie deklaracje</Eyebrow>
+      <h2 class="section-title">Dlaczego Owell</h2>
+
+      <dl class="argumenty">
+        {argumenty.map((a) => (
+          <div class="argument">
+            <dt class="argument-liczba">
+              {a.liczba} <span class="argument-jednostka">{a.jednostka}</span>
+            </dt>
+            <dd class="argument-opis">{a.opis}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </Container>
+</Section>
+
+<style>
+  :global(.dlaczego-inner) {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-12);
+  }
+
+  .dlaczego-media :global(img) {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--hairline-soft);
+  }
+
+  .section-title {
+    margin-top: var(--sp-4);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .argumenty {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-8);
+    margin-top: var(--sp-12);
+  }
+
+  .argument-liczba {
+    font-family: var(--font-mono);
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    color: var(--gold-bright);
+  }
+
+  .argument-jednostka {
+    font-size: var(--fs-small);
+    font-weight: 400;
+    color: var(--steel);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+  }
+
+  .argument-opis {
+    margin-top: var(--sp-2);
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  @media (min-width: 720px) {
+    .argumenty {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 960px) {
+    :global(.dlaczego-inner) {
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: var(--sp-16);
+      align-items: center;
+    }
+  }
+</style>

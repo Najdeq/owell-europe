@@ -32,16 +32,23 @@ html {
   color-scheme: dark;
 }
 
+html[data-theme="light"] {
+  color-scheme: light;
+}
+
 body {
   background-color: var(--bg-0);
   color: var(--text);
   font-family: var(--font-body);
   line-height: var(--lh-body);
+  transition:
+    background-color var(--dur) var(--ease),
+    color var(--dur) var(--ease);
 }
 
 ::selection {
-  background-color: var(--gold);
-  color: var(--bg-0);
+  background-color: var(--gold-surface);
+  color: var(--ink-on-gold);
 }
 
 ::-webkit-scrollbar {

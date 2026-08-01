@@ -1,0 +1,260 @@
+---
+import { Image } from "astro:assets";
+import Container from "./ui/Container.astro";
+import { site } from "../data/site.ts";
+import logoDark from "../assets/marka/logo-light.png";
+import logoLight from "../assets/marka/logo-transparent.png";
+
+const wsparcie = [
+  { label: "Instrukcje", href: "/instrukcje" },
+  { label: "Gwarancja", href: "/gwarancja" },
+  { label: "Reklamacje", href: "/reklamacje" },
+  { label: "FAQ", href: "/faq" },
+];
+
+const prawne = [
+  { label: "Polityka prywatności", href: "/polityka-prywatnosci" },
+  { label: "Cookies", href: "/cookies" },
+  { label: "Deklaracja dostępności", href: "/deklaracja-dostepnosci" },
+  { label: "Bezpieczeństwo produktu", href: "/bezpieczenstwo-produktu" },
+];
+
+---
+
+<footer class="footer">
+  <Container>
+    <div class="columns">
+      <div class="col col-marka">
+        <a href="/" class="logo" aria-label="Owell — strona główna">
+          <Image src={logoDark} alt="Owell" class="logo-mark logo-mark-dark" width={138} height={40} />
+          <Image src={logoLight} alt="Owell" class="logo-mark logo-mark-light" width={138} height={40} />
+        </a>
+        <p class="tagline">{site.tagline}</p>
+
+        <a
+          href={site.sklep}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-marketplace="sklep"
+          data-platforma="Sklep internetowy"
+          data-lokalizacja="stopka"
+          class="marketplace-link"
+        >
+          <svg
+            class="marketplace-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            aria-hidden="true"
+          >
+            <path d="M4 8.5 5.2 4h13.6l1.2 4.5" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M4 8.5h16v10.5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8.5Z" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M9 12a3 3 0 0 0 6 0" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <span>Sklep internetowy</span>
+        </a>
+      </div>
+
+      <nav class="col" aria-label="Kategorie produktów">
+        <p class="col-title">Produkty</p>
+        <ul>
+          {site.kategorie.map((kategoria) => (
+            <li>
+              <a href={`/produkty/${kategoria.slug}`}>{kategoria.nazwa}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <nav class="col" aria-label="Wsparcie">
+        <p class="col-title">Wsparcie</p>
+        <ul>
+          {wsparcie.map((item) => (
+            <li>
+              <a href={item.href}>{item.label}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <div class="col">
+        <p class="col-title">Kontakt</p>
+        <ul>
+          <li>
+            <a href={`mailto:${site.kontakt.email}`}>{site.kontakt.email}</a>
+          </li>
+          <li>
+            <a href={`mailto:${site.kontakt.emailSerwis}`}>{site.kontakt.emailSerwis}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="bottom-bar">
+      <p class="dane-rejestrowe">
+        {site.firma.nazwaPelna} · {site.firma.adres} · NIP: {site.firma.nip} · REGON: {site.firma.regon}
+      </p>
+
+      <nav aria-label="Informacje prawne">
+        <ul class="prawne-list">
+          {prawne.map((item) => (
+            <li>
+              <a href={item.href}>{item.label}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </div>
+  </Container>
+</footer>
+
+<style>
+  .footer {
+    background-color: var(--bg-1);
+    border-top: 1px solid var(--hairline);
+    padding-block: var(--section-y);
+  }
+
+  .columns {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--sp-12);
+  }
+
+  .col-marka {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    text-decoration: none;
+    color: var(--text);
+  }
+
+  .logo-mark {
+    height: 32px;
+    width: auto;
+  }
+
+  .logo-mark-light {
+    display: none;
+  }
+
+  :global(html[data-theme="light"]) .logo-mark-dark {
+    display: none;
+  }
+
+  :global(html[data-theme="light"]) .logo-mark-light {
+    display: block;
+  }
+
+  .tagline {
+    max-width: 24rem;
+    font-size: var(--fs-small);
+    color: var(--text-2);
+  }
+
+  .marketplace-link {
+    margin-top: var(--sp-2);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    font-size: var(--fs-small);
+    color: var(--text-2);
+    text-decoration: none;
+    transition: color var(--dur) var(--ease);
+  }
+
+  .marketplace-link:hover {
+    color: var(--gold-bright);
+  }
+
+  .marketplace-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+  .col-title {
+    margin-bottom: var(--sp-4);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+  }
+
+  .col ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+    list-style: none;
+  }
+
+  .col a {
+    font-size: var(--fs-small);
+    color: var(--text-2);
+    text-decoration: none;
+    transition: color var(--dur) var(--ease);
+  }
+
+  .col a:hover {
+    color: var(--gold-bright);
+  }
+
+  .bottom-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-4);
+    margin-top: var(--sp-16);
+    padding-top: var(--sp-8);
+    border-top: 1px solid var(--hairline-soft);
+  }
+
+  .dane-rejestrowe {
+    font-size: var(--fs-micro);
+    color: var(--text-muted);
+  }
+
+  .prawne-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-6);
+    list-style: none;
+  }
+
+  .prawne-list a {
+    font-size: var(--fs-micro);
+    color: var(--text-muted);
+    text-decoration: none;
+  }
+
+  .prawne-list a:hover {
+    color: var(--gold-bright);
+  }
+
+  @media (max-width: 860px) {
+    .columns {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--sp-8);
+    }
+  }
+
+  @media (max-width: 560px) {
+    .columns {
+      grid-template-columns: 1fr;
+    }
+
+    .bottom-bar {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>

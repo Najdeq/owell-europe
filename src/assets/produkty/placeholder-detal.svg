@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1100" viewBox="0 0 900 1100">
+  <rect width="900" height="1100" fill="#171613" />
+  <rect x="0.5" y="0.5" width="899" height="1099" fill="none" stroke="#C9A227" stroke-opacity="0.24" />
+  <line x1="0" y1="366" x2="900" y2="366" stroke="#8E99A4" stroke-opacity="0.3" stroke-width="1" />
+  <line x1="0" y1="733" x2="900" y2="733" stroke="#8E99A4" stroke-opacity="0.3" stroke-width="1" />
+  <text x="450" y="540" fill="#A9A49A" font-family="monospace" font-size="20" text-anchor="middle" dominant-baseline="middle">ZDJĘCIE DETALU MATERIAŁU</text>
+  <text x="450" y="574" fill="#5C646C" font-family="monospace" font-size="15" text-anchor="middle" dominant-baseline="middle">[DO UZUPEŁNIENIA]</text>
+</svg>

@@ -2,12 +2,13 @@
 interface Props {
   bg?: "base" | "raised";
   class?: string;
+  id?: string;
 }
 
-const { bg = "base", class: className } = Astro.props;
+const { bg = "base", class: className, id } = Astro.props;
 ---
 
-<section class:list={["section", `section--${bg}`, className]}>
+<section id={id} class:list={["section", `section--${bg}`, className]}>
   <slot />
 </section>
 

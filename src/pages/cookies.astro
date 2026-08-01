@@ -1,0 +1,205 @@
+---
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import BreadcrumbSchema from "../components/BreadcrumbSchema.astro";
+import Container from "../components/ui/Container.astro";
+import Section from "../components/ui/Section.astro";
+import Prose from "../components/ui/Prose.astro";
+
+const breadcrumbs = [
+  { name: "Owell", path: "/" },
+  { name: "Cookies", path: "/cookies" },
+];
+
+const kategorie = [
+  {
+    nazwa: "Niezbędne",
+    opis: "Wymagane do prawidłowego działania strony i zapamiętania Twoich wyborów dotyczących zgody. Nie można ich wyłączyć.",
+    cookies: [
+      {
+        nazwa: "owell-consent (localStorage)",
+        dostawca: "Owell (własny, first-party)",
+        cel: "Zapamiętanie decyzji dotyczącej zgody na cookies analityczne i marketingowe.",
+        czas: "Bez terminu ważności — do ręcznego wyczyszczenia lub zmiany ustawień.",
+      },
+    ],
+  },
+  {
+    nazwa: "Analityczne",
+    opis: "Pomagają zrozumieć, jak odwiedzający korzystają ze strony. Ładowane wyłącznie po wyrażeniu zgody (Consent Mode v2).",
+    cookies: [
+      {
+        nazwa: "_ga",
+        dostawca: "Google (Google Analytics 4)",
+        cel: "Rozróżnianie unikalnych użytkowników.",
+        czas: "13 miesięcy",
+      },
+      {
+        nazwa: "_ga_&lt;identyfikator&gt;",
+        dostawca: "Google (Google Analytics 4)",
+        cel: "Utrzymanie stanu sesji i zbieranie statystyk odwiedzin.",
+        czas: "13 miesięcy",
+      },
+    ],
+  },
+  {
+    nazwa: "Marketingowe",
+    opis: "Obecnie nie wykorzystujemy plików cookies marketingowych. Ta sekcja zostanie uzupełniona, jeśli to się zmieni.",
+    cookies: [],
+  },
+];
+---
+
+<Base
+  title="Polityka cookies — Owell"
+  description="Jakich plików cookies używamy na stronie Owell, w jakim celu i jak długo są przechowywane."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title">Polityka cookies</h1>
+
+        <Prose>
+          <p>
+            Ta strona wykorzystuje pliki cookies. Cookies niezbędne są ładowane zawsze, pozostałe kategorie — dopiero po
+            wyrażeniu zgody w banerze przy pierwszej wizycie. Zgodę możesz w każdej chwili zmienić.
+          </p>
+
+          <button type="button" class="zmien-ustawienia" data-open-consent-settings>
+            Zmień ustawienia cookies
+          </button>
+
+          {kategorie.map((kategoria) => (
+            <>
+              <h2>{kategoria.nazwa}</h2>
+              <p>{kategoria.opis}</p>
+
+              {kategoria.cookies.length > 0 && (
+                <div class="table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th scope="col">Nazwa</th>
+                        <th scope="col">Dostawca</th>
+                        <th scope="col">Cel</th>
+                        <th scope="col">Czas życia</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {kategoria.cookies.map((cookie) => (
+                        <tr>
+                          <td data-label="Nazwa" set:html={cookie.nazwa} />
+                          <td data-label="Dostawca">{cookie.dostawca}</td>
+                          <td data-label="Cel">{cookie.cel}</td>
+                          <td data-label="Czas życia">{cookie.czas}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </>
+          ))}
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .zmien-ustawienia {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--sp-3) var(--sp-6);
+    margin-block: var(--sp-2) var(--sp-8);
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    font-weight: 500;
+    color: var(--text);
+    background-color: transparent;
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition:
+      border-color var(--dur) var(--ease),
+      color var(--dur) var(--ease);
+  }
+
+  .zmien-ustawienia:hover {
+    border-color: var(--gold);
+    color: var(--gold-bright);
+  }
+
+  .table-wrap {
+    margin-bottom: var(--sp-8);
+    overflow-x: auto;
+    border: 1px solid var(--hairline-soft);
+    border-radius: var(--radius);
+  }
+
+  table {
+    width: 100%;
+    min-width: 640px;
+    border-collapse: collapse;
+    font-size: var(--fs-small);
+  }
+
+  th {
+    padding: var(--sp-3) var(--sp-4);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+    text-align: left;
+    background-color: var(--bg-2);
+    white-space: nowrap;
+  }
+
+  td {
+    padding: var(--sp-3) var(--sp-4);
+    color: var(--text-2);
+    border-top: 1px solid var(--hairline-soft);
+    vertical-align: top;
+  }
+
+  td:first-child {
+    font-family: var(--font-mono);
+    color: var(--text);
+    white-space: nowrap;
+  }
+</style>
+
+<script>
+  const button = document.querySelector<HTMLButtonElement>(
+    "[data-open-consent-settings]"
+  );
+
+  button?.addEventListener("click", () => {
+    const openConsentSettings = (
+      window as unknown as { openConsentSettings?: () => void }
+    ).openConsentSettings;
+
+    if (typeof openConsentSettings === "function") {
+      openConsentSettings();
+    }
+  });
+</script>

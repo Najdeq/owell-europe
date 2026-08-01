@@ -1,0 +1,104 @@
+---
+import Container from "../ui/Container.astro";
+import Section from "../ui/Section.astro";
+import Eyebrow from "../ui/Eyebrow.astro";
+import { site } from "../../data/site.ts";
+
+const opinie = site.opinie;
+---
+
+{opinie.length > 0 && (
+  <Section bg="base">
+    <Container>
+      <Eyebrow>Opinie klientów</Eyebrow>
+      <h2 class="section-title">Co mówią kupujący</h2>
+
+      <div class="grid">
+        {opinie.map((o) => (
+          <article class="karta">
+            {o.zweryfikowany && <span class="badge">Zweryfikowany zakup</span>}
+            <p class="cytat">„{o.cytat}”</p>
+            <div class="meta">
+              <p class="autor">{o.autor}</p>
+              <p class="detale">{o.zrodlo} · {o.data}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </Container>
+  </Section>
+)}
+
+<style>
+  .section-title {
+    margin-top: var(--sp-4);
+    max-width: var(--maxw-prose);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-6);
+    margin-top: var(--sp-12);
+  }
+
+  .karta {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+    padding: var(--sp-6);
+    background-color: var(--bg-2);
+    border: 1px solid var(--hairline-soft);
+    border-radius: var(--radius-lg);
+  }
+
+  .badge {
+    align-self: flex-start;
+    padding: var(--sp-1) var(--sp-3);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--gold-bright);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-sm);
+  }
+
+  .cytat {
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--text);
+  }
+
+  .meta {
+    padding-top: var(--sp-3);
+    border-top: 1px solid var(--hairline-soft);
+  }
+
+  .autor {
+    font-size: var(--fs-small);
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .detale {
+    margin-top: var(--sp-1);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+  }
+
+  @media (min-width: 720px) {
+    .grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

@@ -1,0 +1,177 @@
+---
+import Container from "../ui/Container.astro";
+import Section from "../ui/Section.astro";
+import Eyebrow from "../ui/Eyebrow.astro";
+
+const liczby = [
+  {
+    target: 100000,
+    unit: "tys",
+    suffix: "+",
+    podpis: "sprzedanych urządzeń",
+  },
+  {
+    target: 4.8,
+    unit: "plain",
+    decimals: 1,
+    suffix: "",
+    podpis: "średnia ocena klientów",
+  },
+  {
+    target: 95000,
+    unit: "tys",
+    suffix: "+",
+    podpis: "obsłużonych zamówień",
+  },
+];
+
+function format(value: number, unit: string, decimals = 0, suffix = "") {
+  if (unit === "tys") {
+    return `${Math.floor(value / 1000)} tys.${suffix}`;
+  }
+  return `${value.toFixed(decimals)}${suffix}`;
+}
+---
+
+<Section bg="base">
+  <Container>
+    <Eyebrow>Liczby, nie obietnice</Eyebrow>
+    <h2 class="section-title">Owell w liczbach</h2>
+
+    <div class="grid" data-liczby>
+      {liczby.map((l) => (
+        <div class="liczba-item">
+          <p
+            class="liczba-wartosc"
+            data-liczba-wartosc
+            data-target={l.target}
+            data-unit={l.unit}
+            data-decimals={l.decimals ?? 0}
+            data-suffix={l.suffix}
+          >
+            {format(l.target, l.unit, l.decimals, l.suffix)}
+          </p>
+          <p class="liczba-podpis">{l.podpis}</p>
+        </div>
+      ))}
+    </div>
+  </Container>
+</Section>
+
+<style>
+  .section-title {
+    margin-top: var(--sp-4);
+    max-width: var(--maxw-prose);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-12);
+    margin-top: var(--sp-12);
+  }
+
+  .liczba-wartosc {
+    font-variant-numeric: tabular-nums;
+    font-family: var(--font-display);
+    font-size: clamp(2.25rem, 5vw, 3.5rem);
+    font-weight: 600;
+    line-height: var(--lh-tight);
+    letter-spacing: var(--tracking-display);
+    color: var(--gold-bright);
+  }
+
+  .liczba-podpis {
+    margin-top: var(--sp-3);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+  }
+
+  @media (min-width: 720px) {
+    .grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--sp-8);
+    }
+  }
+</style>
+
+<script>
+  const prefersReducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
+
+  const format = (
+    value: number,
+    unit: string,
+    decimals: number,
+    suffix: string
+  ) => {
+    if (unit === "tys") {
+      return `${Math.floor(value / 1000)} tys.${suffix}`;
+    }
+    return `${value.toFixed(decimals)}${suffix}`;
+  };
+
+  const animate = (el: HTMLElement) => {
+    const target = Number(el.dataset.target);
+    const unit = el.dataset.unit ?? "plain";
+    const decimals = Number(el.dataset.decimals ?? 0);
+    const suffix = el.dataset.suffix ?? "";
+
+    if (prefersReducedMotion) {
+      el.textContent = format(target, unit, decimals, suffix);
+      return;
+    }
+
+    const duration = 1400;
+    const start = performance.now();
+
+    const step = (now: number) => {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = format(target * eased, unit, decimals, suffix);
+
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      } else {
+        el.textContent = format(target, unit, decimals, suffix);
+      }
+    };
+
+    requestAnimationFrame(step);
+  };
+
+  const grid = document.querySelector<HTMLElement>("[data-liczby]");
+
+  if (grid) {
+    const items =
+      grid.querySelectorAll<HTMLElement>("[data-liczba-wartosc]");
+
+    const observer = new IntersectionObserver(
+      (entries, obs) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            animate(entry.target as HTMLElement);
+            obs.unobserve(entry.target);
+          }
+        }
+      },
+      { threshold: 0.4 }
+    );
+
+    items.forEach((el) => {
+      el.textContent = format(0, el.dataset.unit ?? "plain", 0, "");
+      observer.observe(el);
+    });
+  }
+</script>

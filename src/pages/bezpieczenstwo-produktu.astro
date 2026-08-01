@@ -1,0 +1,158 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import BreadcrumbSchema from "../components/BreadcrumbSchema.astro";
+import Container from "../components/ui/Container.astro";
+import Section from "../components/ui/Section.astro";
+import Prose from "../components/ui/Prose.astro";
+import { site } from "../data/site.ts";
+
+const produkty = (await getCollection("produkty", ({ data }) => data.opublikowany)).sort(
+  (a, b) => a.data.kolejnosc - b.data.kolejnosc
+);
+
+const breadcrumbs = [
+  { name: "Owell", path: "/" },
+  { name: "Bezpieczeństwo produktu", path: "/bezpieczenstwo-produktu" },
+];
+---
+
+<Base
+  title="Bezpieczeństwo produktu — Owell"
+  description="Dane producenta wymagane rozporządzeniem GPSR (UE) 2023/988, sposób zgłaszania problemów z bezpieczeństwem produktu oraz informacje o akcjach serwisowych."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title">Bezpieczeństwo produktu</h1>
+
+        <Prose>
+          <p>
+            Ta strona zawiera informacje wymagane Rozporządzeniem Parlamentu Europejskiego i Rady (UE) 2023/988 w sprawie
+            ogólnego bezpieczeństwa produktów (GPSR).
+          </p>
+
+          <h2>Podmiot odpowiedzialny za stronę</h2>
+          <p>
+            <strong>{site.firma.nazwaPelna}</strong><br />
+            {site.firma.adres}<br />
+            NIP: {site.firma.nip} · REGON: {site.firma.regon}<br />
+            E-mail w sprawach bezpieczeństwa produktów: <a href={`mailto:${site.kontakt.emailGpsr}`}>{site.kontakt.emailGpsr}</a>
+          </p>
+
+          <h2>Dane producentów poszczególnych produktów</h2>
+          <p>
+            Zgodnie z wymogami GPSR poniżej publikujemy dane identyfikacyjne producenta dla każdego produktu w ofercie.
+            Kolumna „Osoba odpowiedzialna w UE" jest wypełniona wyłącznie wtedy, gdy producent ma siedzibę poza Unią
+            Europejską.
+          </p>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Produkt</th>
+                  <th scope="col">Producent</th>
+                  <th scope="col">Adres</th>
+                  <th scope="col">E-mail</th>
+                  <th scope="col">Osoba odpowiedzialna w UE</th>
+                </tr>
+              </thead>
+              <tbody>
+                {produkty.map((p) => (
+                  <tr>
+                    <td data-label="Produkt">{p.data.nazwa} ({p.data.model})</td>
+                    <td data-label="Producent">{p.data.gpsr.producent}</td>
+                    <td data-label="Adres">{p.data.gpsr.adres}</td>
+                    <td data-label="E-mail">
+                      <a href={`mailto:${p.data.gpsr.emailProducenta}`}>{p.data.gpsr.emailProducenta}</a>
+                    </td>
+                    <td data-label="Osoba odpowiedzialna w UE">{p.data.gpsr.osobaOdpowiedzialnaUE ?? "—"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <h2>Jak zgłosić problem z bezpieczeństwem</h2>
+          <p>
+            Jeśli podejrzewasz, że któryś z naszych produktów stwarza zagrożenie dla zdrowia lub bezpieczeństwa, napisz na
+            adres <a href={`mailto:${site.kontakt.emailGpsr}`}>{site.kontakt.emailGpsr}</a>. W zgłoszeniu podaj:
+          </p>
+          <ul>
+            <li>nazwę i model produktu (np. z etykiety lub karty produktu na tej stronie),</li>
+            <li>opis zaobserwowanego problemu,</li>
+            <li>zdjęcia problemu, jeśli to możliwe,</li>
+            <li>swoje dane kontaktowe, abyśmy mogli się z Tobą skontaktować.</li>
+          </ul>
+          <p>
+            Jeżeli produkt stwarza poważne zagrożenie, producent i dystrybutorzy są zobowiązani zgłosić ten fakt właściwym
+            organom nadzoru rynku (w Polsce m.in. UOKiK) za pośrednictwem unijnego systemu Safety Gate.
+          </p>
+
+          <h2>Akcje serwisowe i wycofania z rynku</h2>
+          <p>[DO UZUPEŁNIENIA: informacja o aktualnych akcjach serwisowych lub wycofaniach produktów z rynku, jeśli takie mają miejsce].</p>
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .table-wrap {
+    margin-bottom: var(--sp-8);
+    overflow-x: auto;
+    border: 1px solid var(--hairline-soft);
+    border-radius: var(--radius);
+  }
+
+  table {
+    width: 100%;
+    min-width: 760px;
+    border-collapse: collapse;
+    font-size: var(--fs-small);
+  }
+
+  th {
+    padding: var(--sp-3) var(--sp-4);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+    text-align: left;
+    background-color: var(--bg-2);
+    white-space: nowrap;
+  }
+
+  td {
+    padding: var(--sp-3) var(--sp-4);
+    color: var(--text-2);
+    border-top: 1px solid var(--hairline-soft);
+    vertical-align: top;
+  }
+
+  td:first-child {
+    color: var(--text);
+    font-weight: 500;
+  }
+</style>

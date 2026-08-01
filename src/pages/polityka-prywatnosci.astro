@@ -1,0 +1,131 @@
+---
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import BreadcrumbSchema from "../components/BreadcrumbSchema.astro";
+import Container from "../components/ui/Container.astro";
+import Section from "../components/ui/Section.astro";
+import Prose from "../components/ui/Prose.astro";
+import { site } from "../data/site.ts";
+
+const breadcrumbs = [
+  { name: "Owell", path: "/" },
+  { name: "Polityka prywatności", path: "/polityka-prywatnosci" },
+];
+---
+
+<Base
+  title="Polityka prywatności — Owell"
+  description="Zasady przetwarzania danych osobowych na stronie Owell: administrator, cele, podstawy prawne, odbiorcy danych i prawa osoby, której dane dotyczą."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title">Polityka prywatności</h1>
+
+        <Prose>
+          <h2>Administrator danych</h2>
+          <p>
+            Administratorem danych osobowych przetwarzanych w związku z korzystaniem z tej strony jest{" "}
+            <strong>{site.firma.nazwaPelna}</strong>, {site.firma.adres}, NIP: {site.firma.nip}, REGON: {site.firma.regon}.
+            Kontakt w sprawach dotyczących ochrony danych: <a href={`mailto:${site.kontakt.email}`}>{site.kontakt.email}</a>.
+          </p>
+
+          <h2>Cele i podstawy przetwarzania</h2>
+          <p>Dane osobowe przetwarzamy w następujących celach:</p>
+          <ul>
+            <li>
+              <strong>Obsługa korespondencji i zgłoszeń</strong> (formularz kontaktowy, e-mail) — podstawa: art. 6 ust. 1 lit. b RODO
+              (podjęcie działań przed zawarciem umowy / w związku z zapytaniem) lub lit. f RODO (prawnie uzasadniony interes
+              polegający na udzieleniu odpowiedzi).
+            </li>
+            <li>
+              <strong>Obsługa reklamacji i zgłoszeń serwisowych</strong> — podstawa: art. 6 ust. 1 lit. c RODO (obowiązek prawny
+              wynikający z przepisów o rękojmi i gwarancji) oraz lit. b RODO.
+            </li>
+            <li>
+              <strong>Statystyki odwiedzin strony</strong> (Google Analytics) — wyłącznie po wyrażeniu zgody w banerze cookies,
+              podstawa: art. 6 ust. 1 lit. a RODO. Szczegóły w{" "}
+              <a href="/cookies">polityce cookies</a>.
+            </li>
+            <li>
+              <strong>Zapewnienie bezpieczeństwa i prawidłowego działania strony</strong> (logi serwera hostingowego) — podstawa:
+              art. 6 ust. 1 lit. f RODO (prawnie uzasadniony interes administratora).
+            </li>
+          </ul>
+          <p>Nie profilujemy użytkowników ani nie podejmujemy wobec nich zautomatyzowanych decyzji wywołujących skutki prawne.</p>
+
+          <h2>Okres przechowywania danych</h2>
+          <ul>
+            <li>Dane z korespondencji i zgłoszeń — przez okres [DO UZUPEŁNIENIA: okres przechowywania korespondencji].</li>
+            <li>
+              Dane związane z reklamacją lub gwarancją — przez okres niezbędny do jej rozpatrzenia, a następnie przez okres
+              przedawnienia roszczeń.
+            </li>
+            <li>Dane wynikające z przepisów podatkowo-księgowych — przez okres wymagany tymi przepisami.</li>
+            <li>Pliki cookies — zgodnie z czasem życia wskazanym w <a href="/cookies">polityce cookies</a>.</li>
+          </ul>
+
+          <h2>Odbiorcy danych</h2>
+          <p>Dane mogą być przekazywane następującym kategoriom odbiorców:</p>
+          <ul>
+            <li>
+              <strong>Cloudflare</strong> — dostawca hostingu i infrastruktury CDN, na której działa strona.
+            </li>
+            <li>
+              <strong>Google</strong> — dostawca narzędzia analitycznego Google Analytics, wykorzystywanego wyłącznie po
+              wyrażeniu zgody na cookies analityczne.
+            </li>
+            <li>[DO UZUPEŁNIENIA: inni dostawcy, jeśli dotyczy — np. obsługa poczty e-mail, systemu zgłoszeń serwisowych].</li>
+          </ul>
+          <p>
+            Część z wymienionych dostawców może przetwarzać dane poza Europejskim Obszarem Gospodarczym. W takich przypadkach
+            przekazanie odbywa się w oparciu o standardowe klauzule umowne zatwierdzone przez Komisję Europejską lub inny
+            mechanizm zgodny z RODO.
+          </p>
+
+          <h2>Prawa osoby, której dane dotyczą</h2>
+          <p>Przysługuje Ci prawo do:</p>
+          <ul>
+            <li>dostępu do swoich danych oraz otrzymania ich kopii,</li>
+            <li>sprostowania (poprawienia) danych,</li>
+            <li>usunięcia danych,</li>
+            <li>ograniczenia przetwarzania,</li>
+            <li>przenoszenia danych,</li>
+            <li>wniesienia sprzeciwu wobec przetwarzania opartego na art. 6 ust. 1 lit. f RODO,</li>
+            <li>cofnięcia zgody w dowolnym momencie, bez wpływu na zgodność z prawem przetwarzania dokonanego przed jej cofnięciem,</li>
+            <li>
+              wniesienia skargi do Prezesa Urzędu Ochrony Danych Osobowych, jeśli uznasz, że przetwarzanie narusza przepisy
+              RODO.
+            </li>
+          </ul>
+
+          <h2>Kontakt</h2>
+          <p>
+            W sprawach dotyczących przetwarzania danych osobowych możesz skontaktować się z nami pod adresem{" "}
+            <a href={`mailto:${site.kontakt.email}`}>{site.kontakt.email}</a>.
+          </p>
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+</style>

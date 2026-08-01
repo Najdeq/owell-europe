@@ -1,0 +1,305 @@
+---
+import { Image } from "astro:assets";
+import Container from "./ui/Container.astro";
+import Button from "./ui/Button.astro";
+import ThemeToggle from "./ui/ThemeToggle.astro";
+import logoDark from "../assets/marka/logo-light.png";
+import logoLight from "../assets/marka/logo-transparent.png";
+
+const menu = [
+  { label: "Produkty", href: "/produkty" },
+  { label: "Marka", href: "/marka" },
+  { label: "Wsparcie", href: "/wsparcie" },
+  { label: "Gdzie kupić", href: "/gdzie-kupic" },
+  { label: "Kontakt", href: "/kontakt" },
+];
+---
+
+<header class="header" data-header>
+  <Container class="header-inner">
+    <a href="/" class="logo" aria-label="Owell — strona główna">
+      <Image src={logoDark} alt="Owell" class="logo-mark logo-mark-dark" width={138} height={40} />
+      <Image src={logoLight} alt="Owell" class="logo-mark logo-mark-light" width={138} height={40} />
+    </a>
+
+    <nav class="nav-desktop" aria-label="Główna nawigacja">
+      <ul>
+        {menu.map((item) => (
+          <li>
+            <a href={item.href}>{item.label}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="header-cta">
+      <Button href="/gdzie-kupic" variant="primary">Gdzie kupić</Button>
+    </div>
+
+    <div class="header-actions">
+      <ThemeToggle />
+
+      <button
+        type="button"
+        class="hamburger"
+        data-menu-toggle
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        aria-label="Otwórz menu"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </Container>
+</header>
+
+<div id="mobile-menu" class="mobile-menu" data-mobile-menu hidden>
+  <nav aria-label="Menu mobilne">
+    <ul>
+      {menu.map((item) => (
+        <li>
+          <a href={item.href}>{item.label}</a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+  <div class="mobile-cta">
+    <Button href="/gdzie-kupic" variant="primary">Gdzie kupić</Button>
+  </div>
+</div>
+
+<style>
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background-color: var(--bg-0-scrim);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  :global(.header-inner) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-6);
+    padding-block: var(--sp-4);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    text-decoration: none;
+    color: var(--text);
+  }
+
+  .logo-mark {
+    height: 36px;
+    width: auto;
+  }
+
+  .logo-mark-light {
+    display: none;
+  }
+
+  :global(html[data-theme="light"]) .logo-mark-dark {
+    display: none;
+  }
+
+  :global(html[data-theme="light"]) .logo-mark-light {
+    display: block;
+  }
+
+  .nav-desktop ul {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-8);
+    list-style: none;
+  }
+
+  .nav-desktop a {
+    font-size: var(--fs-small);
+    font-weight: 500;
+    color: var(--text-2);
+    text-decoration: none;
+    transition: color var(--dur) var(--ease);
+  }
+
+  .nav-desktop a:hover {
+    color: var(--gold-bright);
+  }
+
+  .header-cta {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-4);
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+  }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+
+  .hamburger span {
+    display: block;
+    height: 2px;
+    background-color: var(--text);
+    border-radius: var(--radius-sm);
+    transition:
+      transform var(--dur) var(--ease),
+      opacity var(--dur) var(--ease);
+  }
+
+  .hamburger[aria-expanded="true"] span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+
+  .hamburger[aria-expanded="true"] span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .hamburger[aria-expanded="true"] span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    top: var(--header-h, 65px);
+    z-index: 49;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: var(--sp-8) var(--gutter);
+    background-color: var(--bg-0);
+    overflow-y: auto;
+  }
+
+  .mobile-menu ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-6);
+    list-style: none;
+  }
+
+  .mobile-menu a {
+    font-family: var(--font-display);
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .mobile-menu a:hover {
+    color: var(--gold-bright);
+  }
+
+  .mobile-cta {
+    padding-top: var(--sp-8);
+  }
+
+  .mobile-cta :global(.btn) {
+    width: 100%;
+  }
+
+  @media (max-width: 860px) {
+    .nav-desktop,
+    .header-cta {
+      display: none;
+    }
+
+    .hamburger {
+      display: flex;
+    }
+  }
+</style>
+
+<script>
+  const header = document.querySelector<HTMLElement>("[data-header]");
+  const toggle = document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
+  const menu = document.querySelector<HTMLElement>("[data-mobile-menu]");
+
+  const syncHeaderHeight = () => {
+    if (!header) return;
+    document.documentElement.style.setProperty(
+      "--header-h",
+      `${header.offsetHeight}px`
+    );
+  };
+
+  syncHeaderHeight();
+  window.addEventListener("resize", syncHeaderHeight);
+
+  if (toggle && menu) {
+    const focusableSelector =
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+    const openMenu = () => {
+      menu.hidden = false;
+      toggle.setAttribute("aria-expanded", "true");
+      toggle.setAttribute("aria-label", "Zamknij menu");
+      document.body.style.overflow = "hidden";
+      const first = menu.querySelector<HTMLElement>(focusableSelector);
+      first?.focus();
+    };
+
+    const closeMenu = ({ returnFocus = true } = {}) => {
+      menu.hidden = true;
+      toggle.setAttribute("aria-expanded", "false");
+      toggle.setAttribute("aria-label", "Otwórz menu");
+      document.body.style.overflow = "";
+      if (returnFocus) toggle.focus();
+    };
+
+    toggle.addEventListener("click", () => {
+      const isOpen = toggle.getAttribute("aria-expanded") === "true";
+      if (isOpen) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    });
+
+    menu.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        closeMenu();
+        return;
+      }
+
+      if (event.key !== "Tab") return;
+
+      const focusable = Array.from(
+        menu.querySelectorAll<HTMLElement>(focusableSelector)
+      );
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
+  }
+</script>

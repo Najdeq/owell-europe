@@ -18,6 +18,7 @@
   --bg-1: #171613;   /* sekcje naprzemienne, stopka */
   --bg-2: #1F1E1A;   /* karty, panele */
   --bg-3: #2A2925;   /* karta w stanie hover, elementy podniesione */
+  --bg-0-scrim: rgba(15, 14, 12, 0.72);   /* --bg-0 z przezroczystością — sticky header z backdrop-blur */
 
   /* ------------------------------------------------------------------
      AKCENT CIEPŁY — złoto
@@ -43,6 +44,20 @@
   --text: #F3F0E9;         /* akapity, nagłówki — ciepła biel, nie #FFF */
   --text-2: #A9A49A;       /* opisy, tekst drugorzędny */
   --text-muted: #878179;   /* metadane, podpisy — patrz uwaga o kontraście */
+
+  /* ------------------------------------------------------------------
+     ZŁOTO NA POWIERZCHNIACH — przyciski, wyraźne obwódki, ikony liniowe.
+     Osobne od --gold, bo w jasnym motywie tekst i wypełnienia potrzebują
+     innej jasności złota, żeby obie role zachowały kontrast AA.
+     ------------------------------------------------------------------ */
+  --gold-surface: var(--gold);
+  --gold-surface-hover: var(--gold-bright);
+  --ink-on-gold: var(--bg-0);   /* tekst/ikony na złotym tle */
+
+  /* Tło pod zdjęciami produktowymi (packshoty na białym tle). W ciemnym
+     motywie potrzebują jasnego "podkładu", w jasnym motywie strona sama
+     w sobie już nim jest. */
+  --photo-bg: var(--text);
 
   /* ------------------------------------------------------------------
      LINIE I STANY
@@ -136,6 +151,52 @@
 }
 
 /* ==========================================================================
+   MOTYW JASNY — nadpisanie tokenów przez [data-theme="light"] na <html>.
+   Atrybut ustawia blokujący skrypt w Base.astro (przed pierwszym malowaniem,
+   żeby uniknąć mignięcia złego motywu). Domyślnie strona jest ciemna —
+   to świadoma decyzja marki, jasny motyw to opcja, nie punkt wyjścia.
+
+   Te same zasady co w ciemnym motywie: baza nie jest czystą bielą (ciepła
+   kość słoniowa, nie #FFF), złoto to biżuteria, nie farba, stal to drugi
+   materiał. Wartości kontrastu przeliczone niżej w bloku dokumentacji.
+   ========================================================================== */
+
+:root[data-theme="light"] {
+  --bg-0: #FAF7F1;
+  --bg-1: #F1ECE1;
+  --bg-2: #E9E2D2;
+  --bg-3: #DED3BC;
+  --bg-0-scrim: rgba(250, 247, 241, 0.72);
+
+  --gold: #7C6119;         /* tekst/linki — ciemniejsze złoto, czytelne na jasnym tle */
+  --gold-bright: #5E4A12;  /* hover, focus ring */
+  --gold-deep: #C9A227;    /* dawny "vivid" gold — teraz tylko dekoracyjnie */
+
+  --gold-surface: #C9A227;        /* wypełnienia przycisków, żywe złoto */
+  --gold-surface-hover: #B8912A;
+  --ink-on-gold: #1F1706;         /* tekst na złotym tle — NIE --bg-0, bo w jasnym motywie --bg-0 jest jasne */
+  --photo-bg: var(--bg-2);        /* strona sama jest jasna — zdjęcia dostają tylko lekkie wybicie karty */
+
+  --steel: #46586A;
+  --steel-dim: #2E3A46;
+
+  --text: #1E1B14;
+  --text-2: #4A4436;
+  --text-muted: #6B6452;   /* tylko na --bg-0 / --bg-1, patrz uwaga o kontraście */
+
+  --hairline: rgba(124, 97, 25, 0.28);
+  --hairline-soft: rgba(30, 27, 20, 0.08);
+  --error: #B3261E;
+  --success: #2E7D4F;
+
+  --rim: radial-gradient(
+    620px circle at var(--rim-x) var(--rim-y),
+    rgba(124, 97, 25, 0.1),
+    transparent 62%
+  );
+}
+
+/* ==========================================================================
    MAPOWANIE NA TAILWIND v4
    Skopiuj ten blok do src/styles/global.css POD importem tokens.css.
    Dzięki temu działają klasy typu bg-bg-2, text-gold, font-display.
@@ -194,4 +255,40 @@
    poniżej AA — pilnuj go.
 
    Uwaga: kontrast nie zaokrągla się w górę. 4.47:1 to porażka, nie "prawie".
+   ========================================================================== */
+
+/* ==========================================================================
+   KONTRAST WCAG — MOTYW JASNY [data-theme="light"]
+   Ta sama metoda liczenia co wyżej. --gold w jasnym motywie to CELOWO inny
+   (ciemniejszy) odcień niż --gold-surface — jeden musi działać jako tekst
+   na jasnym tle, drugi jako wypełnienie przycisku pod --ink-on-gold.
+   ==========================================================================
+
+   NA TLE --bg-0 (#FAF7F1):
+     --text        #1E1B14   16.1:1   ✅ AAA
+     --text-2      #4A4436    9.0:1   ✅ AAA
+     --text-muted  #6B6452    5.5:1   ✅ AA
+     --gold        #7C6119    5.5:1   ✅ AA
+     --gold-bright #5E4A12    8.0:1   ✅ AAA
+     --steel       #46586A    6.9:1   ✅ AA (blisko AAA)
+
+   NA TLE --bg-2 (#E9E2D2) — karty i panele:
+     --text        #1E1B14   13.3:1   ✅ AAA
+     --text-2      #4A4436    7.5:1   ✅ AAA
+     --text-muted  #6B6452    4.6:1   ✅ AA (na granicy — nie schodź niżej)
+     --gold        #7C6119    4.5:1   ✅ AA (na granicy)
+     --steel       #46586A    5.7:1   ✅ AA
+
+   NA TLE --bg-3 (#DED3BC) — karta w hover:
+     --text-muted  #6B6452    4.0:1   ⚠️  NIE przechodzi AA — użyj --text-2
+     --gold        #7C6119    4.0:1   ⚠️  NIE przechodzi AA — użyj --gold-bright (5.7:1)
+
+   --ink-on-gold (#1F1706) na --gold-surface (#C9A227): 7.3:1  ✅ AAA
+
+   ⚠️ PUŁAPKI W TYM MOTYWIE:
+   1. --text-muted i bazowe --gold (jako kolor tekstu) działają tylko na
+      --bg-0 i --bg-1. Na kartach (--bg-2) są na granicy AA — na --bg-3
+      (stan hover) już nie przechodzą. Użyj wtedy --text-2 / --gold-bright.
+   2. --gold-surface / --ink-on-gold to PARA — używaj ich razem (tło + tekst
+      na tym tle), nigdy --gold-surface jako koloru tekstu wprost.
    ========================================================================== */

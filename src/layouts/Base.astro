@@ -1,5 +1,8 @@
 ---
 import "../styles/global.css";
+import ConsentBanner from "../components/ConsentBanner.astro";
+import Analytics from "../components/Analytics.astro";
+import { site } from "../data/site.ts";
 
 interface Props {
   title: string;
@@ -14,15 +17,84 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const resolvedOgImage = ogImage
   ? new URL(ogImage, Astro.site)
   : new URL("/og-default.jpg", Astro.site);
+
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: site.nazwa,
+  legalName: site.firma.nazwaPelna,
+  url: Astro.site?.toString(),
+  logo: new URL("/logo.png", Astro.site).toString(),
+  email: site.kontakt.email,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: site.firma.adres,
+  },
+  ...(site.sameAs.length > 0 ? { sameAs: site.sameAs } : {}),
+};
 ---
 
 <!doctype html>
 <html lang="pl">
   <head>
+    <!--
+      Google Consent Mode v2 — musi wykonać się PRZED jakimkolwiek skryptem
+      Google (GA4 jest wstrzykiwany dynamicznie dopiero po zgodzie, patrz
+      ConsentBanner.astro). Domyślnie wszystko "denied".
+    -->
+    <script is:inline>
+      (function () {
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+          dataLayer.push(arguments);
+        }
+        window.gtag = gtag;
+
+        gtag("consent", "default", {
+          ad_storage: "denied",
+          analytics_storage: "denied",
+          ad_user_data: "denied",
+          ad_personalization: "denied",
+          personalization_storage: "denied",
+          wait_for_update: 500,
+        });
+
+        try {
+          var raw = localStorage.getItem("owell-consent");
+          if (raw) {
+            var saved = JSON.parse(raw);
+            if (saved && saved.version === 1) {
+              gtag("consent", "update", {
+                analytics_storage: saved.analytics ? "granted" : "denied",
+                ad_storage: saved.marketing ? "granted" : "denied",
+                ad_user_data: saved.marketing ? "granted" : "denied",
+                ad_personalization: saved.marketing ? "granted" : "denied",
+                personalization_storage: saved.marketing ? "granted" : "denied",
+              });
+            }
+          }
+        } catch (e) {}
+      })();
+    </script>
+
+    <script is:inline>
+      (function () {
+        try {
+          var saved = localStorage.getItem("owell-theme");
+          if (saved === "light") {
+            document.documentElement.setAttribute("data-theme", "light");
+            var meta = document.getElementById("theme-color-meta");
+            if (meta) meta.setAttribute("content", "#FAF7F1");
+          }
+        } catch (e) {}
+      })();
+    </script>
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#0F0E0C" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta id="theme-color-meta" name="theme-color" content="#0F0E0C" />
+    <link rel="icon" type="image/png" href="/favicon-32.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="canonical" href={canonicalURL} />
 
     {noindex && <meta name="robots" content="noindex, nofollow" />}
@@ -46,12 +118,17 @@ const resolvedOgImage = ogImage
 
     <meta name="generator" content={Astro.generator} />
 
+    <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
+
     <slot name="head" />
   </head>
   <body>
     <a href="#content" class="skip-link">Przejdź do treści</a>
 
     <slot />
+
+    <ConsentBanner />
+    <Analytics />
   </body>
 </html>
 
@@ -62,8 +139,8 @@ const resolvedOgImage = ogImage
     left: var(--sp-4);
     z-index: 100;
     padding: var(--sp-3) var(--sp-6);
-    background-color: var(--gold);
-    color: var(--bg-0);
+    background-color: var(--gold-surface);
+    color: var(--ink-on-gold);
     font-family: var(--font-mono);
     font-size: var(--fs-small);
     text-transform: uppercase;

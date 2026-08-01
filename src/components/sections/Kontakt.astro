@@ -1,0 +1,77 @@
+---
+import Container from "../ui/Container.astro";
+import Section from "../ui/Section.astro";
+import Button from "../ui/Button.astro";
+import Eyebrow from "../ui/Eyebrow.astro";
+import { site } from "../../data/site.ts";
+---
+
+<Section bg="raised">
+  <Container>
+    <Eyebrow>Kontakt</Eyebrow>
+    <h2 class="section-title">Masz pytanie?</h2>
+
+    <div class="grid">
+      <div class="kontakt-item">
+        <p class="kontakt-etykieta">Zapytania ogólne</p>
+        <a href={`mailto:${site.kontakt.email}`} class="kontakt-email">{site.kontakt.email}</a>
+      </div>
+
+      <div class="kontakt-item">
+        <p class="kontakt-etykieta">Serwis i reklamacje</p>
+        <a href={`mailto:${site.kontakt.emailSerwis}`} class="kontakt-email">{site.kontakt.emailSerwis}</a>
+      </div>
+
+      <div class="kontakt-item">
+        <p class="kontakt-etykieta">Formularz kontaktowy</p>
+        <Button href="/kontakt" variant="ghost">Napisz do nas</Button>
+      </div>
+    </div>
+  </Container>
+</Section>
+
+<style>
+  .section-title {
+    margin-top: var(--sp-4);
+    max-width: var(--maxw-prose);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-8);
+    margin-top: var(--sp-12);
+  }
+
+  .kontakt-etykieta {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+  }
+
+  .kontakt-email {
+    display: inline-block;
+    margin-top: var(--sp-3);
+    font-size: var(--fs-lead);
+    color: var(--gold);
+    text-decoration: none;
+  }
+
+  .kontakt-email:hover {
+    color: var(--gold-bright);
+  }
+
+  @media (min-width: 720px) {
+    .grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

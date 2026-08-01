@@ -1,0 +1,93 @@
+---
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import BreadcrumbSchema from "../components/BreadcrumbSchema.astro";
+import Container from "../components/ui/Container.astro";
+import Section from "../components/ui/Section.astro";
+import Prose from "../components/ui/Prose.astro";
+import { site } from "../data/site.ts";
+
+const breadcrumbs = [
+  { name: "Owell", path: "/" },
+  { name: "Deklaracja dostępności", path: "/deklaracja-dostepnosci" },
+];
+---
+
+<Base
+  title="Deklaracja dostępności — Owell"
+  description="Deklaracja dostępności strony Owell: deklarowany poziom zgodności z WCAG 2.2 AA, metoda oceny i znane ograniczenia."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title">Deklaracja dostępności</h1>
+
+        <Prose>
+          <p>
+            {site.firma.nazwaPelna} dokłada starań, aby strona internetowa Owell była dostępna dla jak najszerszego grona
+            użytkowników, w tym osób z niepełnosprawnościami, zgodnie z wymogami Ustawy z dnia 4 kwietnia 2019 r. o
+            dostępności cyfrowej stron internetowych i aplikacji mobilnych podmiotów publicznych oraz Europejskiego Aktu o
+            Dostępności (EAA).
+          </p>
+
+          <h2>Status zgodności</h2>
+          <p>
+            Strona jest <strong>częściowo zgodna</strong> ze standardem{" "}
+            <strong>WCAG 2.2 na poziomie AA</strong>. Dążymy do pełnej zgodności i traktujemy dostępność jako wymóg
+            projektowy, nie dodatek na końcu procesu.
+          </p>
+
+          <h2>Data sporządzenia i metoda oceny</h2>
+          <p>Deklarację sporządzono dnia [DO UZUPEŁNIENIA: data sporządzenia deklaracji].</p>
+          <p>
+            Ocenę zgodności przeprowadzono metodą <strong>samooceny</strong> — analizy przeprowadzonej samodzielnie przez
+            zespół odpowiedzialny za stronę, bez udziału zewnętrznego audytora.
+          </p>
+
+          <h2>Znane ograniczenia</h2>
+          <p>Uczciwie informujemy o obszarach, które w momencie publikacji tej deklaracji nie są jeszcze w pełni gotowe:</p>
+          <ul>
+            <li>Część podstron wskazanych w menu i stopce jest obecnie w budowie i może zwracać błąd 404.</li>
+            <li>Dostępność cyfrowa instrukcji obsługi w formacie PDF, dołączanych do kart produktów, nie została jeszcze zweryfikowana.</li>
+            <li>[DO UZUPEŁNIENIA: inne znane ograniczenia, jeśli zostaną zidentyfikowane].</li>
+          </ul>
+
+          <h2>Procedura wnioskowo-skargowa</h2>
+          <p>
+            Jeżeli napotkasz na stronie problem z dostępnością — np. element, którego nie da się obsłużyć z klawiatury, brak
+            opisu alternatywnego obrazka czy niewystarczający kontrast — daj nam znać. Masz prawo zgłosić żądanie
+            zapewnienia dostępności cyfrowej strony lub jej elementu. Jeżeli nie odpowiemy w ustawowym terminie albo odmowa
+            zapewnienia dostępności będzie nieuzasadniona, przysługuje Ci prawo złożenia skargi do organu nadzorującego, a w
+            dalszej kolejności — skargi do Rzecznika Praw Obywatelskich.
+          </p>
+
+          <h2>Kontakt</h2>
+          <p>
+            Problemy z dostępnością zgłaszaj na adres <a href={`mailto:${site.kontakt.email}`}>{site.kontakt.email}</a>.
+            Postaramy się odpowiedzieć i usunąć zgłoszony problem najszybciej, jak to możliwe.
+          </p>
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+</style>

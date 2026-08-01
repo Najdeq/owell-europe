@@ -1,0 +1,91 @@
+---
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import BreadcrumbSchema from "../components/BreadcrumbSchema.astro";
+import Container from "../components/ui/Container.astro";
+import Section from "../components/ui/Section.astro";
+import Prose from "../components/ui/Prose.astro";
+import { site } from "../data/site.ts";
+
+const breadcrumbs = [
+  { name: "Owell", path: "/" },
+  { name: "FAQ", path: "/faq" },
+];
+
+const pytania = [
+  {
+    pytanie: "Gdzie mogę kupić produkty Owell?",
+    odpowiedz: `Wszystkie produkty kupisz przez nasz sklep internetowy. Nie prowadzimy sprzedaży stacjonarnej ani innych kanałów — link do sklepu znajdziesz w sekcji „Gdzie kupić” na stronie głównej i w stopce.`,
+  },
+  {
+    pytanie: "Ile trwa gwarancja i co obejmuje?",
+    odpowiedz: `${site.gwarancjaMiesiace} miesiące od daty zakupu. Gwarancja obejmuje wady materiałowe i produkcyjne — nie obejmuje uszkodzeń mechanicznych powstałych z winy użytkownika.`,
+  },
+  {
+    pytanie: "Jak zgłosić reklamację?",
+    odpowiedz: `Napisz na ${site.kontakt.emailSerwis}. W zgłoszeniu podaj model produktu, numer zamówienia i opis usterki — zdjęcia lub krótkie wideo przyspieszają rozpatrzenie sprawy.`,
+  },
+  {
+    pytanie: "Gdzie znajdę instrukcję obsługi?",
+    odpowiedz: `Instrukcja w formacie PDF jest dostępna na stronie każdego produktu. Jeśli jej tam nie znajdziesz, napisz do nas — wyślemy ją mailem.`,
+  },
+  {
+    pytanie: "Czy dostępne są części zamienne?",
+    odpowiedz: `To zależy od modelu. Napisz na ${site.kontakt.emailSerwis} z nazwą produktu i opisem potrzebnej części — sprawdzimy dostępność indywidualnie.`,
+  },
+  {
+    pytanie: "Jak działa serwis?",
+    odpowiedz: `Zgłoszenia przyjmujemy mailowo, bez infolinii. Odpowiadamy w ciągu 24 godzin roboczych i prowadzimy sprawę do końca — bez przekierowywania do innych działów.`,
+  },
+  {
+    pytanie: "Jak wygląda dostawa?",
+    odpowiedz: `Zamówienia złożone do 18:30 wysyłamy tego samego dnia, z gwarancją dostawy InPostem. Dokładny czas i koszt dostawy zobaczysz w sklepie przy składaniu zamówienia — zależą od wybranej metody wysyłki.`,
+  },
+  {
+    pytanie: "Jak się z Wami skontaktować?",
+    odpowiedz: `W sprawach ogólnych: ${site.kontakt.email}. W sprawach serwisowych i reklamacyjnych: ${site.kontakt.emailSerwis}.`,
+  },
+];
+---
+
+<Base
+  title="FAQ — Owell"
+  description="Odpowiedzi na najczęstsze pytania: gdzie kupić, jak działa gwarancja, jak zgłosić reklamację i skontaktować się z serwisem."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title">Najczęstsze pytania</h1>
+
+        <Prose>
+          {pytania.map((p) => (
+            <>
+              <h2>{p.pytanie}</h2>
+              <p>{p.odpowiedz}</p>
+            </>
+          ))}
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+</style>
