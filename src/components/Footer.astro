@@ -32,13 +32,19 @@ const prawne = [
         </a>
         <p class="tagline">{site.tagline}</p>
 
+        {/* Dopóki sklep nie wystartował (site.sklep === null), zamiast martwego
+            linku prowadzimy na /gdzie-kupic, gdzie stoi uczciwe wyjaśnienie. */}
         <a
-          href={site.sklep}
-          target="_blank"
-          rel="noopener noreferrer"
-          data-marketplace="sklep"
-          data-platforma="Sklep internetowy"
-          data-lokalizacja="stopka"
+          href={site.sklep ?? "/gdzie-kupic"}
+          {...(site.sklep
+            ? {
+                target: "_blank",
+                rel: "noopener noreferrer",
+                "data-marketplace": "sklep",
+                "data-platforma": "Sklep internetowy",
+                "data-lokalizacja": "stopka",
+              }
+            : {})}
           class="marketplace-link"
         >
           <svg
@@ -53,7 +59,7 @@ const prawne = [
             <path d="M4 8.5h16v10.5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8.5Z" stroke-linecap="round" stroke-linejoin="round" />
             <path d="M9 12a3 3 0 0 0 6 0" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
-          <span>Sklep internetowy</span>
+          <span>{site.sklep ? "Sklep internetowy" : "Gdzie kupić"}</span>
         </a>
       </div>
 

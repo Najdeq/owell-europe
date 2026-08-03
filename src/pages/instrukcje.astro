@@ -29,8 +29,16 @@ const breadcrumbs = [
 
         <Prose>
           <p>
-            Instrukcja obsługi w formacie PDF jest dostępna na stronie każdego produktu w naszym{" "}
-            <a href={site.sklep} target="_blank" rel="noopener noreferrer">sklepie internetowym</a>.
+            {site.sklep ? (
+              <Fragment>
+                Instrukcja obsługi w formacie PDF jest dostępna na stronie każdego produktu w naszym{" "}
+                <a href={site.sklep} target="_blank" rel="noopener noreferrer">sklepie internetowym</a>.
+              </Fragment>
+            ) : (
+              <Fragment>
+                Instrukcja obsługi w formacie PDF jest dołączona do każdego produktu w opakowaniu.
+              </Fragment>
+            )}
           </p>
           <p>
             Jeśli nie możesz znaleźć instrukcji dla swojego modelu, napisz do nas na{" "}

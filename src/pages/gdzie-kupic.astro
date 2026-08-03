@@ -13,9 +13,13 @@ const breadcrumbs = [
   { name: "Gdzie kupić", path: "/gdzie-kupic" },
 ];
 
+// Obietnica o wysyłce dotyczy działającego sklepu — dopóki nie wystartował,
+// nie deklarujemy jej w czasie teraźniejszym.
 const punkty = [
   `${site.gwarancjaMiesiace} miesięcy gwarancji na każdy produkt, bez wyjątków.`,
-  "Zamówienia złożone do 18:30 wysyłamy tego samego dnia, z gwarancją dostawy InPostem.",
+  site.sklep
+    ? "Zamówienia złożone do 18:30 wysyłamy tego samego dnia, z gwarancją dostawy InPostem."
+    : "Zamówienia złożone do 18:30 będziemy wysyłać tego samego dnia, z gwarancją dostawy InPostem.",
   "Pełna karta GPSR i dane producenta przy każdym modelu.",
 ];
 ---
@@ -33,23 +37,52 @@ const punkty = [
       <Container>
         <h1 class="page-title" data-reveal>Gdzie kupić</h1>
         <p class="page-lead" data-reveal data-reveal-delay="80">
-          Sprzedajemy wyłącznie przez nasz oficjalny sklep internetowy — bez sieci salonów stacjonarnych i bez
-          sprzedaży przez marketplace'y. To jedyny kanał, w którym możemy zagwarantować oryginalność produktu, pełną
-          kartę gwarancyjną i wsparcie serwisowe.
+          {site.sklep
+            ? `Sprzedajemy wyłącznie przez nasz oficjalny sklep internetowy — bez sieci salonów stacjonarnych i bez
+               sprzedaży przez marketplace'y. To jedyny kanał, w którym możemy zagwarantować oryginalność produktu,
+               pełną kartę gwarancyjną i wsparcie serwisowe.`
+            : `Będziemy sprzedawać wyłącznie przez własny sklep internetowy — bez sieci salonów stacjonarnych i bez
+               marketplace'ów. To jedyny kanał, w którym możemy zagwarantować oryginalność produktu, pełną kartę
+               gwarancyjną i wsparcie serwisowe.`}
         </p>
 
-        <div class="cta">
-          <Button
-            href={site.sklep}
-            variant="primary"
-            external
-            data-marketplace="sklep"
-            data-platforma="Sklep internetowy"
-            data-lokalizacja="strona-gdzie-kupic"
-          >
-            Przejdź do sklepu
-          </Button>
-        </div>
+        {site.sklep ? (
+          <div class="cta">
+            <Button
+              href={site.sklep}
+              variant="primary"
+              external
+              data-marketplace="sklep"
+              data-platforma="Sklep internetowy"
+              data-lokalizacja="strona-gdzie-kupic"
+            >
+              Przejdź do sklepu
+            </Button>
+          </div>
+        ) : (
+          <div class="wkrotce">
+            <p class="wkrotce-tytul">Sklep w przygotowaniu</p>
+            <p class="wkrotce-opis">
+              Uruchamiamy własny sklep internetowy. Do tego czasu odpowiadamy na pytania o produkty i dostępność
+              bezpośrednio — napisz na WhatsApp albo mailem, a powiemy, kiedy ruszamy.
+            </p>
+            <div class="wkrotce-cta">
+              <Button
+                href={`https://wa.me/${site.kontakt.whatsappWa}`}
+                variant="primary"
+                external
+                data-marketplace="whatsapp"
+                data-platforma="WhatsApp"
+                data-lokalizacja="strona-gdzie-kupic"
+              >
+                Napisz na WhatsApp
+              </Button>
+              <Button href={`mailto:${site.kontakt.email}`} variant="ghost">
+                {site.kontakt.email}
+              </Button>
+            </div>
+          </div>
+        )}
 
         <ul class="punkty">
           {punkty.map((p) => (
@@ -89,6 +122,36 @@ const punkty = [
 
   .cta {
     margin-top: var(--sp-8);
+  }
+
+  .wkrotce {
+    max-width: var(--maxw-prose);
+    margin-top: var(--sp-8);
+    padding: var(--sp-8);
+    background-color: var(--bg-1);
+    border: 1px solid var(--gold);
+    border-radius: var(--radius-lg);
+  }
+
+  .wkrotce-tytul {
+    font-family: var(--font-display);
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .wkrotce-opis {
+    margin-top: var(--sp-3);
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .wkrotce-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-4);
+    margin-top: var(--sp-6);
   }
 
   .punkty {

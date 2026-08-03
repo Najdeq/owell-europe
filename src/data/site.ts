@@ -21,7 +21,11 @@ export const site = {
 
   gwarancjaMiesiace: 24,
 
-  sklep: "#DO-UZUPELNIENIA",
+  // Adres sklepu internetowego. `null` = sklep jeszcze nie wystartował —
+  // wtedy komponenty zamiast martwego linku pokazują uczciwy komunikat
+  // "sklep w przygotowaniu" i kierują na kontakt (WhatsApp / e-mail).
+  // Po wykupieniu domeny wystarczy wpisać tu URL — reszta strony zadziała sama.
+  sklep: null as string | null,
 
   // Fakty o Adler Europe Group — grupie, w ramach której rozwijana jest marka
   // Owell. Dane przekazane przez właściciela, weryfikowalne na adler.com.pl.
