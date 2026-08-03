@@ -46,10 +46,14 @@ const fakty = [
 
     <div class="hero-media">
       <div class="hero-media-frame">
+        {/* poster = pierwsza klatka video (90 kB). Bez niego przez cały czas
+            pobierania 2,7 MB pliku w najważniejszym miejscu strony wisiała
+            pusta ramka, co psuło LCP. */}
         <video
           class="hero-video"
           aria-label={wideoAlt}
           src="/video/ow-3300.mp4"
+          poster="/video/ow-3300-poster.jpg"
           autoplay
           muted
           loop
