@@ -31,18 +31,66 @@ const fotki: Record<string, ImageMetadata> = {
 };
 
 const kategorieRaw = [
-  { nazwa: "Czajnik elektryczny", slug: "ow-1360b" },
-  { nazwa: "Rozdrabniacze i szatkownice", slug: "ow-4819" },
-  { nazwa: "Grzejnik elektryczny", slug: null },
-  { nazwa: "Lodówka turystyczna", slug: "ow-8805" },
-  { nazwa: "Maszynka do strzyżenia włosów", slug: "ow-2856" },
-  { nazwa: "Strzyżarka dla zwierząt", slug: "ow-2859" },
-  { nazwa: "Blender ręczny", slug: "ow-4634" },
-  { nazwa: "Blender kielichowy", slug: null },
-  { nazwa: "Czyścik parowy", slug: null },
-  { nazwa: "Pralko-wirówka turystyczna", slug: "ow-8058" },
-  { nazwa: "Koce i poduszki elektryczne", slug: null },
-  { nazwa: "Opiekacz do kanapek", slug: "ow-3300" },
+  {
+    nazwa: "Czajnik elektryczny",
+    slug: "ow-1360b",
+    opis: "Szybkie gotowanie wody z regulacją temperatury — do kawy, herbaty i innych naparów.",
+  },
+  {
+    nazwa: "Rozdrabniacze i szatkownice",
+    slug: "ow-4819",
+    opis: "Krojenie, szatkowanie i rozdrabnianie warzyw i owoców bez ręcznej pracy.",
+  },
+  {
+    nazwa: "Grzejnik elektryczny",
+    slug: null,
+    opis: "Dogrzewanie pomieszczeń w chłodniejsze dni, bez instalacji i bez czekania.",
+  },
+  {
+    nazwa: "Lodówka turystyczna",
+    slug: "ow-8805",
+    opis: "Chłodzenie i utrzymywanie temperatury w podróży, zasilana z gniazda 12V lub 230V.",
+  },
+  {
+    nazwa: "Maszynka do strzyżenia włosów",
+    slug: "ow-2856",
+    opis: "Strzyżenie włosów w domu, między wizytami u fryzjera.",
+  },
+  {
+    nazwa: "Strzyżarka dla zwierząt",
+    slug: "ow-2859",
+    opis: "Pielęgnacja sierści psów i kotów w domowych warunkach.",
+  },
+  {
+    nazwa: "Blender ręczny",
+    slug: "ow-4634",
+    opis: "Miksowanie, ubijanie i rozdrabnianie w jednym urządzeniu, bez wielu sprzętów na blacie.",
+  },
+  {
+    nazwa: "Blender kielichowy",
+    slug: null,
+    opis: "Przygotowywanie smoothie, koktajli i zup w jednym naczyniu.",
+  },
+  {
+    nazwa: "Czyścik parowy",
+    slug: null,
+    opis: "Czyszczenie powierzchni parą, bez chemii i szorowania.",
+  },
+  {
+    nazwa: "Pralko-wirówka turystyczna",
+    slug: "ow-8058",
+    opis: "Pranie i odwirowywanie w małych ilościach — do kempingu, przyczepy lub małych przestrzeni.",
+  },
+  {
+    nazwa: "Koce i poduszki elektryczne",
+    slug: null,
+    opis: "Ogrzewanie łóżka i ciała zimą, z regulacją temperatury.",
+  },
+  {
+    nazwa: "Opiekacz do kanapek",
+    slug: "ow-3300",
+    opis: "Opiekanie kanapek i tostów w kilka minut, bez patelni i pilnowania.",
+  },
 ];
 
 const kategorie = kategorieRaw.map((k) => ({
@@ -71,25 +119,35 @@ const kategorie = kategorieRaw.map((k) => ({
         <div class="grid">
           {kategorie.map((k) => (
             <article class:list={["karta", { "karta--puste": !k.produkt }]}>
-              <div class="karta-foto">
-                {k.foto ? (
-                  <Image src={k.foto} alt={k.produkt!.data.nazwa} width={640} height={640} class="foto-img" />
-                ) : k.produkt ? (
-                  <div class="foto-placeholder">
-                    <span class="foto-placeholder-label">{k.produkt.data.model}</span>
+              <div class="karta-flip">
+                <div class="karta-face karta-face--przod">
+                  <div class="karta-foto">
+                    {k.foto ? (
+                      <Image src={k.foto} alt={k.produkt!.data.nazwa} width={640} height={640} class="foto-img" />
+                    ) : k.produkt ? (
+                      <div class="foto-placeholder">
+                        <span class="foto-placeholder-label">{k.produkt.data.model}</span>
+                      </div>
+                    ) : (
+                      <div class="foto-placeholder foto-placeholder--puste">
+                        <span class="foto-placeholder-label">Wkrótce w ofercie</span>
+                      </div>
+                    )}
                   </div>
-                ) : (
-                  <div class="foto-placeholder foto-placeholder--puste">
-                    <span class="foto-placeholder-label">Wkrótce w ofercie</span>
-                  </div>
-                )}
-              </div>
 
-              <div class="karta-info">
-                <h2 class="karta-nazwa">{k.nazwa}</h2>
-                <p class="karta-tagline">{k.produkt ? k.produkt.data.tagline : "Wkrótce w ofercie."}</p>
+                  <div class="karta-info">
+                    <h2 class="karta-nazwa">{k.nazwa}</h2>
+                    <p class="karta-tagline">{k.opis}</p>
+                    {!k.produkt && <p class="karta-status">Wkrótce w ofercie.</p>}
+                  </div>
+                </div>
+
                 {k.produkt && (
-                  <p class="karta-opis">{k.produkt.data.opis.split("\n\n")[0]}</p>
+                  <div class="karta-face karta-face--tyl">
+                    <span class="karta-tyl-model">{k.produkt.data.model}</span>
+                    <h2 class="karta-tyl-nazwa">{k.nazwa}</h2>
+                    <p class="karta-tyl-opis">{k.produkt.data.opis.split("\n\n")[0]}</p>
+                  </div>
                 )}
               </div>
             </article>
@@ -127,62 +185,84 @@ const kategorie = kategorieRaw.map((k) => ({
     gap: var(--sp-6);
   }
 
-  .grid {
-    /* Karty rosną na hover ponad sąsiadów (transform, bez zmiany layoutu) —
-       trzeba miejsca nad/pod siatką, żeby się nie ucinały. */
-    padding-block: var(--sp-8);
-  }
-
   .karta {
     position: relative;
     aspect-ratio: 1 / 1;
     border-radius: var(--radius-lg);
-    overflow: hidden;
-    border: 1px solid var(--hairline-soft);
+    perspective: 1800px;
     cursor: default;
-    /* Punkt skalowania u góry — karta rośnie w dół, nigdy nie nachodzi na
-       treść nad siatką (nagłówek, lead). */
-    transform-origin: center top;
-    transition:
-      transform 480ms var(--ease),
-      border-color var(--dur) var(--ease),
-      box-shadow var(--dur) var(--ease);
   }
 
-  .karta:hover {
-    transform: scale(2.3);
-    border-color: var(--gold);
-    box-shadow: 0 0 0 1px var(--gold), 0 40px 80px -20px rgba(0, 0, 0, 0.65);
+  .karta:not(.karta--puste):hover {
     z-index: 10;
   }
 
-  /* Karta w skali 2.3 potrafi wyjść poza ekran w poziomie, jeśli rośnie od
-     środka skrajnej kolumny — przesuwamy punkt skalowania do wewnętrznej
-     krawędzi (pion zostaje zawsze "top"). */
-  @media (min-width: 1000px) {
-    .karta:nth-child(4n + 1) {
-      transform-origin: left top;
-    }
-
-    .karta:nth-child(4n) {
-      transform-origin: right top;
-    }
+  .karta-flip {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    will-change: transform;
+    transition: transform 700ms var(--ease);
   }
 
-  @media (min-width: 640px) and (max-width: 999px) {
-    .karta:nth-child(odd) {
-      transform-origin: left top;
-    }
+  /* Lekkie powiększenie razem z obrotem — ten sam tekst zajmuje więcej
+     miejsca na ekranie, łatwiej się czyta bez zmiany layoutu siatki. */
+  .karta:not(.karta--puste):hover .karta-flip {
+    transform: rotateY(180deg) scale(1.12);
+  }
 
-    .karta:nth-child(even) {
-      transform-origin: right top;
-    }
+  .karta-face {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--hairline-soft);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    /* Zabezpieczenie na wypadek, gdy backface-visibility zawiedzie (bug
+       w niektórych przeglądarkach — zdjęcie z przodu potrafi "prześwitywać"
+       zniekształcone przez tył karty): dodatkowo chowamy nieaktywną stronę
+       przez opacity, dokładnie w połowie 700ms obrotu — karta jest wtedy
+       widoczna "na krawędź" (90°), więc przełącznik jest niezauważalny.
+       transition-delay 350ms + duration 0s = natychmiastowy skok w tym
+       jednym momencie, nie płynne blaknięcie. */
+    /* Wymusza osobną warstwę kompozytowania GPU dla każdej ścianki —
+       bez tego niektóre przeglądarki (widoczne zwłaszcza na jasnym tle)
+       "prześwietlają" ukrytą stronę przez backface-visibility, dając
+       rozjechany, podwójny tekst. */
+    transform: translateZ(0);
+    transition:
+      border-color var(--dur) var(--ease),
+      opacity 0s linear 350ms;
+  }
+
+  .karta-face--tyl {
+    transform: rotateY(180deg) translateZ(0);
+    opacity: 0;
+  }
+
+  .karta:not(.karta--puste):hover .karta-face--przod {
+    opacity: 0;
+  }
+
+  .karta:not(.karta--puste):hover .karta-face--tyl {
+    opacity: 1;
+  }
+
+  .karta:hover .karta-face {
+    border-color: var(--gold);
+  }
+
+  .karta-face--przod {
+    background-color: var(--photo-bg);
   }
 
   .karta-foto {
     position: absolute;
     inset: 0;
-    background-color: var(--photo-bg);
   }
 
   .foto-img {
@@ -190,11 +270,6 @@ const kategorie = kategorieRaw.map((k) => ({
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform var(--dur-slow) var(--ease);
-  }
-
-  .karta:hover .foto-img {
-    transform: scale(1.08);
   }
 
   .foto-placeholder {
@@ -225,10 +300,15 @@ const kategorie = kategorieRaw.map((k) => ({
     position: absolute;
     inset: auto 0 0 0;
     padding: var(--sp-5);
+    padding-top: var(--sp-10);
+    /* Pełna krycie aż do końca tekstu — .karta-info owija się tylko wokół
+       tytułu/taglinu (auto height), więc dawny gradient przygasał do
+       przezroczystości zanim doszedł do glifów, przez co prześwitywał wzór
+       zdjęcia (np. wyświetlacz czajnika) i tekst wyglądał na "rozjechany". */
     background: linear-gradient(
       to top,
       var(--bg-0) 0%,
-      rgba(15, 14, 12, 0.85) 55%,
+      var(--bg-0) 70%,
       transparent 100%
     );
   }
@@ -247,29 +327,65 @@ const kategorie = kategorieRaw.map((k) => ({
     color: var(--text-2);
   }
 
-  .karta--puste .karta-tagline {
-    color: var(--text-muted);
+  .karta-status {
+    margin-top: var(--sp-1);
+    font-size: var(--fs-small);
     font-style: italic;
+    color: var(--text-muted);
   }
 
-  .karta-opis {
-    max-height: 0;
-    margin-top: 0;
+  /* Obrót o 180° na starcie (żeby po obrocie rodzica .karta-flip tekst
+     czytał się normalnie) ustawiony wyżej razem z translateZ(0). */
+  .karta-face--tyl {
+    gap: var(--sp-2);
+    padding: var(--sp-6);
+    background-color: var(--bg-1);
+  }
+
+  .karta-tyl-model {
+    flex: none;
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--gold);
+  }
+
+  .karta-tyl-nazwa {
+    flex: none;
+    font-family: var(--font-display);
+    font-size: var(--fs-lead);
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  /* Opis pełnego akapitu bywa dłuższy niż miejsce na karcie — zamiast
+     obcinać tekst, robimy go przewijalnym scrollem myszy/gestem. */
+  .karta-tyl-opis {
+    flex: 1 1 auto;
+    min-height: 0;
+    margin-top: var(--sp-2);
+    padding-right: var(--sp-3);
     font-size: var(--fs-small);
     line-height: var(--lh-body);
     color: var(--text-2);
-    opacity: 0;
-    overflow: hidden;
-    transition:
-      max-height 480ms var(--ease),
-      opacity 480ms var(--ease),
-      margin-top 480ms var(--ease);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: var(--gold) transparent;
   }
 
-  .karta:hover .karta-opis {
-    max-height: 16rem;
-    margin-top: var(--sp-3);
-    opacity: 1;
+  .karta-tyl-opis::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .karta-tyl-opis::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .karta-tyl-opis::-webkit-scrollbar-thumb {
+    background-color: var(--gold);
+    border-radius: var(--radius-sm);
   }
 
   @media (min-width: 640px) {
@@ -285,10 +401,12 @@ const kategorie = kategorieRaw.map((k) => ({
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .karta,
-    .foto-img,
-    .karta-opis {
+    .karta-flip {
       transition: none !important;
+    }
+
+    .karta-face {
+      transition: border-color var(--dur) var(--ease) !important;
     }
   }
 </style>
