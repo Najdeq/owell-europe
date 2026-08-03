@@ -4,7 +4,7 @@ import { Image } from "astro:assets";
 import Container from "../ui/Container.astro";
 import Section from "../ui/Section.astro";
 import Eyebrow from "../ui/Eyebrow.astro";
-import detalPlaceholder from "../../assets/produkty/placeholder-detal.svg";
+import detalCzajnik from "../../assets/marka/detal-czajnik.jpg";
 
 const produkty = await getCollection("produkty");
 
@@ -36,10 +36,10 @@ const argumenty = [
   <Container class="dlaczego-inner">
     <div class="dlaczego-media">
       <Image
-        src={detalPlaceholder}
-        alt="[DO UZUPEŁNIENIA: zdjęcie detalu materiału]"
-        width={720}
-        height={880}
+        src={detalCzajnik}
+        alt="Czajnik Owell OW-1360B z wyświetlaczem temperatury, trzymany w dłoniach"
+        width={1024}
+        height={1024}
       />
     </div>
 

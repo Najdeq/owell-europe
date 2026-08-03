@@ -1,0 +1,132 @@
+---
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import BreadcrumbSchema from "../components/BreadcrumbSchema.astro";
+import Container from "../components/ui/Container.astro";
+import Section from "../components/ui/Section.astro";
+import Button from "../components/ui/Button.astro";
+import { site } from "../data/site.ts";
+
+const breadcrumbs = [
+  { name: "Owell", path: "/" },
+  { name: "Gdzie kupić", path: "/gdzie-kupic" },
+];
+
+const punkty = [
+  `${site.gwarancjaMiesiace} miesięcy gwarancji na każdy produkt, bez wyjątków.`,
+  "Zamówienia złożone do 18:30 wysyłamy tego samego dnia, z gwarancją dostawy InPostem.",
+  "Pełna karta GPSR i dane producenta przy każdym modelu.",
+];
+---
+
+<Base
+  title="Gdzie kupić — Owell"
+  description="Produkty Owell kupisz wyłącznie przez nasz oficjalny sklep internetowy. Bez pośredników, bez marketplace'ów."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title">Gdzie kupić</h1>
+        <p class="page-lead">
+          Sprzedajemy wyłącznie przez nasz oficjalny sklep internetowy — bez sieci salonów stacjonarnych i bez
+          sprzedaży przez marketplace'y. To jedyny kanał, w którym możemy zagwarantować oryginalność produktu, pełną
+          kartę gwarancyjną i wsparcie serwisowe.
+        </p>
+
+        <div class="cta">
+          <Button
+            href={site.sklep}
+            variant="primary"
+            external
+            data-marketplace="sklep"
+            data-platforma="Sklep internetowy"
+            data-lokalizacja="strona-gdzie-kupic"
+          >
+            Przejdź do sklepu
+          </Button>
+        </div>
+
+        <ul class="punkty">
+          {punkty.map((p) => (
+            <li>{p}</li>
+          ))}
+        </ul>
+
+        <p class="uwaga">
+          Nie autoryzujemy sprzedaży naszych produktów przez inne platformy niż nasz sklep internetowy. Jeśli
+          natrafisz na ofertę Owell gdzie indziej, zachowaj ostrożność — nie możemy potwierdzić jej oryginalności ani
+          zapewnić z niej wsparcia gwarancyjnego.
+        </p>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .page-lead {
+    margin-top: var(--sp-4);
+    max-width: var(--maxw-prose);
+    font-size: var(--fs-lead);
+    color: var(--text-2);
+  }
+
+  .cta {
+    margin-top: var(--sp-8);
+  }
+
+  .punkty {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+    max-width: var(--maxw-prose);
+    margin-top: var(--sp-8);
+    padding-left: var(--sp-4);
+    list-style: none;
+  }
+
+  .punkty li {
+    position: relative;
+    padding-left: var(--sp-4);
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .punkty li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.65em;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background-color: var(--gold);
+  }
+
+  .uwaga {
+    margin-top: var(--sp-10);
+    padding-top: var(--sp-6);
+    max-width: var(--maxw-prose);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--text-muted);
+    border-top: 1px solid var(--hairline-soft);
+  }
+</style>

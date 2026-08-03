@@ -12,7 +12,7 @@ import { site } from "../../data/site.ts";
 
     <div class="grid">
       {site.kategorie.map((kategoria) => (
-        <a href={`/produkty/${kategoria.slug}`} class="kafel">
+        <a href={`/produkty#${kategoria.slug}`} class="kafel">
           <h3 class="kafel-tytul">{kategoria.nazwa}</h3>
           <p class="kafel-opis">{kategoria.opis}</p>
           <span class="kafel-link">Zobacz produkty →</span>

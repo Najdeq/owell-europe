@@ -12,9 +12,10 @@ const wideoAlt = produktWideo
   : "Produkt Owell";
 
 const fakty = [
-  { wartosc: String(produkty.length), etykieta: "produktów w ofercie" },
-  { wartosc: "24 mies.", etykieta: "gwarancji" },
-  { wartosc: "2025", etykieta: "rok założenia marki" },
+  { target: produkty.length, suffix: "", etykieta: "produktów w ofercie" },
+  { target: site.gwarancjaMiesiace, suffix: " mies.", etykieta: "gwarancji" },
+  { target: 2025, suffix: "", etykieta: "rok założenia marki" },
+  { target: 100, suffix: "%", etykieta: "produktów z kartą GPSR" },
 ];
 ---
 
@@ -24,8 +25,8 @@ const fakty = [
       <Eyebrow>Małe AGD · Projektowane w Europie</Eyebrow>
       <h1 class="hero-title">Marka AGD, którą można sprawdzić.</h1>
       <p class="hero-lead">
-        Pełne dane producenta, karta GPSR i {site.gwarancjaMiesiace} miesiące gwarancji przy każdym produkcie.
-        Nic nie chowamy za regulaminem.
+        Małe AGD do kuchni, pielęgnacji i podróży — zaprojektowane do codziennego użytku, nie od święta. Każdy
+        produkt ma pełne dane producenta, kartę GPSR i {site.gwarancjaMiesiace} miesiące gwarancji, bez wyjątków.
       </p>
 
       <div class="hero-cta">
@@ -33,11 +34,11 @@ const fakty = [
         <Button href="/o-nas" variant="ghost">Poznaj nas</Button>
       </div>
 
-      <dl class="hero-fakty">
+      <dl class="hero-fakty" data-hero-fakty>
         {fakty.map((f) => (
           <div class="fakt">
             <dt>{f.etykieta}</dt>
-            <dd>{f.wartosc}</dd>
+            <dd data-fakt-wartosc data-target={f.target} data-suffix={f.suffix}>0{f.suffix}</dd>
           </div>
         ))}
       </dl>
@@ -101,15 +102,16 @@ const fakty = [
   }
 
   .hero-fakty {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--sp-8);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--sp-6) var(--sp-8);
     margin-top: var(--sp-12);
     padding-top: var(--sp-6);
     border-top: 1px solid var(--hairline-soft);
   }
 
   .fakt dd {
+    font-variant-numeric: tabular-nums;
     font-family: var(--font-mono);
     font-size: var(--fs-h3);
     font-weight: 600;
@@ -154,6 +156,12 @@ const fakty = [
     max-width: 100%;
   }
 
+  @media (min-width: 480px) {
+    .hero-fakty {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
   @media (min-width: 960px) {
     .hero-inner {
       grid-template-columns: 0.7fr 1.3fr;
@@ -165,3 +173,52 @@ const fakty = [
     }
   }
 </style>
+
+<script>
+  // Liczby w Hero zawsze są widoczne od razu przy wejściu na stronę (nad
+  // linią zagięcia), więc liczymy w górę od razu po zamontowaniu — bez
+  // IntersectionObserver, w przeciwieństwie do sekcji Liczby niżej na stronie.
+  function animateHeroFakty() {
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    const grid = document.querySelector<HTMLElement>("[data-hero-fakty]");
+    if (!grid) return;
+    if (grid.dataset.owellBound === "true") return;
+    grid.dataset.owellBound = "true";
+
+    const items = grid.querySelectorAll<HTMLElement>("[data-fakt-wartosc]");
+
+    items.forEach((el) => {
+      const target = Number(el.dataset.target);
+      const suffix = el.dataset.suffix ?? "";
+
+      if (prefersReducedMotion) {
+        el.textContent = `${target}${suffix}`;
+        return;
+      }
+
+      const duration = 1200;
+      const start = performance.now();
+
+      const step = (now: number) => {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = `${Math.round(target * eased)}${suffix}`;
+
+        if (progress < 1) {
+          requestAnimationFrame(step);
+        } else {
+          el.textContent = `${target}${suffix}`;
+        }
+      };
+
+      requestAnimationFrame(step);
+    });
+  }
+
+  animateHeroFakty();
+  document.addEventListener("astro:page-load", animateHeroFakty);
+</script>

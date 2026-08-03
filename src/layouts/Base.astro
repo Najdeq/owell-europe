@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import ConsentBanner from "../components/ConsentBanner.astro";
 import Analytics from "../components/Analytics.astro";
+import WhatsAppWidget from "../components/WhatsAppWidget.astro";
 import { site } from "../data/site.ts";
 
 interface Props {
@@ -129,6 +130,7 @@ const organizationSchema = {
 
     <ConsentBanner />
     <Analytics />
+    <WhatsAppWidget />
   </body>
 </html>
 

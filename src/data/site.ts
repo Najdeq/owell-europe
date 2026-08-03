@@ -13,6 +13,10 @@ export const site = {
     email: "sklep@owelleurope.com",
     emailSerwis: "serwis@owelleurope.com",
     emailGpsr: "gpsr@adlereurope.eu",
+    whatsapp: "+48 537 899 499",
+    // Numer do linku wa.me — same cyfry, bez spacji i znaku "+" (wymóg formatu wa.me).
+    whatsappWa: "48537899499",
+    godzinyPracy: "9:00–17:00",
   },
 
   gwarancjaMiesiace: 24,
@@ -41,6 +45,11 @@ export const site = {
       slug: "agd-turystyczne",
       nazwa: "AGD turystyczne",
       opis: "Lodówka turystyczna i pralko-wirówka — kompaktowe urządzenia do samochodu, kempingu i małych przestrzeni. Mniejsze niż sprzęt domowy, ale zaprojektowane z tą samą uwagą na trwałość.",
+    },
+    {
+      slug: "dom",
+      nazwa: "Dom",
+      opis: "Grzejnik, czyścik parowy i koce elektryczne — sprzęt do codziennego komfortu w domu, poza kuchnią i pielęgnacją.",
     },
   ],
 

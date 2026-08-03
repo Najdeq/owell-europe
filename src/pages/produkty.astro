@@ -7,6 +7,7 @@ import Footer from "../components/Footer.astro";
 import BreadcrumbSchema from "../components/BreadcrumbSchema.astro";
 import Container from "../components/ui/Container.astro";
 import Section from "../components/ui/Section.astro";
+import { site } from "../data/site.ts";
 
 import fotoOw1360b from "../assets/produkty/hero/ow-1360b.jpg";
 import fotoOw3097 from "../assets/produkty/hero/ow-3097.jpg";
@@ -34,62 +35,74 @@ const kategorieRaw = [
   {
     nazwa: "Czajnik elektryczny",
     slug: "ow-1360b",
+    grupa: "kuchnia",
     opis: "Szybkie gotowanie wody z regulacją temperatury — do kawy, herbaty i innych naparów.",
   },
   {
     nazwa: "Rozdrabniacze i szatkownice",
     slug: "ow-4819",
+    grupa: "kuchnia",
     opis: "Krojenie, szatkowanie i rozdrabnianie warzyw i owoców bez ręcznej pracy.",
-  },
-  {
-    nazwa: "Grzejnik elektryczny",
-    slug: null,
-    opis: "Dogrzewanie pomieszczeń w chłodniejsze dni, bez instalacji i bez czekania.",
-  },
-  {
-    nazwa: "Lodówka turystyczna",
-    slug: "ow-8805",
-    opis: "Chłodzenie i utrzymywanie temperatury w podróży, zasilana z gniazda 12V lub 230V.",
-  },
-  {
-    nazwa: "Maszynka do strzyżenia włosów",
-    slug: "ow-2856",
-    opis: "Strzyżenie włosów w domu, między wizytami u fryzjera.",
-  },
-  {
-    nazwa: "Strzyżarka dla zwierząt",
-    slug: "ow-2859",
-    opis: "Pielęgnacja sierści psów i kotów w domowych warunkach.",
   },
   {
     nazwa: "Blender ręczny",
     slug: "ow-4634",
+    grupa: "kuchnia",
     opis: "Miksowanie, ubijanie i rozdrabnianie w jednym urządzeniu, bez wielu sprzętów na blacie.",
   },
   {
     nazwa: "Blender kielichowy",
     slug: null,
+    grupa: "kuchnia",
     opis: "Przygotowywanie smoothie, koktajli i zup w jednym naczyniu.",
-  },
-  {
-    nazwa: "Czyścik parowy",
-    slug: null,
-    opis: "Czyszczenie powierzchni parą, bez chemii i szorowania.",
-  },
-  {
-    nazwa: "Pralko-wirówka turystyczna",
-    slug: "ow-8058",
-    opis: "Pranie i odwirowywanie w małych ilościach — do kempingu, przyczepy lub małych przestrzeni.",
-  },
-  {
-    nazwa: "Koce i poduszki elektryczne",
-    slug: null,
-    opis: "Ogrzewanie łóżka i ciała zimą, z regulacją temperatury.",
   },
   {
     nazwa: "Opiekacz do kanapek",
     slug: "ow-3300",
+    grupa: "kuchnia",
     opis: "Opiekanie kanapek i tostów w kilka minut, bez patelni i pilnowania.",
+  },
+  {
+    nazwa: "Maszynka do strzyżenia włosów",
+    slug: "ow-2856",
+    grupa: "pielegnacja",
+    opis: "Strzyżenie włosów w domu, między wizytami u fryzjera.",
+  },
+  {
+    nazwa: "Strzyżarka dla zwierząt",
+    slug: "ow-2859",
+    grupa: "pielegnacja",
+    opis: "Pielęgnacja sierści psów i kotów w domowych warunkach.",
+  },
+  {
+    nazwa: "Lodówka turystyczna",
+    slug: "ow-8805",
+    grupa: "agd-turystyczne",
+    opis: "Chłodzenie i utrzymywanie temperatury w podróży, zasilana z gniazda 12V lub 230V.",
+  },
+  {
+    nazwa: "Pralko-wirówka turystyczna",
+    slug: "ow-8058",
+    grupa: "agd-turystyczne",
+    opis: "Pranie i odwirowywanie w małych ilościach — do kempingu, przyczepy lub małych przestrzeni.",
+  },
+  {
+    nazwa: "Grzejnik elektryczny",
+    slug: null,
+    grupa: "dom",
+    opis: "Dogrzewanie pomieszczeń w chłodniejsze dni, bez instalacji i bez czekania.",
+  },
+  {
+    nazwa: "Czyścik parowy",
+    slug: null,
+    grupa: "dom",
+    opis: "Czyszczenie powierzchni parą, bez chemii i szorowania.",
+  },
+  {
+    nazwa: "Koce i poduszki elektryczne",
+    slug: null,
+    grupa: "dom",
+    opis: "Ogrzewanie łóżka i ciała zimą, z regulacją temperatury.",
   },
 ];
 
@@ -97,6 +110,11 @@ const kategorie = kategorieRaw.map((k) => ({
   ...k,
   produkt: k.slug ? znajdzProdukt(k.slug) : undefined,
   foto: k.slug ? fotki[k.slug] : undefined,
+}));
+
+const grupy = site.kategorie.map((g) => ({
+  ...g,
+  kategorie: kategorie.filter((k) => k.grupa === g.slug),
 }));
 ---
 
@@ -116,43 +134,52 @@ const kategorie = kategorieRaw.map((k) => ({
           Kategorie sprzętu, który projektujemy. Przy każdej — jeden przykładowy model z oferty.
         </p>
 
-        <div class="grid">
-          {kategorie.map((k) => (
-            <article class:list={["karta", { "karta--puste": !k.produkt }]}>
-              <div class="karta-flip">
-                <div class="karta-face karta-face--przod">
-                  <div class="karta-foto">
-                    {k.foto ? (
-                      <Image src={k.foto} alt={k.produkt!.data.nazwa} width={640} height={640} class="foto-img" />
-                    ) : k.produkt ? (
-                      <div class="foto-placeholder">
-                        <span class="foto-placeholder-label">{k.produkt.data.model}</span>
+        {grupy.map((g) => (
+          <section id={g.slug} class="grupa">
+            <div class="grupa-header">
+              <h2 class="grupa-tytul">{g.nazwa}</h2>
+              <p class="grupa-opis">{g.opis}</p>
+            </div>
+
+            <div class="grid">
+              {g.kategorie.map((k) => (
+                <article class:list={["karta", { "karta--puste": !k.produkt }]}>
+                  <div class="karta-flip">
+                    <div class="karta-face karta-face--przod">
+                      <div class="karta-foto">
+                        {k.foto ? (
+                          <Image src={k.foto} alt={k.produkt!.data.nazwa} width={640} height={640} class="foto-img" />
+                        ) : k.produkt ? (
+                          <div class="foto-placeholder">
+                            <span class="foto-placeholder-label">{k.produkt.data.model}</span>
+                          </div>
+                        ) : (
+                          <div class="foto-placeholder foto-placeholder--puste">
+                            <span class="foto-placeholder-label">Wkrótce w ofercie</span>
+                          </div>
+                        )}
                       </div>
-                    ) : (
-                      <div class="foto-placeholder foto-placeholder--puste">
-                        <span class="foto-placeholder-label">Wkrótce w ofercie</span>
+
+                      <div class="karta-info">
+                        <h3 class="karta-nazwa">{k.nazwa}</h3>
+                        <p class="karta-tagline">{k.opis}</p>
+                        {!k.produkt && <p class="karta-status">Wkrótce w ofercie.</p>}
+                      </div>
+                    </div>
+
+                    {k.produkt && (
+                      <div class="karta-face karta-face--tyl">
+                        <span class="karta-tyl-model">{k.produkt.data.model}</span>
+                        <h3 class="karta-tyl-nazwa">{k.nazwa}</h3>
+                        <p class="karta-tyl-opis">{k.produkt.data.opis.split("\n\n")[0]}</p>
                       </div>
                     )}
                   </div>
-
-                  <div class="karta-info">
-                    <h2 class="karta-nazwa">{k.nazwa}</h2>
-                    <p class="karta-tagline">{k.opis}</p>
-                    {!k.produkt && <p class="karta-status">Wkrótce w ofercie.</p>}
-                  </div>
-                </div>
-
-                {k.produkt && (
-                  <div class="karta-face karta-face--tyl">
-                    <span class="karta-tyl-model">{k.produkt.data.model}</span>
-                    <h2 class="karta-tyl-nazwa">{k.nazwa}</h2>
-                    <p class="karta-tyl-opis">{k.produkt.data.opis.split("\n\n")[0]}</p>
-                  </div>
-                )}
-              </div>
-            </article>
-          ))}
-        </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        ))}
       </Container>
     </Section>
   </main>
@@ -179,7 +206,34 @@ const kategorie = kategorieRaw.map((k) => ({
     color: var(--text-2);
   }
 
+  .grupa {
+    /* Kotwice (/produkty#kuchnia itd. z homepage i stopki) nie mogą chować
+       nagłówka pod sticky headerem po doskoku. */
+    scroll-margin-top: calc(var(--header-h, 65px) + var(--sp-4));
+  }
+
+  .grupa + .grupa {
+    margin-top: var(--sp-16);
+    padding-top: var(--sp-12);
+    border-top: 1px solid var(--hairline-soft);
+  }
+
+  .grupa-tytul {
+    font-family: var(--font-display);
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .grupa-opis {
+    margin-top: var(--sp-2);
+    max-width: var(--maxw-prose);
+    font-size: var(--fs-body);
+    color: var(--text-2);
+  }
+
   .grid {
+    margin-top: var(--sp-8);
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--sp-6);

@@ -1,0 +1,248 @@
+---
+import { site } from "../data/site.ts";
+
+const waHref = `https://wa.me/${site.kontakt.whatsappWa}`;
+---
+
+<div class="wa-widget" data-whatsapp-widget>
+  <div id="wa-popup" class="wa-popup" role="dialog" aria-labelledby="wa-popup-title" hidden>
+    <div class="wa-popup-header">
+      <p id="wa-popup-title" class="wa-popup-title">{site.nazwa}</p>
+      <button type="button" class="wa-popup-close" data-wa-close aria-label="Zamknij">✕</button>
+    </div>
+    <p class="wa-popup-text">
+      Cześć! Masz pytanie o produkt, zamówienie lub gwarancję? Napisz do nas na WhatsApp — pracujemy w godzinach{" "}
+      {site.kontakt.godzinyPracy}.
+    </p>
+    <a
+      href={waHref}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="wa-popup-cta"
+      data-marketplace="whatsapp"
+      data-platforma="WhatsApp"
+      data-lokalizacja="widget-floating"
+    >
+      Rozpocznij czat
+    </a>
+  </div>
+
+  <button
+    type="button"
+    class="wa-toggle"
+    data-wa-toggle
+    aria-haspopup="dialog"
+    aria-expanded="false"
+    aria-controls="wa-popup"
+    aria-label="Napisz do nas na WhatsApp"
+  >
+    <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true" class="wa-icon">
+      <path
+        d="M16 3C9 3 3.3 8.6 3.3 15.5c0 2.4.7 4.7 1.9 6.6L3 29l7.1-2.2c1.8 1 3.8 1.5 5.9 1.5 7 0 12.7-5.6 12.7-12.5S23 3 16 3Zm0 22.7c-1.9 0-3.7-.5-5.3-1.4l-.4-.2-4.2 1.3 1.3-4.1-.2-.4a10.2 10.2 0 0 1-1.6-5.4C5.6 9.9 10.2 5.3 16 5.3c5.8 0 10.4 4.6 10.4 10.2 0 5.6-4.7 10.2-10.4 10.2Zm5.7-7.6c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1-.3-.2-1.3-.5-2.5-1.6-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6.1-.1.3-.4.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.2-.7-1.7-1-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1.1 2.8 1.2 3c.1.2 2.2 3.4 5.3 4.7.7.3 1.3.5 1.8.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.2-.6-.4Z"
+      />
+    </svg>
+  </button>
+</div>
+
+<style>
+  /* Kolor WhatsApp to rozpoznawalny kolor marki trzeciej (nie część palety
+     motywu Owell) — celowo poza systemem tokenów --gold/--bg, żeby ikona
+     była natychmiast rozpoznawalna niezależnie od jasnego/ciemnego motywu. */
+  .wa-widget {
+    --wa-green: #25d366;
+    --wa-green-dark: #1da851;
+    --wa-offset: 0px;
+    position: fixed;
+    right: var(--sp-6);
+    bottom: calc(var(--sp-6) + var(--wa-offset));
+    z-index: 70;
+    transition: bottom var(--dur) var(--ease);
+  }
+
+  .wa-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    background-color: var(--wa-green);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    transition: background-color var(--dur) var(--ease);
+  }
+
+  .wa-toggle:hover {
+    background-color: var(--wa-green-dark);
+  }
+
+  .wa-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .wa-popup {
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + var(--sp-3));
+    width: min(20rem, calc(100vw - var(--sp-8)));
+    padding: var(--sp-5);
+    background-color: var(--bg-1);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 20px 48px -16px rgba(0, 0, 0, 0.5);
+  }
+
+  .wa-popup-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--sp-4);
+  }
+
+  .wa-popup-title {
+    font-family: var(--font-display);
+    font-size: var(--fs-lead);
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .wa-popup-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    background: transparent;
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-sm);
+    color: var(--text-2);
+    cursor: pointer;
+  }
+
+  .wa-popup-close:hover {
+    border-color: var(--gold);
+    color: var(--gold-bright);
+  }
+
+  .wa-popup-text {
+    margin-top: var(--sp-3);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .wa-popup-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: var(--sp-4);
+    padding: var(--sp-3) var(--sp-6);
+    background-color: var(--wa-green);
+    color: #fff;
+    font-size: var(--fs-body);
+    font-weight: 500;
+    text-decoration: none;
+    border-radius: var(--radius);
+    transition: background-color var(--dur) var(--ease);
+  }
+
+  .wa-popup-cta:hover {
+    background-color: var(--wa-green-dark);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .wa-widget {
+      transition: none !important;
+    }
+  }
+</style>
+
+<script>
+  function setupWhatsAppWidget() {
+    var widget = document.querySelector<HTMLElement>("[data-whatsapp-widget]");
+    var toggle = document.querySelector<HTMLButtonElement>("[data-wa-toggle]");
+    var popup = document.getElementById("wa-popup");
+    var closeBtn = document.querySelector<HTMLButtonElement>("[data-wa-close]");
+
+    if (!widget || !toggle || !popup) return;
+    if (widget.dataset.owellBound === "true") return;
+    widget.dataset.owellBound = "true";
+
+    function openPopup() {
+      popup.hidden = false;
+      toggle.setAttribute("aria-expanded", "true");
+      document.addEventListener("keydown", onKeydown);
+      document.addEventListener("click", onOutsideClick, true);
+    }
+
+    function closePopup({ returnFocus = false } = {}) {
+      popup.hidden = true;
+      toggle.setAttribute("aria-expanded", "false");
+      document.removeEventListener("keydown", onKeydown);
+      document.removeEventListener("click", onOutsideClick, true);
+      if (returnFocus) toggle.focus();
+    }
+
+    function onKeydown(event: KeyboardEvent) {
+      if (event.key === "Escape") closePopup({ returnFocus: true });
+    }
+
+    function onOutsideClick(event: MouseEvent) {
+      if (!widget.contains(event.target as Node)) closePopup();
+    }
+
+    toggle.addEventListener("click", function () {
+      if (popup.hidden) openPopup();
+      else closePopup();
+    });
+
+    if (closeBtn) {
+      closeBtn.addEventListener("click", function () {
+        closePopup({ returnFocus: true });
+      });
+    }
+
+    // Podnosimy widget ponad baner cookies, żeby się nie nakładały —
+    // wysokość banera mierzymy dynamicznie (ten sam wzorzec co --header-h
+    // w Header.astro), bo różni się między mobile/desktop.
+    var banner = document.getElementById("consent-banner");
+
+    function syncOffset() {
+      if (banner && !banner.hidden) {
+        widget.style.setProperty("--wa-offset", banner.offsetHeight + 16 + "px");
+      } else {
+        widget.style.setProperty("--wa-offset", "0px");
+      }
+    }
+
+    syncOffset();
+
+    if (banner) {
+      var observer = new MutationObserver(syncOffset);
+      observer.observe(banner, { attributes: true, attributeFilter: ["hidden"] });
+    }
+
+    window.addEventListener("resize", syncOffset);
+    window.addEventListener("owell:consent-change", syncOffset);
+
+    // Automatyczne otwarcie popupu raz na sesję przeglądarki (nie przy
+    // każdym wejściu/nawigacji) — zaproszenie do kontaktu, a nie natręctwo.
+    var AUTO_OPEN_KEY = "owell-wa-auto-shown";
+    try {
+      if (!sessionStorage.getItem(AUTO_OPEN_KEY)) {
+        sessionStorage.setItem(AUTO_OPEN_KEY, "true");
+        window.setTimeout(function () {
+          syncOffset();
+          openPopup();
+        }, 2500);
+      }
+    } catch (e) {}
+  }
+
+  setupWhatsAppWidget();
+  document.addEventListener("astro:page-load", setupWhatsAppWidget);
+</script>

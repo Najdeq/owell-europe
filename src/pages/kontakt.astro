@@ -1,0 +1,146 @@
+---
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import BreadcrumbSchema from "../components/BreadcrumbSchema.astro";
+import Container from "../components/ui/Container.astro";
+import Section from "../components/ui/Section.astro";
+import { site } from "../data/site.ts";
+
+const breadcrumbs = [
+  { name: "Owell", path: "/" },
+  { name: "Kontakt", path: "/kontakt" },
+];
+
+const kanaly = [
+  {
+    etykieta: "Zapytania ogólne",
+    tekst: site.kontakt.email,
+    href: `mailto:${site.kontakt.email}`,
+    opis: "Pytania o produkty, ofertę i współpracę.",
+  },
+  {
+    etykieta: "Serwis i reklamacje",
+    tekst: site.kontakt.emailSerwis,
+    href: `mailto:${site.kontakt.emailSerwis}`,
+    opis: "Zgłoszenia gwarancyjne, reklamacje, pytania o naprawę.",
+  },
+  {
+    etykieta: "WhatsApp",
+    tekst: site.kontakt.whatsapp,
+    href: `https://wa.me/${site.kontakt.whatsappWa}`,
+    external: true,
+    opis: "Szybki kontakt na czacie — odpowiadamy w godzinach pracy.",
+  },
+];
+---
+
+<Base
+  title="Kontakt — Owell"
+  description="Napisz do nas w sprawach ogólnych lub serwisowych. Odpowiadamy mailowo, bez infolinii."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title">Kontakt</h1>
+        <p class="page-lead">
+          Nie prowadzimy infolinii — wszystkie sprawy załatwiamy mailowo. Na zgłoszenia serwisowe odpowiadamy w ciągu
+          24 godzin roboczych.
+        </p>
+
+        <div class="grid">
+          {kanaly.map((k) => (
+            <div class="kanal">
+              <p class="kanal-etykieta">{k.etykieta}</p>
+              <a
+                href={k.href}
+                class="kanal-email"
+                {...(k.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+              >
+                {k.tekst}
+              </a>
+              <p class="kanal-opis">{k.opis}</p>
+            </div>
+          ))}
+        </div>
+
+        <p class="dane-firmowe">
+          {site.firma.nazwaPelna} · {site.firma.adres} · NIP: {site.firma.nip}
+        </p>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .page-lead {
+    margin-top: var(--sp-4);
+    max-width: var(--maxw-prose);
+    font-size: var(--fs-lead);
+    color: var(--text-2);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-8);
+    margin-top: var(--sp-12);
+    max-width: var(--maxw-prose);
+  }
+
+  .kanal-etykieta {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+  }
+
+  .kanal-email {
+    display: inline-block;
+    margin-top: var(--sp-3);
+    font-size: var(--fs-lead);
+    color: var(--gold);
+    text-decoration: none;
+  }
+
+  .kanal-email:hover {
+    color: var(--gold-bright);
+  }
+
+  .kanal-opis {
+    margin-top: var(--sp-2);
+    font-size: var(--fs-small);
+    color: var(--text-2);
+  }
+
+  .dane-firmowe {
+    margin-top: var(--sp-12);
+    padding-top: var(--sp-6);
+    font-size: var(--fs-micro);
+    color: var(--text-muted);
+    border-top: 1px solid var(--hairline-soft);
+  }
+
+  @media (min-width: 640px) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

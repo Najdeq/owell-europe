@@ -1,0 +1,75 @@
+---
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import BreadcrumbSchema from "../components/BreadcrumbSchema.astro";
+import Container from "../components/ui/Container.astro";
+import Section from "../components/ui/Section.astro";
+import Prose from "../components/ui/Prose.astro";
+import { site } from "../data/site.ts";
+
+const breadcrumbs = [
+  { name: "Owell", path: "/" },
+  { name: "Gwarancja", path: "/gwarancja" },
+];
+---
+
+<Base
+  title="Gwarancja — Owell"
+  description={`Każdy produkt Owell objęty jest ${site.gwarancjaMiesiace}-miesięczną gwarancją. Sprawdź, co obejmuje i jak zgłosić naprawę.`}
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title">Karta gwarancyjna</h1>
+
+        <Prose>
+          <h2>Okres gwarancji</h2>
+          <p>
+            Każdy produkt Owell objęty jest {site.gwarancjaMiesiace}-miesięczną gwarancją, liczoną od daty zakupu
+            potwierdzonej dowodem zakupu (paragon lub faktura ze sklepu internetowego).
+          </p>
+
+          <h2>Co obejmuje gwarancja</h2>
+          <p>
+            Wady materiałowe i produkcyjne powstałe w normalnych warunkach użytkowania, zgodnie z instrukcją obsługi
+            dołączoną do produktu.
+          </p>
+
+          <h2>Czego gwarancja nie obejmuje</h2>
+          <ul>
+            <li>Uszkodzeń mechanicznych powstałych z winy użytkownika.</li>
+            <li>Normalnego zużycia elementów eksploatacyjnych (np. ostrzy, akumulatorów).</li>
+            <li>Usterek powstałych wskutek użytkowania niezgodnego z instrukcją obsługi.</li>
+          </ul>
+
+          <h2>Jak zgłosić naprawę</h2>
+          <p>
+            Napisz na <a href={`mailto:${site.kontakt.emailSerwis}`}>{site.kontakt.emailSerwis}</a>, podając model
+            produktu, numer zamówienia i opis usterki. Zdjęcia lub krótkie wideo przyspieszają rozpatrzenie sprawy.
+            Zgłoszenia rozpatrujemy mailowo, bez infolinii.
+          </p>
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+</style>

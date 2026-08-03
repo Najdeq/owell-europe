@@ -23,6 +23,18 @@ import { site } from "../../data/site.ts";
       </div>
 
       <div class="kontakt-item">
+        <p class="kontakt-etykieta">WhatsApp</p>
+        <a
+          href={`https://wa.me/${site.kontakt.whatsappWa}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="kontakt-email"
+        >
+          {site.kontakt.whatsapp}
+        </a>
+      </div>
+
+      <div class="kontakt-item">
         <p class="kontakt-etykieta">Formularz kontaktowy</p>
         <Button href="/kontakt" variant="ghost">Napisz do nas</Button>
       </div>

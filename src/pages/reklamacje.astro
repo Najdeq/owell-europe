@@ -1,0 +1,110 @@
+---
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import BreadcrumbSchema from "../components/BreadcrumbSchema.astro";
+import Container from "../components/ui/Container.astro";
+import Section from "../components/ui/Section.astro";
+import Prose from "../components/ui/Prose.astro";
+import { site } from "../data/site.ts";
+
+const breadcrumbs = [
+  { name: "Owell", path: "/" },
+  { name: "Reklamacje", path: "/reklamacje" },
+];
+
+const kroki = [
+  "Napisz na adres serwisowy, podając model produktu i numer zamówienia.",
+  "Opisz usterkę — zdjęcia lub krótkie wideo przyspieszają rozpatrzenie sprawy.",
+  "Odpowiadamy w ciągu 24 godzin roboczych z dalszymi krokami (naprawa, wymiana lub zwrot).",
+];
+---
+
+<Base
+  title="Reklamacje — Owell"
+  description="Jak zgłosić reklamację produktu Owell — krok po kroku, bez infolinii."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title">Reklamacje</h1>
+        <p class="page-lead">
+          Zgłoszenia reklamacyjne przyjmujemy mailowo, bezpośrednio — bez infolinii i bez przekierowań między
+          działami.
+        </p>
+
+        <ol class="kroki">
+          {kroki.map((krok, i) => (
+            <li>
+              <span class="krok-numer">{i + 1}</span>
+              <span class="krok-tekst">{krok}</span>
+            </li>
+          ))}
+        </ol>
+
+        <Prose>
+          <p>
+            Adres serwisowy: <a href={`mailto:${site.kontakt.emailSerwis}`}>{site.kontakt.emailSerwis}</a>. Reklamacje
+            rozpatrujemy zgodnie z warunkami opisanymi na stronie{" "}
+            <a href="/gwarancja">gwarancji</a>.
+          </p>
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .page-lead {
+    margin-top: var(--sp-4);
+    max-width: var(--maxw-prose);
+    font-size: var(--fs-lead);
+    color: var(--text-2);
+  }
+
+  .kroki {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-6);
+    max-width: var(--maxw-prose);
+    margin-top: var(--sp-10);
+    margin-bottom: var(--sp-10);
+    list-style: none;
+  }
+
+  .kroki li {
+    display: flex;
+    align-items: baseline;
+    gap: var(--sp-4);
+  }
+
+  .krok-numer {
+    flex: none;
+    font-family: var(--font-mono);
+    font-size: var(--fs-lead);
+    font-weight: 600;
+    color: var(--gold-bright);
+  }
+
+  .krok-tekst {
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+</style>
