@@ -7,6 +7,7 @@ import Footer from "../components/Footer.astro";
 import BreadcrumbSchema from "../components/BreadcrumbSchema.astro";
 import Container from "../components/ui/Container.astro";
 import Section from "../components/ui/Section.astro";
+import WyszukiwarkaModelu from "../components/WyszukiwarkaModelu.astro";
 import { site } from "../data/site.ts";
 
 import fotoOw1360b from "../assets/produkty/hero/ow-1360b.jpg";
@@ -134,6 +135,8 @@ const grupy = site.kategorie.map((g) => ({
           Kategorie sprzętu, który projektujemy. Przy każdej — jeden przykładowy model z oferty.
         </p>
 
+        <WyszukiwarkaModelu class="szukaj-na-produktach" />
+
         {grupy.map((g) => (
           <section id={g.slug} class="grupa">
             <div class="grupa-header">
@@ -214,6 +217,10 @@ const grupy = site.kategorie.map((g) => ({
     max-width: var(--maxw-prose);
     font-size: var(--fs-lead);
     color: var(--text-2);
+  }
+
+  :global(.szukaj-na-produktach) {
+    margin-bottom: var(--sp-12);
   }
 
   .grupa {

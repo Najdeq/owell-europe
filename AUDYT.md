@@ -1,6 +1,18 @@
 # Audyt strony Owell Europe
 
-Data: 2026-08-03 · Średnia ocena: **6,8/10**
+Data: 2026-08-03 · Ocena w chwili audytu: **6,8/10**
+
+## Status realizacji
+
+| # | Zadanie | Status |
+|---|---------|--------|
+| 1 | `site.sklep` | ⏳ czeka na domenę — CTA tymczasowo kierują na WhatsApp/mail, zero martwych linków |
+| 2 | Niepotwierdzone liczby | ✅ zastąpione danymi weryfikowalnymi |
+| 3 | Strony produktowe | ✅ 10 stron `/produkty/[model]` |
+| 4 | Wyszukiwarka po modelu | ✅ na `/produkty` i `/wsparcie` |
+| 5 | LCP (poster, eager logo) | ✅ |
+| 6 | Schema Product + FAQPage | ✅ |
+| 7 | Rejestracja produktu → +12 mies. | ⬜ decyzja biznesowa |
 
 Cel strony: budowanie wiarygodności marki dla kogoś, kto zobaczył produkt Owell
 na marketplace i sprawdza w Google, czy to prawdziwa firma. To NIE jest sklep.

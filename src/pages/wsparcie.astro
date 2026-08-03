@@ -5,6 +5,7 @@ import Footer from "../components/Footer.astro";
 import BreadcrumbSchema from "../components/BreadcrumbSchema.astro";
 import Container from "../components/ui/Container.astro";
 import Section from "../components/ui/Section.astro";
+import WyszukiwarkaModelu from "../components/WyszukiwarkaModelu.astro";
 
 const breadcrumbs = [
   { name: "Owell", path: "/" },
@@ -54,6 +55,8 @@ const linki = [
         <h1 class="page-title" data-reveal>Wsparcie</h1>
         <p class="page-lead" data-reveal data-reveal-delay="80">Wszystko, czego możesz potrzebować po zakupie, w jednym miejscu.</p>
 
+        <WyszukiwarkaModelu class="szukaj-na-wsparciu" />
+
         <div class="grid">
           {linki.map((l) => (
             <a href={l.href} class="karta">
@@ -86,6 +89,10 @@ const linki = [
     max-width: var(--maxw-prose);
     font-size: var(--fs-lead);
     color: var(--text-2);
+  }
+
+  :global(.szukaj-na-wsparciu) {
+    margin-top: var(--sp-8);
   }
 
   .grid {

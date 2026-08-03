@@ -1,0 +1,247 @@
+---
+import { getCollection } from "astro:content";
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+
+const produkty = await getCollection("produkty");
+
+// Indeks budujemy w czasie builda i wstrzykujemy jako JSON — 10 produktów to
+// kilka kB, więc nie ma potrzeby odpytywania serwera ani ładowania biblioteki.
+const indeks = produkty
+  .filter((p) => p.data.opublikowany)
+  .map((p) => ({
+    id: p.id,
+    model: p.data.model,
+    nazwa: p.data.nazwa,
+    tagline: p.data.tagline,
+    // Znormalizowany klucz wyszukiwania: bez spacji i myślników, małe litery.
+    // Dzięki temu "OW 3300", "ow-3300" i "ow3300" trafiają w ten sam produkt —
+    // klient przepisuje numer z pudełka i nie musi zgadywać formatu.
+    // Tagline w kluczu pozwala też znaleźć sprzęt po typie ("czajnik"),
+    // gdy ktoś nie ma pod ręką numeru modelu.
+    klucz: `${p.data.model} ${p.data.nazwa} ${p.data.tagline}`
+      .toLowerCase()
+      .replace(/[\s-]/g, ""),
+  }));
+---
+
+<div class:list={["szukaj", className]} data-szukaj>
+  <label class="szukaj-label" for="szukaj-input">
+    Masz produkt Owell? Wpisz numer modelu z tabliczki lub pudełka
+  </label>
+
+  <div class="szukaj-pole">
+    <input
+      id="szukaj-input"
+      type="search"
+      class="szukaj-input"
+      placeholder="np. OW 3300"
+      autocomplete="off"
+      role="combobox"
+      aria-expanded="false"
+      aria-controls="szukaj-wyniki"
+      aria-autocomplete="list"
+      data-szukaj-input
+    />
+  </div>
+
+  <ul id="szukaj-wyniki" class="szukaj-wyniki" data-szukaj-wyniki hidden></ul>
+  <p class="szukaj-pusto" data-szukaj-pusto hidden>
+    Nie znaleźliśmy takiego modelu. Sprawdź pisownię albo napisz do nas — pomożemy zidentyfikować sprzęt.
+  </p>
+</div>
+
+<script define:vars={{ indeks }}>
+  function setupWyszukiwarka() {
+    const root = document.querySelector("[data-szukaj]");
+    if (!root || root.dataset.owellBound === "true") return;
+    root.dataset.owellBound = "true";
+
+    const input = root.querySelector("[data-szukaj-input]");
+    const lista = root.querySelector("[data-szukaj-wyniki]");
+    const pusto = root.querySelector("[data-szukaj-pusto]");
+
+    const normalizuj = (s) => s.toLowerCase().replace(/[\s-]/g, "");
+
+    function render(wyniki) {
+      lista.innerHTML = "";
+
+      for (const w of wyniki) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.href = `/produkty/${w.id}`;
+        a.className = "szukaj-wynik";
+        a.innerHTML =
+          `<span class="szukaj-wynik-model"></span>` +
+          `<span class="szukaj-wynik-nazwa"></span>`;
+        // Treść wstawiamy przez textContent, nie innerHTML — dane pochodzą
+        // z pola tekstowego użytkownika i z kolekcji, więc nie budujemy
+        // znaczników ze stringów.
+        a.querySelector(".szukaj-wynik-model").textContent = w.model;
+        a.querySelector(".szukaj-wynik-nazwa").textContent = w.nazwa;
+        li.appendChild(a);
+        lista.appendChild(li);
+      }
+
+      lista.hidden = wyniki.length === 0;
+      input.setAttribute("aria-expanded", String(wyniki.length > 0));
+    }
+
+    function szukaj() {
+      const q = normalizuj(input.value.trim());
+
+      if (q.length < 2) {
+        lista.hidden = true;
+        pusto.hidden = true;
+        input.setAttribute("aria-expanded", "false");
+        return;
+      }
+
+      const wyniki = indeks.filter((p) => p.klucz.includes(q)).slice(0, 6);
+      render(wyniki);
+      pusto.hidden = wyniki.length > 0;
+    }
+
+    input.addEventListener("input", szukaj);
+
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        input.value = "";
+        szukaj();
+        return;
+      }
+      // Strzałka w dół przenosi na pierwszy wynik — obsługa z klawiatury
+      // bez konieczności tabowania przez cały formularz.
+      if (e.key === "ArrowDown" && !lista.hidden) {
+        e.preventDefault();
+        lista.querySelector("a")?.focus();
+      }
+    });
+
+    lista.addEventListener("keydown", (e) => {
+      const linki = Array.from(lista.querySelectorAll("a"));
+      const i = linki.indexOf(document.activeElement);
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        (linki[i + 1] ?? linki[0]).focus();
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        if (i <= 0) input.focus();
+        else linki[i - 1].focus();
+      } else if (e.key === "Escape") {
+        input.focus();
+      }
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!root.contains(e.target)) {
+        lista.hidden = true;
+        input.setAttribute("aria-expanded", "false");
+      }
+    });
+  }
+
+  setupWyszukiwarka();
+  document.addEventListener("astro:page-load", setupWyszukiwarka);
+</script>
+
+<style>
+  .szukaj {
+    position: relative;
+    max-width: 32rem;
+  }
+
+  .szukaj-label {
+    display: block;
+    margin-bottom: var(--sp-3);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+  }
+
+  .szukaj-input {
+    width: 100%;
+    padding: var(--sp-4) var(--sp-5);
+    font-family: var(--font-mono);
+    font-size: var(--fs-body);
+    color: var(--text);
+    background-color: var(--bg-1);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    transition: border-color var(--dur) var(--ease);
+  }
+
+  .szukaj-input::placeholder {
+    color: var(--text-muted);
+  }
+
+  .szukaj-input:focus {
+    border-color: var(--gold);
+    outline: none;
+  }
+
+  .szukaj-input:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  .szukaj-wyniki {
+    position: absolute;
+    z-index: 20;
+    width: 100%;
+    margin-top: var(--sp-2);
+    list-style: none;
+    background-color: var(--bg-2);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 20px 48px -16px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Elementy wyników powstają w JS (document.createElement), więc nie dostają
+     atrybutu data-astro-cid-* i scoped CSS by ich nie objął — stąd :global.
+     Zagnieżdżenie w .szukaj-wyniki trzyma je mimo to lokalnie. */
+  .szukaj-wyniki :global(.szukaj-wynik) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-1);
+    padding: var(--sp-3) var(--sp-5);
+    text-decoration: none;
+    border-bottom: 1px solid var(--hairline-soft);
+    transition: background-color var(--dur) var(--ease);
+  }
+
+  .szukaj-wyniki :global(li:last-child .szukaj-wynik) {
+    border-bottom: none;
+  }
+
+  .szukaj-wyniki :global(.szukaj-wynik:hover),
+  .szukaj-wyniki :global(.szukaj-wynik:focus-visible) {
+    background-color: var(--bg-3);
+  }
+
+  .szukaj-wyniki :global(.szukaj-wynik-model) {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    letter-spacing: var(--tracking-mono);
+    color: var(--gold);
+  }
+
+  .szukaj-wyniki :global(.szukaj-wynik-nazwa) {
+    font-size: var(--fs-small);
+    color: var(--text);
+  }
+
+  .szukaj-pusto {
+    margin-top: var(--sp-3);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--text-muted);
+  }
+</style>
