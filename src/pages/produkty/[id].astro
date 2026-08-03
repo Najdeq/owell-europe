@@ -1,0 +1,474 @@
+---
+import { existsSync } from "node:fs";
+import { Image } from "astro:assets";
+import { getCollection, type CollectionEntry } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Button from "../../components/ui/Button.astro";
+import Eyebrow from "../../components/ui/Eyebrow.astro";
+import { site } from "../../data/site.ts";
+
+import fotoOw1360b from "../../assets/produkty/hero/ow-1360b.jpg";
+import fotoOw1360w from "../../assets/produkty/hero/ow-1360w.jpg";
+import fotoOw3097 from "../../assets/produkty/hero/ow-3097.jpg";
+import fotoOw3300 from "../../assets/produkty/hero/ow-3300.jpg";
+import fotoOw4634 from "../../assets/produkty/hero/ow-4634.jpg";
+import fotoOw8805 from "../../assets/produkty/hero/ow-8805.jpg";
+
+export async function getStaticPaths() {
+  const produkty = await getCollection("produkty");
+  return produkty
+    .filter((p) => p.data.opublikowany)
+    .map((produkt) => ({ params: { id: produkt.id }, props: { produkt } }));
+}
+
+interface Props {
+  produkt: CollectionEntry<"produkty">;
+}
+
+const { produkt } = Astro.props;
+const d = produkt.data;
+
+const fotki: Record<string, ImageMetadata> = {
+  "ow-1360b": fotoOw1360b,
+  "ow-1360w": fotoOw1360w,
+  "ow-3097": fotoOw3097,
+  "ow-3300": fotoOw3300,
+  "ow-4634": fotoOw4634,
+  "ow-8805": fotoOw8805,
+};
+const foto = fotki[produkt.id];
+
+// Instrukcje PDF jeszcze nie leżą w public/ — linkujemy dopiero, gdy plik
+// naprawdę istnieje, żeby nie wysyłać nikogo na 404. Po wrzuceniu pliku
+// do public/pliki/ link pojawi się sam, bez zmian w kodzie.
+const instrukcjaIstnieje =
+  !!d.instrukcjaPdf && existsSync(`./public${d.instrukcjaPdf}`);
+
+const akapity = d.opis.split("\n\n").filter(Boolean);
+const kupHref = d.gdzieKupic ?? site.sklep;
+
+const nazwaKategorii =
+  site.kategorie.find((k) => k.slug === d.kategoria)?.nazwa ?? "Produkty";
+
+const breadcrumbs = [
+  { name: "Owell", path: "/" },
+  { name: "Produkty", path: "/produkty" },
+  { name: d.nazwa, path: `/produkty/${produkt.id}` },
+];
+
+// schema.org/Product — bez `offers`, bo nie podajemy cen na tej stronie
+// (to nie sklep). Dodanie ceny bez działającego sklepu byłoby nieprawdą.
+const productSchema = {
+  "@context": "https://schema.org",
+  "@type": "Product",
+  name: d.nazwa,
+  model: d.model,
+  sku: d.model,
+  description: d.tagline,
+  category: nazwaKategorii,
+  brand: { "@type": "Brand", name: site.nazwa },
+  manufacturer: {
+    "@type": "Organization",
+    name: d.gpsr.producent,
+    address: { "@type": "PostalAddress", streetAddress: d.gpsr.adres },
+    email: d.gpsr.emailProducenta,
+  },
+  ...(foto ? { image: new URL(foto.src, Astro.site).toString() } : {}),
+  additionalProperty: d.dane.map((x) => ({
+    "@type": "PropertyValue",
+    name: x.etykieta,
+    value: x.wartosc,
+  })),
+};
+---
+
+<Base
+  title={`${d.nazwa} (${d.model}) — Owell`}
+  description={d.tagline}
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+  <script
+    slot="head"
+    type="application/ld+json"
+    set:html={JSON.stringify(productSchema)}
+  />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <nav class="okruszki" aria-label="Ścieżka nawigacji">
+          <a href="/produkty">Produkty</a>
+          <span aria-hidden="true">/</span>
+          <a href={`/produkty#${d.kategoria}`}>{nazwaKategorii}</a>
+        </nav>
+
+        <div class="top">
+          <div class="top-media">
+            {foto ? (
+              <Image
+                src={foto}
+                alt={`${d.nazwa} — ${d.tagline}`}
+                width={900}
+                height={900}
+                loading="eager"
+                class="foto"
+              />
+            ) : (
+              <div class="foto-brak">
+                <span>{d.model}</span>
+              </div>
+            )}
+          </div>
+
+          <div class="top-info">
+            <Eyebrow data-reveal>{d.model}</Eyebrow>
+            <h1 class="tytul" data-reveal data-reveal-delay="80">{d.nazwa}</h1>
+            <p class="tagline" data-reveal data-reveal-delay="160">{d.tagline}</p>
+
+            <div class="kup">
+              {kupHref ? (
+                <Button
+                  href={kupHref}
+                  variant="primary"
+                  external
+                  data-marketplace="sklep"
+                  data-platforma="Sklep internetowy"
+                  data-lokalizacja={`produkt-${produkt.id}`}
+                >
+                  Kup w sklepie
+                </Button>
+              ) : (
+                <Button
+                  href={`https://wa.me/${site.kontakt.whatsappWa}`}
+                  variant="primary"
+                  external
+                  data-marketplace="whatsapp"
+                  data-platforma="WhatsApp"
+                  data-lokalizacja={`produkt-${produkt.id}`}
+                >
+                  Zapytaj o dostępność
+                </Button>
+              )}
+              {instrukcjaIstnieje && (
+                <Button href={d.instrukcjaPdf!} variant="ghost">Instrukcja PDF</Button>
+              )}
+            </div>
+
+            <p class="gwarancja-nota">
+              {d.gwarancjaMiesiace} miesięcy gwarancji · pełna karta GPSR poniżej
+            </p>
+          </div>
+        </div>
+      </Container>
+    </Section>
+
+    <Section bg="raised">
+      <Container>
+        <div class="dwie-kolumny">
+          <div>
+            <h2 class="naglowek" data-reveal>Opis</h2>
+            {akapity.map((a) => <p class="akapit">{a}</p>)}
+          </div>
+
+          <div>
+            <h2 class="naglowek" data-reveal>Dane techniczne</h2>
+            <dl class="dane">
+              {d.dane.map((x) => (
+                <div class="dana">
+                  <dt>{x.etykieta}</dt>
+                  <dd>{x.wartosc}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </div>
+      </Container>
+    </Section>
+
+    <Section bg="base">
+      <Container>
+        <h2 class="naglowek" data-reveal>Co wyróżnia ten model</h2>
+        <div class="wyroznniki">
+          {d.wyroznniki.map((w) => (
+            <article class="wyroznnik">
+              <h3 class="wyroznnik-tytul">{w.tytul}</h3>
+              <p class="wyroznnik-opis">{w.opis}</p>
+            </article>
+          ))}
+        </div>
+      </Container>
+    </Section>
+
+    <Section bg="raised">
+      <Container>
+        <div class="gpsr">
+          <Eyebrow>Bezpieczeństwo produktu (GPSR)</Eyebrow>
+          <h2 class="naglowek naglowek--gpsr">Dane producenta</h2>
+
+          <dl class="dane dane--gpsr">
+            <div class="dana">
+              <dt>Producent</dt>
+              <dd>{d.gpsr.producent}</dd>
+            </div>
+            <div class="dana">
+              <dt>Adres</dt>
+              <dd>{d.gpsr.adres}</dd>
+            </div>
+            <div class="dana">
+              <dt>Kontakt</dt>
+              <dd><a href={`mailto:${d.gpsr.emailProducenta}`}>{d.gpsr.emailProducenta}</a></dd>
+            </div>
+            {d.gpsr.osobaOdpowiedzialnaUE && (
+              <div class="dana">
+                <dt>Osoba odpowiedzialna w UE</dt>
+                <dd>{d.gpsr.osobaOdpowiedzialnaUE}</dd>
+              </div>
+            )}
+          </dl>
+
+          {d.gpsr.ostrzezenia && d.gpsr.ostrzezenia.length > 0 && (
+            <ul class="ostrzezenia">
+              {d.gpsr.ostrzezenia.map((o) => <li>{o}</li>)}
+            </ul>
+          )}
+
+          <p class="gpsr-nota">
+            Zgodnie z rozporządzeniem (UE) 2023/988. Więcej na stronie{" "}
+            <a href="/bezpieczenstwo-produktu">bezpieczeństwa produktu</a>.
+          </p>
+        </div>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .okruszki {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+    margin-top: var(--sp-4);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+  }
+
+  .okruszki a {
+    color: var(--steel);
+    text-decoration: none;
+  }
+
+  .okruszki a:hover {
+    color: var(--gold-bright);
+  }
+
+  .top {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-8);
+    margin-top: var(--sp-8);
+  }
+
+  .foto,
+  .foto-brak {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--hairline-soft);
+  }
+
+  .foto {
+    height: auto;
+    object-fit: cover;
+    background-color: var(--photo-bg);
+  }
+
+  .foto-brak {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--bg-1);
+    font-family: var(--font-mono);
+    font-size: var(--fs-small);
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+  }
+
+  .tytul {
+    margin-top: var(--sp-3);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .tagline {
+    margin-top: var(--sp-4);
+    font-size: var(--fs-lead);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .kup {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-4);
+    margin-top: var(--sp-8);
+  }
+
+  .gwarancja-nota {
+    margin-top: var(--sp-6);
+    padding-top: var(--sp-4);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+    border-top: 1px solid var(--hairline-soft);
+  }
+
+  .naglowek {
+    font-family: var(--font-display);
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .naglowek--gpsr {
+    margin-top: var(--sp-3);
+  }
+
+  .dwie-kolumny {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-12);
+  }
+
+  .akapit {
+    max-width: var(--maxw-prose);
+    margin-top: var(--sp-4);
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .dane {
+    margin-top: var(--sp-6);
+  }
+
+  .dana {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--sp-4);
+    padding-block: var(--sp-3);
+    border-top: 1px solid var(--hairline-soft);
+  }
+
+  .dana dt {
+    font-size: var(--fs-small);
+    color: var(--text-2);
+  }
+
+  .dana dd {
+    font-family: var(--font-mono);
+    font-size: var(--fs-small);
+    color: var(--text);
+  }
+
+  .dana dd a {
+    color: var(--gold);
+  }
+
+  .dana dd a:hover {
+    color: var(--gold-bright);
+  }
+
+  .wyroznniki {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-8);
+    margin-top: var(--sp-8);
+  }
+
+  .wyroznnik-tytul {
+    font-family: var(--font-display);
+    font-size: var(--fs-lead);
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .wyroznnik-opis {
+    margin-top: var(--sp-2);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .gpsr {
+    max-width: var(--maxw-prose);
+  }
+
+  .ostrzezenia {
+    margin-top: var(--sp-6);
+    padding-left: var(--sp-6);
+  }
+
+  .ostrzezenia li {
+    margin-bottom: var(--sp-2);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .gpsr-nota {
+    margin-top: var(--sp-6);
+    font-size: var(--fs-micro);
+    line-height: var(--lh-body);
+    color: var(--text-muted);
+  }
+
+  .gpsr-nota a {
+    color: var(--gold);
+  }
+
+  .gpsr-nota a:hover {
+    color: var(--gold-bright);
+  }
+
+  @media (min-width: 720px) {
+    .dwie-kolumny {
+      grid-template-columns: 1.2fr 1fr;
+      gap: var(--sp-16);
+    }
+
+    .wyroznniki {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 960px) {
+    .top {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-16);
+      align-items: center;
+    }
+
+    .wyroznniki {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+</style>

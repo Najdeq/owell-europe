@@ -142,8 +142,16 @@ const grupy = site.kategorie.map((g) => ({
             </div>
 
             <div class="grid">
-              {g.kategorie.map((k) => (
-                <article class:list={["karta", { "karta--puste": !k.produkt }]}>
+              {g.kategorie.map((k) => {
+                // Karta z produktem jest linkiem do jego strony — dzięki temu
+                // treść z tyłu karty (widoczna tylko na hover) jest osiągalna
+                // także na dotyku, gdzie hover nie istnieje.
+                const Tag = k.produkt ? "a" : "article";
+                return (
+                <Tag
+                  class:list={["karta", { "karta--puste": !k.produkt }]}
+                  {...(k.produkt ? { href: `/produkty/${k.produkt.id}` } : {})}
+                >
                   <div class="karta-flip">
                     <div class="karta-face karta-face--przod">
                       <div class="karta-foto">
@@ -172,11 +180,13 @@ const grupy = site.kategorie.map((g) => ({
                         <span class="karta-tyl-model">{k.produkt.data.model}</span>
                         <h3 class="karta-tyl-nazwa">{k.nazwa}</h3>
                         <p class="karta-tyl-opis">{k.produkt.data.opis.split("\n\n")[0]}</p>
+                        <span class="karta-tyl-link">Zobacz produkt →</span>
                       </div>
                     )}
                   </div>
-                </article>
-              ))}
+                </Tag>
+                );
+              })}
             </div>
           </section>
         ))}
@@ -240,11 +250,27 @@ const grupy = site.kategorie.map((g) => ({
   }
 
   .karta {
+    display: block;
     position: relative;
     aspect-ratio: 1 / 1;
     border-radius: var(--radius-lg);
     perspective: 1800px;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .karta--puste {
     cursor: default;
+  }
+
+  .karta-tyl-link {
+    flex: none;
+    margin-top: var(--sp-3);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--gold);
   }
 
   .karta:not(.karta--puste):hover {

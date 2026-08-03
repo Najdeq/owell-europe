@@ -32,7 +32,9 @@ const produkty = defineCollection({
       osobaOdpowiedzialnaUE: z.string().optional(),
       ostrzezenia: z.array(z.string()).optional(),
     }),
-    gdzieKupic: z.string(),
+    // Sprzedaż idzie przez jeden sklep (`site.sklep`), więc pole per-produkt
+    // jest opcjonalne — używaj go tylko, gdy dany model ma inny adres docelowy.
+    gdzieKupic: z.string().optional(),
     kolejnosc: z.number(),
     opublikowany: z.boolean().default(true),
   }),

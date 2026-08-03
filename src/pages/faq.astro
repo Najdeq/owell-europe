@@ -47,6 +47,19 @@ const pytania = [
     odpowiedz: `W sprawach ogólnych: ${site.kontakt.email}. W sprawach serwisowych i reklamacyjnych: ${site.kontakt.emailSerwis}.`,
   },
 ];
+
+// schema.org/FAQPage — pozwala Google pokazać pytania bezpośrednio w wynikach.
+// Treść bierzemy z tej samej tablicy co widoczne teksty, żeby nigdy się nie
+// rozjechały (Google karze za dane strukturalne niezgodne z treścią strony).
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: pytania.map((p) => ({
+    "@type": "Question",
+    name: p.pytanie,
+    acceptedAnswer: { "@type": "Answer", text: p.odpowiedz },
+  })),
+};
 ---
 
 <Base
@@ -54,6 +67,7 @@ const pytania = [
   description="Odpowiedzi na najczęstsze pytania: gdzie kupić, jak działa gwarancja, jak zgłosić reklamację i skontaktować się z serwisem."
 >
   <BreadcrumbSchema slot="head" items={breadcrumbs} />
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 
   <Header />
 
