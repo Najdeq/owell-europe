@@ -86,3 +86,21 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+/* Ogólny efekt "pojawiania się" tekstu — nagłówki/lead dostają
+   [data-reveal], ScrollReveal.astro (IntersectionObserver) dokłada klasę
+   .is-revealed, gdy element wjeżdża w viewport (także przy pierwszym
+   wczytaniu, jeśli element jest od razu widoczny nad linią zagięcia).
+   prefers-reduced-motion i tak zeruje czas trwania dzięki regule wyżej. */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 700ms var(--ease),
+    transform 700ms var(--ease);
+}
+
+[data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+}

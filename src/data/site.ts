@@ -23,6 +23,19 @@ export const site = {
 
   sklep: "#DO-UZUPELNIENIA",
 
+  // Fakty o Adler Europe Group — grupie, w ramach której rozwijana jest marka
+  // Owell. Dane przekazane przez właściciela, weryfikowalne na adler.com.pl.
+  // UWAGA: to są liczby GRUPY, nie marki Owell. Zawsze podpisuj je wprost jako
+  // dotyczące grupy — nigdy nie prezentuj ich jako dorobku samego Owella.
+  grupa: {
+    nazwa: "Adler Europe Group",
+    lataHistorii: 30,
+    odRokuWPolsce: 2002,
+    liczbaProduktow: 800,
+    liczbaKrajow: 60,
+    marki: ["Adler Europe", "Camry Premium", "Mesko Home"],
+  },
+
   // Profile w mediach społecznościowych / inne oficjalne strony marki —
   // schema.org Organization.sameAs.
   sameAs: [

@@ -4,15 +4,20 @@ import { Image } from "astro:assets";
 import Container from "../ui/Container.astro";
 import Section from "../ui/Section.astro";
 import Eyebrow from "../ui/Eyebrow.astro";
+import { site } from "../../data/site.ts";
 import detalCzajnik from "../../assets/marka/detal-czajnik.jpg";
 
 const produkty = await getCollection("produkty");
 
+// Tylko dane, które da się sprawdzić: gwarancja i liczba modeli wynikają
+// wprost z site.ts i kolekcji produktów, pozostałe dwie z site.grupa
+// (fakty o Adler Europe Group przekazane przez właściciela).
+// Nie dodawaj tu liczb sprzedaży, ocen ani lat doświadczenia bez źródła.
 const argumenty = [
   {
-    liczba: "24",
+    liczba: String(site.gwarancjaMiesiace),
     jednostka: "miesiące",
-    opis: "gwarancji na każdy produkt objęty ochroną.",
+    opis: "gwarancji na każdy produkt, bez wyjątków.",
   },
   {
     liczba: String(produkty.length),
@@ -20,14 +25,14 @@ const argumenty = [
     opis: "w aktualnej ofercie, każdy z pełną kartą GPSR.",
   },
   {
-    liczba: "15",
-    jednostka: "lat",
-    opis: "doświadczenia w projektowaniu sprzętu AGD.",
+    liczba: "100%",
+    jednostka: "produktów",
+    opis: "z pełnymi danymi producenta i dokumentacją zgodności.",
   },
   {
-    liczba: "23",
-    jednostka: "rynki w UE",
-    opis: "do których trafiają produkty Owell.",
+    liczba: String(site.grupa.odRokuWPolsce),
+    jednostka: "rok",
+    opis: `od którego ${site.grupa.nazwa} działa na polskim rynku.`,
   },
 ];
 ---
@@ -44,8 +49,8 @@ const argumenty = [
     </div>
 
     <div class="dlaczego-content">
-      <Eyebrow>Dowody, nie deklaracje</Eyebrow>
-      <h2 class="section-title">Dlaczego Owell</h2>
+      <Eyebrow data-reveal>Dowody, nie deklaracje</Eyebrow>
+      <h2 class="section-title" data-reveal data-reveal-delay="80">Dlaczego Owell</h2>
 
       <dl class="argumenty">
         {argumenty.map((a) => (

@@ -129,8 +129,8 @@ const grupy = site.kategorie.map((g) => ({
   <main id="content">
     <Section bg="base">
       <Container>
-        <h1 class="page-title">Produkty</h1>
-        <p class="page-lead">
+        <h1 class="page-title" data-reveal>Produkty</h1>
+        <p class="page-lead" data-reveal data-reveal-delay="80">
           Kategorie sprzętu, który projektujemy. Przy każdej — jeden przykładowy model z oferty.
         </p>
 
@@ -450,7 +450,7 @@ const grupy = site.kategorie.map((g) => ({
 
   @media (min-width: 1000px) {
     .grid {
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
     }
   }
 

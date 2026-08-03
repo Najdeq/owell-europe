@@ -4,15 +4,17 @@
 
 Strona brandowa marki małego AGD **Owell**, dostępna pod `https://owelleurope.com`.
 
-**To NIE jest sklep.** Sprzedaż odbywa się na marketplace'ach (Allegro, Temu, TikTok Shop). Zadaniem tej strony jest budowa wiarygodności marki i przekierowanie ruchu do ofert. Nigdy nie dodawaj koszyka, cen, płatności ani checkoutu.
+**To NIE jest sklep.** Sprzedaż odbywa się wyłącznie przez **jeden własny sklep internetowy** (`site.sklep`) — bez marketplace'ów i bez sprzedaży stacjonarnej. Zadaniem tej strony jest budowa wiarygodności marki i przekierowanie ruchu do sklepu. Nigdy nie dodawaj koszyka, cen, płatności ani checkoutu.
 
-**Główny KPI:** liczba kliknięć w linki do marketplace (`marketplace_click` w GA4).
+**Główny KPI:** liczba kliknięć w link do sklepu (`marketplace_click` w GA4 — nazwa zdarzenia została z czasów modelu marketplace'owego).
 
-**Grupa docelowa:** polski kupujący, który zobaczył produkt Owell na Allegro i wpisał nazwę marki w Google, żeby sprawdzić, czy to poważna firma.
+**Grupa docelowa:** polski kupujący, który zobaczył produkt Owell na marketplace i wpisał nazwę marki w Google, żeby sprawdzić, czy to poważna firma.
+
+**Bieżący stan i backlog:** patrz `AUDYT.md` w katalogu głównym.
 
 ## Stack
 
-- **Astro 6** — `output: 'static'`, zero adapterów SSR
+- **Astro 7** — `output: 'static'`, zero adapterów SSR
 - **Tailwind v4** przez `@tailwindcss/vite` — konfiguracja w CSS przez `@theme`, **nie ma** `tailwind.config.js`
 - **TypeScript** strict
 - **Fonty lokalne** przez `@fontsource-variable/*` — nigdy z Google CDN (RODO)
@@ -27,14 +29,13 @@ src/
   components/
     ui/                  Container, Section, Button, Eyebrow, Prose
     sections/            sekcje strony głównej
-    Header.astro, Footer.astro, RimLight.astro,
-    ConsentBanner.astro, Analytics.astro
+    Header.astro, Footer.astro, ConsentBanner.astro,
+    Analytics.astro, WhatsAppWidget.astro, ScrollReveal.astro
   content/produkty/      pliki .md produktów
-  data/site.ts           dane firmy, kategorie, linki marketplace
+  data/site.ts           dane firmy, kontakt, kategorie, link do sklepu
   layouts/Base.astro
   pages/
   styles/                tokens.css, global.css
-public/pliki/            instrukcje PDF, karty gwarancyjne
 ```
 
 ## Design system — zasady bezwzględne
@@ -59,16 +60,16 @@ Mono dla danych technicznych to świadoma decyzja: liczby (moc, pojemność, tem
 
 **Wszystkie trzy fonty muszą poprawnie renderować polskie znaki:** ą ć ę ł ń ó ś ź ż Ą Ć Ę Ł Ń Ó Ś Ź Ż. Przy każdej zmianie fontu sprawdź tym ciągiem.
 
-## Element sygnaturowy: rim light
+## Ruch i animacje
 
-Jedyny „efektowny" element na stronie. Złota poświata imitująca światło studyjne odbite od metalu, podążająca za kursorem nad zdjęciem produktu.
+Zasada: jeden wyrazisty efekt na widok, reszta cicha. Wszystko czystym CSS,
+zawsze z obsługą `prefers-reduced-motion`.
 
-- Występuje **wyłącznie** w Hero i na zdjęciu głównym karty produktu
-- Animowane tylko `transform` i `opacity`
-- Wyłączony przy `prefers-reduced-motion` i na mobile (statyczna poświata)
-- Ma być subtelny. Jeśli wygląda jak neon — zmniejsz alfę
-
-Nie dodawaj drugiego efektu tej rangi. Cała odwaga wizualna tej strony mieszka tutaj; reszta ma być cicha i zdyscyplinowana.
+Aktualnie w użyciu:
+- **Flip 3D kart kategorii** na `/produkty` — `rotateY(180deg) scale(1.12)`, tył karty przewijalny. Uwaga: efekt hover, więc na dotyku niedostępny.
+- **Scroll reveal** — `[data-reveal]` + `ScrollReveal.astro` (IntersectionObserver dokłada `.is-revealed`). Opcjonalne opóźnienie przez `data-reveal-delay`.
+- **Count-up liczb** — Hero (od razu po wczytaniu) i sekcja Liczby (przy wejściu w viewport).
+- **Crossfade karuzeli** na `/o-nas` — procenty keyframe'ów liczone w frontmatterze i wstrzykiwane przez `<style set:html>` (CSS nie przyjmuje `var()` w selektorze keyframe). Używaj **dodatnich** `animation-delay` — ujemne odwracają kolejność.
 
 ## Czego NIE robić
 

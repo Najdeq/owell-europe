@@ -2,26 +2,36 @@
 import Container from "../ui/Container.astro";
 import Section from "../ui/Section.astro";
 import Eyebrow from "../ui/Eyebrow.astro";
+import { site } from "../../data/site.ts";
 
+// Wyłącznie liczby weryfikowalne: pochodzą z site.ts (dane przekazane przez
+// właściciela, do sprawdzenia na adler.com.pl). Podpisy mówią wprost, że to
+// dorobek grupy Adler Europe, a nie samej marki Owell — patrz komentarz przy
+// `site.grupa`. Nie dodawaj tu liczb sprzedaży ani ocen bez źródła.
 const liczby = [
   {
-    target: 100000,
-    unit: "tys",
-    suffix: "+",
-    podpis: "sprzedanych urządzeń",
-  },
-  {
-    target: 4.8,
+    target: site.grupa.lataHistorii,
     unit: "plain",
-    decimals: 1,
-    suffix: "",
-    podpis: "średnia ocena klientów",
+    suffix: "+",
+    podpis: `lat historii ${site.grupa.nazwa}`,
   },
   {
-    target: 95000,
-    unit: "tys",
+    target: site.grupa.liczbaKrajow,
+    unit: "plain",
     suffix: "+",
-    podpis: "obsłużonych zamówień",
+    podpis: "krajów, w których sprzedaje grupa",
+  },
+  {
+    target: site.grupa.liczbaProduktow,
+    unit: "plain",
+    suffix: "+",
+    podpis: "produktów w portfolio grupy",
+  },
+  {
+    target: site.grupa.odRokuWPolsce,
+    unit: "plain",
+    suffix: "",
+    podpis: "od tego roku na polskim rynku",
   },
 ];
 
@@ -35,8 +45,12 @@ function format(value: number, unit: string, decimals = 0, suffix = "") {
 
 <Section bg="base">
   <Container>
-    <Eyebrow>Liczby, nie obietnice</Eyebrow>
-    <h2 class="section-title">Owell w liczbach</h2>
+    <Eyebrow data-reveal>Liczby, nie obietnice</Eyebrow>
+    <h2 class="section-title" data-reveal data-reveal-delay="80">Zaplecze, na którym stoi marka</h2>
+    <p class="section-lead" data-reveal data-reveal-delay="160">
+      Owell rozwijamy w ramach {site.grupa.nazwa} — razem z markami{" "}
+      {site.grupa.marki.join(", ")}. To dorobek całej grupy, nie samej marki Owell.
+    </p>
 
     <div class="grid" data-liczby>
       {liczby.map((l) => (
@@ -46,10 +60,10 @@ function format(value: number, unit: string, decimals = 0, suffix = "") {
             data-liczba-wartosc
             data-target={l.target}
             data-unit={l.unit}
-            data-decimals={l.decimals ?? 0}
+            data-decimals="0"
             data-suffix={l.suffix}
           >
-            {format(l.target, l.unit, l.decimals, l.suffix)}
+            {format(l.target, l.unit, 0, l.suffix)}
           </p>
           <p class="liczba-podpis">{l.podpis}</p>
         </div>
@@ -68,6 +82,14 @@ function format(value: number, unit: string, decimals = 0, suffix = "") {
     line-height: var(--lh-snug);
     letter-spacing: var(--tracking-display);
     color: var(--text);
+  }
+
+  .section-lead {
+    margin-top: var(--sp-4);
+    max-width: var(--maxw-prose);
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--text-2);
   }
 
   .grid {
@@ -96,9 +118,16 @@ function format(value: number, unit: string, decimals = 0, suffix = "") {
     color: var(--steel);
   }
 
-  @media (min-width: 720px) {
+  @media (min-width: 560px) {
     .grid {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--sp-10) var(--sp-8);
+    }
+  }
+
+  @media (min-width: 960px) {
+    .grid {
+      grid-template-columns: repeat(4, 1fr);
       gap: var(--sp-8);
     }
   }
