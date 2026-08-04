@@ -13,8 +13,7 @@ export default defineConfig({
 
   // Adapter dodany JAWNIE, choć strona jest statyczna. Cloudflare przy
   // projekcie typu Worker i tak wstrzykuje go automatycznie podczas builda —
-  // trzymanie go w repo daje kontrolę nad konfiguracją i sprawia, że build
-  // lokalny odpowiada temu na serwerze.
+  // trzymanie go w repo daje kontrolę nad konfiguracją.
   //
   // `imageService: 'compile'` jest tu kluczowe: obrazy są przetwarzane
   // sharpem na etapie builda i lądują w dist/_astro/ jako gotowe pliki .webp.
@@ -22,9 +21,14 @@ export default defineConfig({
   // /_image?href=... rozwiązywane dopiero w czasie żądania — a przy
   // output: 'static' nie ma runtime'u, który by je obsłużył, więc KAŻDE
   // zdjęcie zwraca 404 (CSS działa, bo nie idzie przez ten mechanizm).
-  adapter: cloudflare({
-    imageService: 'compile',
-  }),
+  //
+  // Adapter podpinamy TYLKO przy `astro build`. W `astro dev` przełącza on
+  // serwer deweloperski na runtime Workers (miniflare), a ten na Windows
+  // wykłada się przy każdym przeładowaniu na cache optymalizatora Vite
+  // ("The file does not exist ... deps_ssr/..."), przez co dev server zwraca
+  // 500 po każdej edycji pliku. Cloudflare uruchamia `npm run build`,
+  // więc na wdrożeniu adapter jest obecny tak czy inaczej.
+  ...(process.argv.includes('build') ? { adapter: cloudflare({ imageService: 'compile' }) } : {}),
 
   vite: {
     plugins: [tailwindcss()]

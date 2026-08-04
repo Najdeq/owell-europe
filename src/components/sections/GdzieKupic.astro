@@ -11,34 +11,25 @@ import { site } from "../../data/site.ts";
       <Eyebrow data-reveal>Gdzie kupić</Eyebrow>
       <h2 class="section-title" data-reveal data-reveal-delay="80">Wszystkie produkty w jednym miejscu</h2>
       <p class="lead">
-        {site.sklep
-          ? "Kupujesz bezpośrednio w naszym sklepie internetowym — bez pośredników i bez porównywania ofert na kilku platformach."
-          : "Nasz sklep internetowy jest w przygotowaniu. Do czasu uruchomienia zamówienia i pytania o dostępność przyjmujemy na WhatsAppie i mailem."}
+        Kupujesz bezpośrednio od producenta w naszym oficjalnym sklepie na Allegro — z pełną gwarancją i serwisem
+        prowadzonym przez nas, nie przez pośrednika.
       </p>
 
-      {site.sklep ? (
+      {site.allegro ? (
         <a
-          href={site.sklep}
+          href={site.allegro}
           target="_blank"
           rel="noopener noreferrer"
-          data-marketplace="sklep"
-          data-platforma="Sklep internetowy"
+          data-marketplace="allegro"
+          data-platforma="Allegro"
           data-lokalizacja="sekcja"
           class="cta"
         >
-          Przejdź do sklepu →
+          Zobacz nasze oferty na Allegro →
         </a>
       ) : (
-        <a
-          href={`https://wa.me/${site.kontakt.whatsappWa}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          data-marketplace="whatsapp"
-          data-platforma="WhatsApp"
-          data-lokalizacja="sekcja-gdzie-kupic"
-          class="cta"
-        >
-          Napisz na WhatsApp →
+        <a href="/gdzie-kupic" class="cta">
+          Gdzie kupić →
         </a>
       )}
     </div>

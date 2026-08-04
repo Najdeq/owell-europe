@@ -13,20 +13,16 @@ const breadcrumbs = [
   { name: "Gdzie kupić", path: "/gdzie-kupic" },
 ];
 
-// Obietnica o wysyłce dotyczy działającego sklepu — dopóki nie wystartował,
-// nie deklarujemy jej w czasie teraźniejszym.
 const punkty = [
   `${site.gwarancjaMiesiace} miesięcy gwarancji na każdy produkt, bez wyjątków.`,
-  site.sklep
-    ? "Zamówienia złożone do 18:30 wysyłamy tego samego dnia, z gwarancją dostawy InPostem."
-    : "Zamówienia złożone do 18:30 będziemy wysyłać tego samego dnia, z gwarancją dostawy InPostem.",
+  "Zamówienia złożone do 18:30 wysyłamy tego samego dnia, z gwarancją dostawy InPostem.",
   "Pełna karta GPSR i dane producenta przy każdym modelu.",
 ];
 ---
 
 <Base
   title="Gdzie kupić — Owell"
-  description="Produkty Owell kupisz wyłącznie przez nasz oficjalny sklep internetowy. Bez pośredników, bez marketplace'ów."
+  description="Produkty Owell kupisz w naszym oficjalnym sklepie na Allegro. Pełna gwarancja i wsparcie serwisowe bezpośrednio od producenta."
 >
   <BreadcrumbSchema slot="head" items={breadcrumbs} />
 
@@ -37,39 +33,44 @@ const punkty = [
       <Container>
         <h1 class="page-title" data-reveal>Gdzie kupić</h1>
         <p class="page-lead" data-reveal data-reveal-delay="80">
-          {site.sklep
-            ? `Sprzedajemy wyłącznie przez nasz oficjalny sklep internetowy — bez sieci salonów stacjonarnych i bez
-               sprzedaży przez marketplace'y. To jedyny kanał, w którym możemy zagwarantować oryginalność produktu,
-               pełną kartę gwarancyjną i wsparcie serwisowe.`
-            : `Będziemy sprzedawać wyłącznie przez własny sklep internetowy — bez sieci salonów stacjonarnych i bez
-               marketplace'ów. To jedyny kanał, w którym możemy zagwarantować oryginalność produktu, pełną kartę
-               gwarancyjną i wsparcie serwisowe.`}
+          Produkty Owell kupisz w naszym oficjalnym sklepie na Allegro. Sprzedajemy tam bezpośrednio jako producent,
+          więc gwarancja i serwis idą prosto do nas — bez pośredników i bez odsyłania między infoliniami.
         </p>
 
-        {site.sklep ? (
-          <div class="cta">
-            <Button
-              href={site.sklep}
-              variant="primary"
-              external
-              data-marketplace="sklep"
-              data-platforma="Sklep internetowy"
-              data-lokalizacja="strona-gdzie-kupic"
-            >
-              Przejdź do sklepu
-            </Button>
-          </div>
-        ) : (
-          <div class="wkrotce">
-            <p class="wkrotce-tytul">Sklep w przygotowaniu</p>
-            <p class="wkrotce-opis">
-              Uruchamiamy własny sklep internetowy. Do tego czasu odpowiadamy na pytania o produkty i dostępność
-              bezpośrednio — napisz na WhatsApp albo mailem, a powiemy, kiedy ruszamy.
+        <div class="kanaly">
+          <article class="kanal kanal--glowny">
+            <p class="kanal-etykieta">Oficjalny sklep</p>
+            <p class="kanal-tytul">Allegro</p>
+            <p class="kanal-opis">
+              Pełna oferta, wysyłka InPostem i {site.gwarancjaMiesiace} miesięcy gwarancji producenta.
             </p>
-            <div class="wkrotce-cta">
+            {site.allegro ? (
+              <Button
+                href={site.allegro}
+                variant="primary"
+                external
+                data-marketplace="allegro"
+                data-platforma="Allegro"
+                data-lokalizacja="strona-gdzie-kupic"
+              >
+                Zobacz nasze oferty
+              </Button>
+            ) : (
+              <p class="kanal-brak">[DO UZUPEŁNIENIA: link do sklepu Owell na Allegro]</p>
+            )}
+          </article>
+
+          <article class="kanal">
+            <p class="kanal-etykieta">Wkrótce</p>
+            <p class="kanal-tytul">Sklep owelleurope.com</p>
+            <p class="kanal-opis">
+              Pracujemy nad własnym sklepem. Do czasu uruchomienia pytania o produkty i dostępność przyjmujemy
+              bezpośrednio.
+            </p>
+            <div class="kanal-cta">
               <Button
                 href={`https://wa.me/${site.kontakt.whatsappWa}`}
-                variant="primary"
+                variant="ghost"
                 external
                 data-marketplace="whatsapp"
                 data-platforma="WhatsApp"
@@ -77,12 +78,9 @@ const punkty = [
               >
                 Napisz na WhatsApp
               </Button>
-              <Button href={`mailto:${site.kontakt.email}`} variant="ghost">
-                {site.kontakt.email}
-              </Button>
             </div>
-          </div>
-        )}
+          </article>
+        </div>
 
         <ul class="punkty">
           {punkty.map((p) => (
@@ -91,9 +89,8 @@ const punkty = [
         </ul>
 
         <p class="uwaga">
-          Nie autoryzujemy sprzedaży naszych produktów przez inne platformy niż nasz sklep internetowy. Jeśli
-          natrafisz na ofertę Owell gdzie indziej, zachowaj ostrożność — nie możemy potwierdzić jej oryginalności ani
-          zapewnić z niej wsparcia gwarancyjnego.
+          Kupując u nas na Allegro, kupujesz bezpośrednio od producenta — ta sama gwarancja, ten sam serwis i te same
+          dane rejestrowe, które znajdziesz na tej stronie. W razie wątpliwości napisz do nas przed zakupem.
         </p>
       </Container>
     </Section>
@@ -124,34 +121,63 @@ const punkty = [
     margin-top: var(--sp-8);
   }
 
-  .wkrotce {
-    max-width: var(--maxw-prose);
+  .kanaly {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-6);
     margin-top: var(--sp-8);
+  }
+
+  .kanal {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     padding: var(--sp-8);
     background-color: var(--bg-1);
-    border: 1px solid var(--gold);
+    border: 1px solid var(--hairline-soft);
     border-radius: var(--radius-lg);
   }
 
-  .wkrotce-tytul {
+  /* Kanał, w którym da się dziś kupić, wyróżniamy złotą ramką —
+     drugi jest tylko zapowiedzią. */
+  .kanal--glowny {
+    border-color: var(--gold);
+  }
+
+  .kanal-etykieta {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+  }
+
+  .kanal-tytul {
+    margin-top: var(--sp-2);
     font-family: var(--font-display);
     font-size: var(--fs-h3);
     font-weight: 600;
     color: var(--text);
   }
 
-  .wkrotce-opis {
+  .kanal-opis {
     margin-top: var(--sp-3);
+    margin-bottom: var(--sp-6);
     font-size: var(--fs-body);
     line-height: var(--lh-body);
     color: var(--text-2);
   }
 
-  .wkrotce-cta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--sp-4);
-    margin-top: var(--sp-6);
+  .kanal-brak {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    color: var(--text-muted);
+  }
+
+  @media (min-width: 720px) {
+    .kanaly {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
 
   .punkty {

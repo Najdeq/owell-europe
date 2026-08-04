@@ -21,11 +21,19 @@ export const site = {
 
   gwarancjaMiesiace: 24,
 
-  // Adres sklepu internetowego. `null` = sklep jeszcze nie wystartował —
-  // wtedy komponenty zamiast martwego linku pokazują uczciwy komunikat
-  // "sklep w przygotowaniu" i kierują na kontakt (WhatsApp / e-mail).
+  // Adres własnego sklepu internetowego. `null` = sklep jeszcze nie wystartował.
   // Po wykupieniu domeny wystarczy wpisać tu URL — reszta strony zadziała sama.
   sklep: null as string | null,
+
+  // Sklep na Allegro — DZIŚ to jedyny działający kanał sprzedaży, więc strona
+  // musi go wskazywać jako oficjalny. Do czasu uruchomienia własnego sklepu
+  // wszystkie CTA „Gdzie kupić" prowadzą właśnie tutaj.
+  //
+  // UWAGA na przyszłość: nie wolno wrócić do formuł typu „sprzedajemy wyłącznie
+  // przez własny sklep" ani ostrzegać przed ofertami na innych platformach,
+  // dopóki Allegro jest aktywne — taki tekst podważa wiarygodność własnych
+  // aukcji u klienta, który trafia tu właśnie z Allegro, żeby sprawdzić markę.
+  allegro: null as string | null,
 
   // Fakty o Adler Europe Group — grupie, w ramach której rozwijana jest marka
   // Owell. Dane przekazane przez właściciela, weryfikowalne na adler.com.pl.

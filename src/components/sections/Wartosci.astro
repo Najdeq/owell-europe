@@ -22,33 +22,46 @@ const filary = [
 ];
 ---
 
+<style is:global>
+  /* Rysowanie konturu ikony po wjechaniu karty w kadr. Wszystkie ścieżki mają
+     pathLength="1", więc jedna reguła działa niezależnie od ich realnej
+     długości — bez tego każda ikona wymagałaby własnej wartości dasharray. */
+  @keyframes filar-rysuj {
+    from { stroke-dashoffset: 1; }
+    to   { stroke-dashoffset: 0; }
+  }
+</style>
+
 <Section bg="raised">
   <Container>
     <Eyebrow data-reveal>Dlaczego Owell</Eyebrow>
     <h2 class="section-title" data-reveal data-reveal-delay="80">Trzy filary każdego produktu</h2>
 
     <div class="grid">
-      {filary.map((f) => (
-        <article class="filar">
+      {filary.map((f, i) => (
+        <article class="filar" data-reveal data-reveal-delay={160 + i * 120}>
+          <span class="filar-numer" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+
           <div class="icon" aria-hidden="true">
             {f.icon === "design" && (
-              <svg viewBox="0 0 32 32" fill="none" stroke="var(--gold)" stroke-width="1.5">
-                <circle cx="16" cy="16" r="10" stroke-linecap="round" />
-                <path d="M16 6v6M16 20v6M6 16h6M20 16h6" stroke-linecap="round" />
+              <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="16" cy="16" r="10" pathLength="1" stroke-linecap="round" />
+                <path d="M16 6v6M16 20v6M6 16h6M20 16h6" pathLength="1" stroke-linecap="round" />
               </svg>
             )}
             {f.icon === "jakosc" && (
-              <svg viewBox="0 0 32 32" fill="none" stroke="var(--gold)" stroke-width="1.5">
-                <path d="M16 4 27 9v8c0 7-4.7 11.7-11 15C9.7 28.7 5 24 5 17V9l11-5Z" stroke-linecap="round" stroke-linejoin="round" />
-                <path d="M11 16l3.5 3.5L21 12" stroke-linecap="round" stroke-linejoin="round" />
+              <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M16 4 27 9v8c0 7-4.7 11.7-11 15C9.7 28.7 5 24 5 17V9l11-5Z" pathLength="1" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M11 16l3.5 3.5L21 12" pathLength="1" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
             )}
             {f.icon === "serwis" && (
-              <svg viewBox="0 0 32 32" fill="none" stroke="var(--gold)" stroke-width="1.5">
-                <path d="M18.7 6.3a5 5 0 0 0-6.8 6.8L4 21v3h3l7.9-7.9a5 5 0 0 0 6.8-6.8l-3.2 3.2-3-3 3.2-3.2Z" stroke-linecap="round" stroke-linejoin="round" />
+              <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M18.7 6.3a5 5 0 0 0-6.8 6.8L4 21v3h3l7.9-7.9a5 5 0 0 0 6.8-6.8l-3.2 3.2-3-3 3.2-3.2Z" pathLength="1" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
             )}
           </div>
+
           <h3 class="filar-tytul">{f.tytul}</h3>
           <p class="filar-opis">{f.opis}</p>
         </article>
@@ -72,22 +85,101 @@ const filary = [
   .grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--sp-12);
+    gap: var(--sp-6);
     margin-top: var(--sp-12);
+  }
+
+  .filar {
+    position: relative;
+    padding: var(--sp-8) var(--sp-6);
+    background-color: var(--bg-1);
+    border: 1px solid var(--hairline-soft);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition:
+      background-color var(--dur) var(--ease),
+      border-color var(--dur) var(--ease),
+      transform var(--dur-slow) var(--ease);
+  }
+
+  /* Złota nitka na górnej krawędzi — rozjeżdża się od lewej przy najechaniu.
+     Jedyny „ozdobnik” w tej sekcji, celowo cienki: złoto ma być biżuterią. */
+  .filar::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 2px;
+    background-color: var(--gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--dur-slow) var(--ease);
+  }
+
+  .filar:hover {
+    background-color: var(--bg-2);
+    border-color: var(--hairline);
+    transform: translateY(-4px);
+  }
+
+  .filar:hover::before {
+    transform: scaleX(1);
+  }
+
+  .filar-numer {
+    position: absolute;
+    top: var(--sp-4);
+    right: var(--sp-5);
+    font-family: var(--font-mono);
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    line-height: 1;
+    color: var(--text);
+    opacity: 0.08;
+    transition: opacity var(--dur-slow) var(--ease);
+  }
+
+  .filar:hover .filar-numer {
+    opacity: 0.16;
   }
 
   .icon {
     width: 40px;
     height: 40px;
+    color: var(--gold);
+    transition:
+      color var(--dur) var(--ease),
+      transform var(--dur-slow) var(--ease);
+  }
+
+  .filar:hover .icon {
+    color: var(--gold-bright);
+    transform: scale(1.08);
   }
 
   .icon svg {
     width: 100%;
     height: 100%;
+    overflow: visible;
+  }
+
+  /* Kontury rysują się dopiero, gdy karta wjedzie w kadr (.is-revealed
+     dokłada ScrollReveal). Do tego czasu są schowane, żeby efekt nie
+     „przepadł” u kogoś, kto wchodzi na stronę wysoko nad tą sekcją. */
+  .icon svg :is(path, circle) {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+
+  .filar.is-revealed .icon svg :is(path, circle) {
+    animation: filar-rysuj 900ms var(--ease) forwards;
+  }
+
+  .filar.is-revealed .icon svg :is(path, circle):nth-child(2) {
+    animation-delay: 220ms;
   }
 
   .filar-tytul {
-    margin-top: var(--sp-4);
+    margin-top: var(--sp-5);
     font-family: var(--font-display);
     font-size: var(--fs-h3);
     font-weight: 600;
@@ -105,7 +197,22 @@ const filary = [
   @media (min-width: 720px) {
     .grid {
       grid-template-columns: repeat(3, 1fr);
-      gap: var(--sp-8);
+    }
+
+    .filar {
+      padding: var(--sp-8);
+    }
+  }
+
+  /* Bez ruchu: kontury od razu widoczne, zero przesunięć. */
+  @media (prefers-reduced-motion: reduce) {
+    .icon svg :is(path, circle) {
+      stroke-dashoffset: 0;
+      animation: none !important;
+    }
+
+    .filar:hover {
+      transform: none;
     }
   }
 </style>
