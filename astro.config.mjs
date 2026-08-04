@@ -1,6 +1,7 @@
 // @ts-check
-import { defineConfig, sharpImageService } from 'astro/config';
+import { defineConfig } from 'astro/config';
 
+import cloudflare from '@astrojs/cloudflare';
 import tailwindcss from '@tailwindcss/vite';
 
 import sitemap from '@astrojs/sitemap';
@@ -10,17 +11,20 @@ export default defineConfig({
   site: 'https://owelleurope.com',
   output: 'static',
 
-  image: {
-    // Wymuszamy sharpa JAWNIE. Cloudflare przy projekcie typu Worker sam
-    // dokłada swój adapter Astro, a ten podmienia serwis obrazów na taki,
-    // który zamiast wygenerować pliki w trakcie builda produkuje adresy
-    // /_image?href=... obsługiwane dopiero w czasie żądania. Przy
-    // output: 'static' nie ma czego takiego obsłużyć i KAŻDE zdjęcie
-    // zwraca 404 (CSS działa, bo nie idzie przez ten mechanizm).
-    // Z jawnym sharpem obrazy są przetwarzane na etapie builda i lądują
-    // jako zwykłe pliki w dist/_astro/.
-    service: sharpImageService(),
-  },
+  // Adapter dodany JAWNIE, choć strona jest statyczna. Cloudflare przy
+  // projekcie typu Worker i tak wstrzykuje go automatycznie podczas builda —
+  // trzymanie go w repo daje kontrolę nad konfiguracją i sprawia, że build
+  // lokalny odpowiada temu na serwerze.
+  //
+  // `imageService: 'compile'` jest tu kluczowe: obrazy są przetwarzane
+  // sharpem na etapie builda i lądują w dist/_astro/ jako gotowe pliki .webp.
+  // Bez tego adapter ustawia tryb, w którym <Image> generuje adresy
+  // /_image?href=... rozwiązywane dopiero w czasie żądania — a przy
+  // output: 'static' nie ma runtime'u, który by je obsłużył, więc KAŻDE
+  // zdjęcie zwraca 404 (CSS działa, bo nie idzie przez ten mechanizm).
+  adapter: cloudflare({
+    imageService: 'compile',
+  }),
 
   vite: {
     plugins: [tailwindcss()]
