@@ -18,7 +18,7 @@ Strona brandowa marki małego AGD **Owell**, dostępna pod `https://owelleurope.
 - **Tailwind v4** przez `@tailwindcss/vite` — konfiguracja w CSS przez `@theme`, **nie ma** `tailwind.config.js`
 - **TypeScript** strict
 - **Fonty lokalne** przez `@fontsource-variable/*` — nigdy z Google CDN (RODO)
-- **Deploy:** Cloudflare Workers (static assets), automatycznie z `git push` na `main`
+- **Deploy:** Cloudflare Pages z podpiętego repo (`npm run build` → `dist`), automatycznie z `git push` na `main` — instrukcja w `DEPLOY.md`
 - **Node:** ≥ 22.12.0
 
 ## Struktura
@@ -126,4 +126,8 @@ npm run build    # build produkcyjny do dist/
 npm run preview  # podgląd builda lokalnie
 ```
 
-Deploy: `git push` na `main` → Cloudflare buduje i wdraża automatycznie.
+Deploy: `git push` na `main` → Cloudflare Pages buduje i wdraża automatycznie.
+
+**Indeksowanie jest domyślnie zablokowane** (`robots.txt` + meta noindex).
+Włącza je dopiero zmienna `PUBLIC_PRODUKCJA=true`, ustawiana wyłącznie na
+docelowej domenie. Szczegóły: `DEPLOY.md`.
