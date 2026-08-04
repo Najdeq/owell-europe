@@ -55,7 +55,56 @@ export const site = {
     // o tym wprost i nie wolno tego zmieniać — patrz komentarz przy `grupa`.
     // Pusta lista = sekcja w ogóle się nie renderuje, żeby nie pokazywać
     // pustej mapy.
-    rynki: [] as { mapa: string; nazwa: string }[],
+    // Odczytane ze strzałek na oficjalnej mapie Adler Europe Group.
+    // Mapa obejmuje Europę, Turcję i Afrykę Północną — deklarowane „ponad 60
+    // krajów" jest szersze niż to, co da się z niej wyczytać, dlatego podpis
+    // pod mapą mówi, ile krajów zaznaczono, i nie udaje pełnej listy.
+    rynki: [
+      { mapa: "Poland", nazwa: "Polska" },
+      { mapa: "Germany", nazwa: "Niemcy" },
+      { mapa: "Czechia", nazwa: "Czechy" },
+      { mapa: "Slovakia", nazwa: "Słowacja" },
+      { mapa: "Hungary", nazwa: "Węgry" },
+      { mapa: "Austria", nazwa: "Austria" },
+      { mapa: "Switzerland", nazwa: "Szwajcaria" },
+      { mapa: "France", nazwa: "Francja" },
+      { mapa: "Belgium", nazwa: "Belgia" },
+      { mapa: "Netherlands", nazwa: "Holandia" },
+      { mapa: "Luxembourg", nazwa: "Luksemburg" },
+      { mapa: "United Kingdom", nazwa: "Wielka Brytania" },
+      { mapa: "Ireland", nazwa: "Irlandia" },
+      { mapa: "Iceland", nazwa: "Islandia" },
+      { mapa: "Norway", nazwa: "Norwegia" },
+      { mapa: "Sweden", nazwa: "Szwecja" },
+      { mapa: "Finland", nazwa: "Finlandia" },
+      { mapa: "Denmark", nazwa: "Dania" },
+      { mapa: "Estonia", nazwa: "Estonia" },
+      { mapa: "Latvia", nazwa: "Łotwa" },
+      { mapa: "Lithuania", nazwa: "Litwa" },
+      { mapa: "Belarus", nazwa: "Białoruś" },
+      { mapa: "Ukraine", nazwa: "Ukraina" },
+      { mapa: "Moldova", nazwa: "Mołdawia" },
+      { mapa: "Russia", nazwa: "Rosja" },
+      { mapa: "Romania", nazwa: "Rumunia" },
+      { mapa: "Bulgaria", nazwa: "Bułgaria" },
+      { mapa: "Slovenia", nazwa: "Słowenia" },
+      { mapa: "Croatia", nazwa: "Chorwacja" },
+      { mapa: "Bosnia and Herz.", nazwa: "Bośnia i Hercegowina" },
+      { mapa: "Serbia", nazwa: "Serbia" },
+      { mapa: "Montenegro", nazwa: "Czarnogóra" },
+      { mapa: "Kosovo", nazwa: "Kosowo" },
+      { mapa: "Macedonia", nazwa: "Macedonia Północna" },
+      { mapa: "Albania", nazwa: "Albania" },
+      { mapa: "Greece", nazwa: "Grecja" },
+      { mapa: "Italy", nazwa: "Włochy" },
+      { mapa: "Spain", nazwa: "Hiszpania" },
+      { mapa: "Portugal", nazwa: "Portugalia" },
+      { mapa: "Turkey", nazwa: "Turcja" },
+      { mapa: "Cyprus", nazwa: "Cypr" },
+      { mapa: "Morocco", nazwa: "Maroko" },
+      { mapa: "Algeria", nazwa: "Algieria" },
+      { mapa: "Tunisia", nazwa: "Tunezja" },
+    ] as { mapa: string; nazwa: string }[],
   },
 
   // Profile w mediach społecznościowych / inne oficjalne strony marki —

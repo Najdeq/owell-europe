@@ -18,6 +18,11 @@ if (nieznane.length > 0) {
     `[MapaZasiegu] nazwy spoza mapy (kraj się nie podświetli): ${nieznane.join(", ")}`
   );
 }
+
+// Kadr na Europę, Turcję i Afrykę Północną — wszystkie zaznaczone rynki mieszczą
+// się w tym obszarze, a pełna mapa świata zostawiałaby ogromne puste pole.
+// Wartości w układzie odwzorowania z scripts/mapa.mjs (equirectangular 1000×500).
+const kadr = "425 35 258 182";
 ---
 
 {rynki.length > 0 && (
@@ -35,9 +40,9 @@ if (nieznane.length > 0) {
       <figure class="mapa-blok" data-reveal data-reveal-delay="240">
         <svg
           class="mapa"
-          viewBox={`0 0 ${mapa.szerokosc} ${mapa.wysokosc}`}
+          viewBox={kadr}
           role="img"
-          aria-label={`Mapa świata z zaznaczonymi ${rynki.length} krajami, w których sprzedaje ${site.grupa.nazwa}`}
+          aria-label={`Mapa Europy z zaznaczonymi ${rynki.length} krajami, w których sprzedaje ${site.grupa.nazwa}`}
         >
           {Object.entries(mapa.kraje).map(([nazwa, d]) => (
             <path
@@ -47,9 +52,15 @@ if (nieznane.length > 0) {
           ))}
         </svg>
 
+        {/* Podpis mówi, ile krajów faktycznie zaznaczono, a deklarowane przez
+            grupę „ponad 60" podajemy obok jako jej deklarację. Gdyby licznik
+            pokazywał 60+ przy 44 podświetlonych krajach, każdy liczący
+            znalazłby rozbieżność. */}
         <figcaption class="podpis">
-          <span class="podpis-liczba">{site.grupa.liczbaKrajow}+</span>
-          <span class="podpis-tekst">krajów, w których sprzedaje grupa</span>
+          <span class="podpis-liczba">{rynki.length}</span>
+          <span class="podpis-tekst">
+            krajów na mapie zasięgu grupy · grupa deklaruje ponad {site.grupa.liczbaKrajow} rynków
+          </span>
         </figcaption>
       </figure>
 
@@ -93,7 +104,9 @@ if (nieznane.length > 0) {
     display: block;
     width: 100%;
     height: auto;
-    overflow: visible;
+    /* Bez tego kontury spoza kadru (reszta świata) rysują się poza ramką SVG
+       i zalewają sekcję — viewBox przycina tylko przy overflow: hidden. */
+    overflow: hidden;
   }
 
   .kraj {
