@@ -1,5 +1,4 @@
 ---
-import { existsSync } from "node:fs";
 import { Image } from "astro:assets";
 import { getCollection, type CollectionEntry } from "astro:content";
 import Base from "../../layouts/Base.astro";
@@ -11,6 +10,7 @@ import Section from "../../components/ui/Section.astro";
 import Button from "../../components/ui/Button.astro";
 import Eyebrow from "../../components/ui/Eyebrow.astro";
 import { site } from "../../data/site.ts";
+import instrukcje from "../../data/instrukcje.json";
 
 import fotoOw1360b from "../../assets/produkty/hero/ow-1360b.jpg";
 import fotoOw1360w from "../../assets/produkty/hero/ow-1360w.jpg";
@@ -51,11 +51,11 @@ const fotki: Record<string, ImageMetadata> = {
 };
 const foto = fotki[produkt.id];
 
-// Instrukcje PDF jeszcze nie leżą w public/ — linkujemy dopiero, gdy plik
-// naprawdę istnieje, żeby nie wysyłać nikogo na 404. Po wrzuceniu pliku
-// do public/pliki/ link pojawi się sam, bez zmian w kodzie.
-const instrukcjaIstnieje =
-  !!d.instrukcjaPdf && existsSync(`./public${d.instrukcjaPdf}`);
+// Link do instrukcji pokazujemy tylko, gdy plik faktycznie leży w public/pliki/,
+// żeby nie wysyłać nikogo na 404. Spis pochodzi z instrukcje.json generowanego
+// przed buildem (npm prebuild) — świadomie NIE czytamy dysku tutaj, bo strony
+// prerenderują się w środowisku Workers, gdzie `node:fs` nie istnieje.
+const instrukcja = instrukcje[produkt.id as keyof typeof instrukcje];
 
 const akapity = d.opis.split("\n\n").filter(Boolean);
 const kupHref = d.gdzieKupic ?? site.sklep;
@@ -165,8 +165,8 @@ const productSchema = {
                   Zapytaj o dostępność
                 </Button>
               )}
-              {instrukcjaIstnieje && (
-                <Button href={d.instrukcjaPdf!} variant="ghost">Instrukcja PDF</Button>
+              {instrukcja && (
+                <Button href={instrukcja.url} variant="ghost">Instrukcja PDF</Button>
               )}
             </div>
 

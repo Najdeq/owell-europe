@@ -1,5 +1,4 @@
 ---
-import { existsSync, statSync } from "node:fs";
 import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
 import Header from "../components/Header.astro";
@@ -9,6 +8,7 @@ import Container from "../components/ui/Container.astro";
 import Section from "../components/ui/Section.astro";
 import WyszukiwarkaModelu from "../components/WyszukiwarkaModelu.astro";
 import { site } from "../data/site.ts";
+import instrukcjeSpis from "../data/instrukcje.json";
 
 const breadcrumbs = [
   { name: "Owell", path: "/" },
@@ -17,23 +17,24 @@ const breadcrumbs = [
 
 const produkty = await getCollection("produkty");
 
-// Listujemy tylko instrukcje, których plik faktycznie leży w public/ —
-// nigdy nie linkujemy do 404. Wagę pliku podajemy przy linku, bo to
-// kilkumegabajtowe PDF-y i użytkownik na komórce powinien wiedzieć,
-// co pobiera.
+// Listujemy tylko instrukcje, których plik faktycznie leży w public/pliki/ —
+// nigdy nie linkujemy do 404. Spis wraz z rozmiarami generuje skrypt
+// scripts/instrukcje.mjs uruchamiany przed buildem (npm prebuild); świadomie
+// nie czytamy dysku tutaj, bo strony prerenderują się w środowisku Workers,
+// gdzie `node:fs` nie istnieje. Wagę pliku pokazujemy, bo to kilkumegabajtowe
+// PDF-y i użytkownik na komórce powinien wiedzieć, co pobiera.
 const instrukcje = produkty
   .filter((p) => p.data.opublikowany)
   .map((p) => {
-    const sciezka = p.data.instrukcjaPdf;
-    if (!sciezka || !existsSync(`./public${sciezka}`)) return null;
-    const mb = statSync(`./public${sciezka}`).size / (1024 * 1024);
+    const wpis = instrukcjeSpis[p.id as keyof typeof instrukcjeSpis];
+    if (!wpis) return null;
     return {
       id: p.id,
       model: p.data.model,
       nazwa: p.data.nazwa,
       tagline: p.data.tagline,
-      plik: sciezka,
-      waga: `${mb.toFixed(1)} MB`,
+      plik: wpis.url,
+      waga: `${wpis.mb.toFixed(1)} MB`,
     };
   })
   .filter((x) => x !== null)
