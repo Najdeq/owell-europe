@@ -317,34 +317,19 @@ const grupy = site.kategorie.map((g) => ({
     border: 1px solid var(--hairline-soft);
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
-    /* Zabezpieczenie na wypadek, gdy backface-visibility zawiedzie (bug
-       w niektórych przeglądarkach — zdjęcie z przodu potrafi "prześwitywać"
-       zniekształcone przez tył karty): dodatkowo chowamy nieaktywną stronę
-       przez opacity, dokładnie w połowie 700ms obrotu — karta jest wtedy
-       widoczna "na krawędź" (90°), więc przełącznik jest niezauważalny.
-       transition-delay 350ms + duration 0s = natychmiastowy skok w tym
-       jednym momencie, nie płynne blaknięcie. */
-    /* Wymusza osobną warstwę kompozytowania GPU dla każdej ścianki —
-       bez tego niektóre przeglądarki (widoczne zwłaszcza na jasnym tle)
-       "prześwietlają" ukrytą stronę przez backface-visibility, dając
-       rozjechany, podwójny tekst. */
+    /* translateZ(0) wymusza osobną warstwę kompozytowania GPU dla każdej
+       ścianki — bez tego część przeglądarek "prześwietla" ukrytą stronę
+       mimo backface-visibility, dając rozjechany, podwójny tekst.
+       To wystarcza i NIE wolno dokładać tu przełącznika opacity z opóźnieniem:
+       --ease jest krzywą ease-out, więc obrót mija 90° już po ~175 ms z 700 ms.
+       Skok opacity ustawiony na sztywno w połowie czasu wypadał wtedy grubo po
+       tym, jak tył zwrócił się do widza — i przez ~175 ms nie było widać nic. */
     transform: translateZ(0);
-    transition:
-      border-color var(--dur) var(--ease),
-      opacity 0s linear 350ms;
+    transition: border-color var(--dur) var(--ease);
   }
 
   .karta-face--tyl {
     transform: rotateY(180deg) translateZ(0);
-    opacity: 0;
-  }
-
-  .karta:not(.karta--puste):hover .karta-face--przod {
-    opacity: 0;
-  }
-
-  .karta:not(.karta--puste):hover .karta-face--tyl {
-    opacity: 1;
   }
 
   .karta:hover .karta-face {
