@@ -23,18 +23,44 @@ if (nieznane.length > 0) {
 // się w tym obszarze, a pełna mapa świata zostawiałaby ogromne puste pole.
 // Wartości w układzie odwzorowania z scripts/mapa.mjs (equirectangular 1000×500).
 const kadr = "425 35 258 182";
+
+// Kolejność zapalania krajów: z zachodu na wschód. Bez sortowania kraje
+// zapalałyby się w losowej kolejności z pliku danych, co wygląda jak awaria,
+// a nie jak zamierzony efekt. Środek ciężkości liczymy zgrubnie ze współrzędnych
+// ścieżki — do ustalenia kolejności to w zupełności wystarcza.
+const srodekX = (d: string) => {
+  const liczby = d.match(/-?\d+(?:\.\d+)?/g);
+  if (!liczby) return 0;
+  let suma = 0;
+  let ile = 0;
+  for (let i = 0; i < liczby.length; i += 2) {
+    suma += Number(liczby[i]);
+    ile++;
+  }
+  return ile ? suma / ile : 0;
+};
+
+const konturyMap = mapa.kraje as Record<string, string>;
+
+const posortowane: string[] = rynki
+  .filter((r: { mapa: string }) => r.mapa in konturyMap)
+  .map((r: { mapa: string }) => r.mapa)
+  .sort((a: string, b: string) => srodekX(konturyMap[a]) - srodekX(konturyMap[b]));
+
+const kolejnosc = new Map<string, number>(posortowane.map((nazwa, i) => [nazwa, i]));
 ---
 
 {rynki.length > 0 && (
   <Section bg="raised">
     <Container>
-      <Eyebrow data-reveal>Zasięg grupy</Eyebrow>
+      <Eyebrow data-reveal>Zasięg</Eyebrow>
       <h2 class="section-title" data-reveal data-reveal-delay="80">
-        Gdzie trafiają produkty Adler Europe Group
+        Nasze produkty jeżdżą po całej Europie
       </h2>
       <p class="section-lead" data-reveal data-reveal-delay="160">
-        Owell rozwijamy w ramach {site.grupa.nazwa}. Zaznaczone kraje to rynki całej grupy — razem z markami{" "}
-        {site.grupa.marki.join(", ")} — a nie samej marki Owell.
+        Owell stoi na zapleczu {site.grupa.nazwa} — {site.grupa.lataHistorii} lat produkcji, ponad{" "}
+        {site.grupa.liczbaProduktow} modeli i sprzedaż w ponad {site.grupa.liczbaKrajow} krajach. Ta sama fabryka,
+        ta sama kontrola jakości, ci sami ludzie od serwisu.
       </p>
 
       <figure class="mapa-blok" data-reveal data-reveal-delay="240">
@@ -42,25 +68,22 @@ const kadr = "425 35 258 182";
           class="mapa"
           viewBox={kadr}
           role="img"
-          aria-label={`Mapa Europy z zaznaczonymi ${rynki.length} krajami, w których sprzedaje ${site.grupa.nazwa}`}
+          aria-label={`Mapa Europy z zaznaczonymi krajami, w których sprzedaje ${site.grupa.nazwa}`}
         >
           {Object.entries(mapa.kraje).map(([nazwa, d]) => (
             <path
               d={d}
               class:list={["kraj", { "kraj--aktywny": zaznaczone.has(nazwa) }]}
+              style={
+                kolejnosc.has(nazwa) ? `--opoznienie: ${kolejnosc.get(nazwa)! * 45}ms` : undefined
+              }
             />
           ))}
         </svg>
 
-        {/* Podpis mówi, ile krajów faktycznie zaznaczono, a deklarowane przez
-            grupę „ponad 60" podajemy obok jako jej deklarację. Gdyby licznik
-            pokazywał 60+ przy 44 podświetlonych krajach, każdy liczący
-            znalazłby rozbieżność. */}
         <figcaption class="podpis">
-          <span class="podpis-liczba">{rynki.length}</span>
-          <span class="podpis-tekst">
-            krajów na mapie zasięgu grupy · grupa deklaruje ponad {site.grupa.liczbaKrajow} rynków
-          </span>
+          <span class="podpis-liczba">{site.grupa.liczbaKrajow}+</span>
+          <span class="podpis-tekst">rynków {site.grupa.nazwa}</span>
         </figcaption>
       </figure>
 
@@ -116,8 +139,26 @@ const kadr = "425 35 258 182";
     transition: fill var(--dur) var(--ease);
   }
 
+  /* Kraje zapalają się kolejno z zachodu na wschód (kolejność liczona
+     w frontmatterze, opóźnienie wstrzykiwane jako --opoznienie). Start
+     dopiero po wjechaniu mapy w kadr — .is-revealed dokłada ScrollReveal,
+     inaczej cały efekt przepadłby u kogoś, kto wchodzi wysoko nad sekcją. */
   .kraj--aktywny {
-    fill: var(--gold);
+    fill: var(--bg-3);
+  }
+
+  .mapa-blok.is-revealed .kraj--aktywny {
+    animation: zapal 520ms var(--ease) forwards;
+    animation-delay: var(--opoznienie, 0ms);
+  }
+
+  @keyframes zapal {
+    from {
+      fill: var(--bg-3);
+    }
+    to {
+      fill: var(--gold);
+    }
   }
 
   /* Podświetlenie tylko na urządzeniach z kursorem — na dotyku hover
@@ -174,5 +215,14 @@ const kadr = "425 35 258 182";
 
   .lista li:last-child::after {
     content: "";
+  }
+
+  /* Bez ruchu: kraje od razu złote, żadnego kaskadowego zapalania. */
+  @media (prefers-reduced-motion: reduce) {
+    .kraj--aktywny,
+    .mapa-blok.is-revealed .kraj--aktywny {
+      fill: var(--gold);
+      animation: none !important;
+    }
   }
 </style>
