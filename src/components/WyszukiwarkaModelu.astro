@@ -22,8 +22,9 @@ const indeks = produkty
     // Dzięki temu "OW 3300", "ow-3300" i "ow3300" trafiają w ten sam produkt —
     // klient przepisuje numer z pudełka i nie musi zgadywać formatu.
     // Tagline w kluczu pozwala też znaleźć sprzęt po typie ("czajnik"),
-    // gdy ktoś nie ma pod ręką numeru modelu.
-    klucz: `${p.data.model} ${p.data.nazwa} ${p.data.tagline}`
+    // gdy ktoś nie ma pod ręką numeru modelu, a EAN — gdy ma pod ręką
+    // kod kreskowy z pudełka zamiast oznaczenia modelu.
+    klucz: `${p.data.model} ${p.data.nazwa} ${p.data.tagline} ${p.data.ean ?? ""}`
       .toLowerCase()
       .replace(/[\s-]/g, ""),
   }));

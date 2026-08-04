@@ -77,6 +77,7 @@ const productSchema = {
   name: d.nazwa,
   model: d.model,
   sku: d.model,
+  ...(d.ean ? { gtin13: d.ean } : {}),
   description: d.tagline,
   category: nazwaKategorii,
   brand: { "@type": "Brand", name: site.nazwa },
@@ -194,6 +195,16 @@ const productSchema = {
                   <dd>{x.wartosc}</dd>
                 </div>
               ))}
+              <div class="dana">
+                <dt>Model</dt>
+                <dd>{d.model}</dd>
+              </div>
+              {d.ean && (
+                <div class="dana">
+                  <dt>Kod EAN</dt>
+                  <dd>{d.ean}</dd>
+                </div>
+              )}
             </dl>
           </div>
         </div>

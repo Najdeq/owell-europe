@@ -6,6 +6,11 @@ const produkty = defineCollection({
   schema: z.object({
     nazwa: z.string(),
     model: z.string(),
+    // Kod kreskowy EAN-13 z tabliczki/pudełka. Trafia do schema.org/Product
+    // jako `gtin13` — Google używa go do powiązania produktu z ofertami
+    // w innych serwisach. Walidacja pilnuje formatu, żeby literówka nie
+    // przeszła do danych strukturalnych.
+    ean: z.string().regex(/^\d{13}$/, "EAN musi mieć dokładnie 13 cyfr").optional(),
     kategoria: z.enum(["kuchnia", "pielegnacja", "agd-turystyczne"]),
     tagline: z.string(),
     opis: z.string(),
