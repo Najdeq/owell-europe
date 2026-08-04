@@ -1,0 +1,165 @@
+---
+import Container from "../ui/Container.astro";
+import Section from "../ui/Section.astro";
+import Eyebrow from "../ui/Eyebrow.astro";
+import { site } from "../../data/site.ts";
+import mapa from "../../data/mapa-swiata.json";
+
+// Bez listy rynków nie renderujemy nic — pusta mapa świata wyglądałaby jak
+// błąd, a wypełnianie jej „na oko" byłoby zmyślaniem danych o firmie.
+const rynki = site.grupa.rynki;
+const zaznaczone = new Set(rynki.map((r) => r.mapa));
+
+// Ostrzegamy przy buildzie, gdy nazwa nie pasuje do żadnego konturu —
+// literówka inaczej po cichu zgasiłaby kraj na mapie.
+const nieznane = rynki.filter((r) => !(r.mapa in mapa.kraje)).map((r) => r.mapa);
+if (nieznane.length > 0) {
+  console.warn(
+    `[MapaZasiegu] nazwy spoza mapy (kraj się nie podświetli): ${nieznane.join(", ")}`
+  );
+}
+---
+
+{rynki.length > 0 && (
+  <Section bg="raised">
+    <Container>
+      <Eyebrow data-reveal>Zasięg grupy</Eyebrow>
+      <h2 class="section-title" data-reveal data-reveal-delay="80">
+        Gdzie trafiają produkty Adler Europe Group
+      </h2>
+      <p class="section-lead" data-reveal data-reveal-delay="160">
+        Owell rozwijamy w ramach {site.grupa.nazwa}. Zaznaczone kraje to rynki całej grupy — razem z markami{" "}
+        {site.grupa.marki.join(", ")} — a nie samej marki Owell.
+      </p>
+
+      <figure class="mapa-blok" data-reveal data-reveal-delay="240">
+        <svg
+          class="mapa"
+          viewBox={`0 0 ${mapa.szerokosc} ${mapa.wysokosc}`}
+          role="img"
+          aria-label={`Mapa świata z zaznaczonymi ${rynki.length} krajami, w których sprzedaje ${site.grupa.nazwa}`}
+        >
+          {Object.entries(mapa.kraje).map(([nazwa, d]) => (
+            <path
+              d={d}
+              class:list={["kraj", { "kraj--aktywny": zaznaczone.has(nazwa) }]}
+            />
+          ))}
+        </svg>
+
+        <figcaption class="podpis">
+          <span class="podpis-liczba">{site.grupa.liczbaKrajow}+</span>
+          <span class="podpis-tekst">krajów, w których sprzedaje grupa</span>
+        </figcaption>
+      </figure>
+
+      {/* Lista tekstowa nie jest ozdobnikiem: mapa SVG jest nieczytelna dla
+          czytników ekranu i dla wyszukiwarek, a na telefonie kontury krajów
+          są za małe, żeby cokolwiek z nich odczytać. */}
+      <ul class="lista" data-reveal data-reveal-delay="320">
+        {rynki.map((r) => (
+          <li>{r.nazwa}</li>
+        ))}
+      </ul>
+    </Container>
+  </Section>
+)}
+
+<style>
+  .section-title {
+    margin-top: var(--sp-4);
+    max-width: var(--maxw-prose);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .section-lead {
+    margin-top: var(--sp-4);
+    max-width: var(--maxw-prose);
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .mapa-blok {
+    margin-top: var(--sp-12);
+  }
+
+  .mapa {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .kraj {
+    fill: var(--bg-3);
+    stroke: var(--bg-1);
+    stroke-width: 0.6;
+    transition: fill var(--dur) var(--ease);
+  }
+
+  .kraj--aktywny {
+    fill: var(--gold);
+  }
+
+  /* Podświetlenie tylko na urządzeniach z kursorem — na dotyku hover
+     potrafi „przykleić się" do ostatnio dotkniętego kraju. */
+  @media (hover: hover) {
+    .kraj--aktywny:hover {
+      fill: var(--gold-bright);
+    }
+  }
+
+  .podpis {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--sp-3);
+    margin-top: var(--sp-6);
+    padding-top: var(--sp-4);
+    border-top: 1px solid var(--hairline-soft);
+  }
+
+  .podpis-liczba {
+    font-family: var(--font-mono);
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    color: var(--gold-bright);
+  }
+
+  .podpis-tekst {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+  }
+
+  .lista {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2) var(--sp-4);
+    margin-top: var(--sp-8);
+    list-style: none;
+  }
+
+  .lista li {
+    font-size: var(--fs-small);
+    color: var(--text-2);
+  }
+
+  .lista li::after {
+    content: "·";
+    margin-left: var(--sp-4);
+    color: var(--steel-dim);
+  }
+
+  .lista li:last-child::after {
+    content: "";
+  }
+</style>

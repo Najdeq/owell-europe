@@ -33,7 +33,7 @@ export const site = {
   // przez własny sklep" ani ostrzegać przed ofertami na innych platformach,
   // dopóki Allegro jest aktywne — taki tekst podważa wiarygodność własnych
   // aukcji u klienta, który trafia tu właśnie z Allegro, żeby sprawdzić markę.
-  allegro: null as string | null,
+  allegro: "https://allegro.pl/uzytkownik/Owell" as string | null,
 
   // Fakty o Adler Europe Group — grupie, w ramach której rozwijana jest marka
   // Owell. Dane przekazane przez właściciela, weryfikowalne na adler.com.pl.
@@ -46,6 +46,16 @@ export const site = {
     liczbaProduktow: 800,
     liczbaKrajow: 60,
     marki: ["Adler Europe", "Camry Premium", "Mesko Home"],
+
+    // Kraje zaznaczane na mapie zasięgu (MapaZasiegu.astro). Klucze muszą
+    // odpowiadać nazwom z src/data/mapa-swiata.json (angielskie, z Natural
+    // Earth) — obok podajemy polską nazwę do wyświetlenia.
+    //
+    // To rynki CAŁEJ GRUPY Adler Europe, nie samej marki Owell. Sekcja mówi
+    // o tym wprost i nie wolno tego zmieniać — patrz komentarz przy `grupa`.
+    // Pusta lista = sekcja w ogóle się nie renderuje, żeby nie pokazywać
+    // pustej mapy.
+    rynki: [] as { mapa: string; nazwa: string }[],
   },
 
   // Profile w mediach społecznościowych / inne oficjalne strony marki —
