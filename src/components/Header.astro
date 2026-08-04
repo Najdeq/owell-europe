@@ -16,6 +16,7 @@ const menu = [
 ---
 
 <header class="header" data-header>
+  <div class="postep" data-postep aria-hidden="true"></div>
   <Container class="header-inner">
     <a href="/" class="logo" aria-label="Owell — strona główna">
       {/* Logo jest nad linią zagięcia na każdej podstronie — musi ładować się
@@ -97,6 +98,22 @@ const menu = [
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--hairline);
+  }
+
+  /* Pasek postępu na dolnej krawędzi headera. Skalujemy transformem
+     (nie width), bo transform nie wymusza przeliczania układu strony
+     przy każdej klatce przewijania. */
+  .postep {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 2px;
+    background-color: var(--gold-bright);
+    transform: scaleX(var(--postep, 0));
+    transform-origin: left;
+    will-change: transform;
+    pointer-events: none;
   }
 
   :global(.header-inner) {
@@ -303,6 +320,35 @@ const menu = [
 
   syncHeaderHeight();
   window.addEventListener("resize", syncHeaderHeight);
+
+  // Pasek postępu przewijania. Aktualizacja w requestAnimationFrame, bo
+  // zdarzenie scroll potrafi lecieć częściej niż klatki — bez tego liczylibyśmy
+  // to samo po kilka razy na klatkę.
+  const pasek = document.querySelector<HTMLElement>("[data-postep]");
+  if (pasek) {
+    let zaplanowane = false;
+
+    const odswiezPostep = () => {
+      zaplanowane = false;
+      const doPrzewiniecia =
+        document.documentElement.scrollHeight - window.innerHeight;
+      const postep =
+        doPrzewiniecia > 0
+          ? Math.min(1, Math.max(0, window.scrollY / doPrzewiniecia))
+          : 0;
+      pasek.style.setProperty("--postep", String(postep));
+    };
+
+    const zaplanuj = () => {
+      if (zaplanowane) return;
+      zaplanowane = true;
+      requestAnimationFrame(odswiezPostep);
+    };
+
+    odswiezPostep();
+    window.addEventListener("scroll", zaplanuj, { passive: true });
+    window.addEventListener("resize", zaplanuj);
+  }
 
   if (toggle && menu) {
     const focusableSelector =

@@ -10,7 +10,7 @@ import { site } from "../../data/site.ts";
     <Eyebrow data-reveal>Katalog</Eyebrow>
     <h2 class="section-title" data-reveal data-reveal-delay="80">Kategorie produktów</h2>
 
-    <div class="grid">
+    <div class="grid" data-kafelki>
       {site.kategorie.map((kategoria) => (
         <a href={`/produkty#${kategoria.slug}`} class="kafel">
           <h3 class="kafel-tytul">{kategoria.nazwa}</h3>
@@ -41,6 +41,10 @@ import { site } from "../../data/site.ts";
     margin-top: var(--sp-12);
   }
 
+  .grid {
+    perspective: 900px;
+  }
+
   .kafel {
     display: flex;
     flex-direction: column;
@@ -49,14 +53,34 @@ import { site } from "../../data/site.ts";
     border: 1px solid var(--hairline-soft);
     border-radius: var(--radius-lg);
     text-decoration: none;
+    /* Przechył sterowany z JS przez zmienne --rx/--ry (patrz skrypt niżej).
+       translateZ(0) wypycha kafelek na własną warstwę GPU, żeby obrót nie
+       powodował przerysowywania tekstu przy każdej klatce. */
+    transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateZ(0);
     transition:
       background-color var(--dur) var(--ease),
-      border-color var(--dur) var(--ease);
+      border-color var(--dur) var(--ease),
+      transform var(--dur) var(--ease);
   }
 
   .kafel:hover {
     background-color: var(--bg-3);
     border-color: var(--gold);
+  }
+
+  /* Podczas ruchu myszą wyłączamy przejście transformu — inaczej kafelek
+     wlecze się za kursorem zamiast za nim nadążać. Przejście wraca przy
+     zjeździe kursora, żeby powrót do zera był płynny. */
+  .kafel[data-przechyl="true"] {
+    transition:
+      background-color var(--dur) var(--ease),
+      border-color var(--dur) var(--ease);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .kafel {
+      transform: none;
+    }
   }
 
   .kafel-tytul {
@@ -87,3 +111,49 @@ import { site } from "../../data/site.ts";
     }
   }
 </style>
+
+<script>
+  function setupPrzechyl() {
+    // Tylko urządzenia z prawdziwym kursorem. Na dotyku nie ma czego śledzić,
+    // a przy prefers-reduced-motion efekt jest wyłączony także w CSS.
+    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const siatka = document.querySelector<HTMLElement>("[data-kafelki]");
+    if (!siatka || siatka.dataset.owellBound === "true") return;
+    siatka.dataset.owellBound = "true";
+
+    const MAX = 5; // stopnie — powyżej ~6° robi się z tego zabawka, nie akcent
+
+    siatka.querySelectorAll<HTMLElement>(".kafel").forEach((kafel) => {
+      let klatka = 0;
+
+      kafel.addEventListener("pointermove", (e) => {
+        if (klatka) return;
+        klatka = requestAnimationFrame(() => {
+          klatka = 0;
+          const r = kafel.getBoundingClientRect();
+          // -0.5..0.5 względem środka kafelka
+          const dx = (e.clientX - r.left) / r.width - 0.5;
+          const dy = (e.clientY - r.top) / r.height - 0.5;
+          kafel.dataset.przechyl = "true";
+          kafel.style.setProperty("--ry", `${dx * MAX * 2}deg`);
+          kafel.style.setProperty("--rx", `${-dy * MAX * 2}deg`);
+        });
+      });
+
+      kafel.addEventListener("pointerleave", () => {
+        if (klatka) {
+          cancelAnimationFrame(klatka);
+          klatka = 0;
+        }
+        delete kafel.dataset.przechyl;
+        kafel.style.setProperty("--rx", "0deg");
+        kafel.style.setProperty("--ry", "0deg");
+      });
+    });
+  }
+
+  setupPrzechyl();
+  document.addEventListener("astro:page-load", setupPrzechyl);
+</script>

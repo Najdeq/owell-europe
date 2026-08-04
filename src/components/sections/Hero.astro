@@ -67,6 +67,7 @@ const fakty = [
 
 <style>
   .hero-inner {
+    position: relative;
     display: grid;
     grid-template-columns: 1fr;
     align-items: center;
@@ -75,6 +76,46 @@ const fakty = [
     max-width: 100rem;
     margin-inline: auto;
     padding-inline: var(--gutter);
+  }
+
+  /* Powolny dryf ciepłej poświaty za treścią hero — jedyny ciągły ruch
+     na stronie. Ma być na granicy zauważalności: gdy widać wyraźną plamę
+     zamiast wrażenia oświetlenia, alfa jest za wysoka.
+     z-index: -1 trzyma go pod tekstem (element pozycjonowany absolutnie
+     rysowałby się nad treścią w normalnym przepływie). */
+  .hero-inner::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: -20%;
+    left: -10%;
+    width: 70%;
+    height: 140%;
+    background: radial-gradient(
+      closest-side,
+      color-mix(in srgb, var(--gold) 12%, transparent),
+      transparent
+    );
+    filter: blur(40px);
+    pointer-events: none;
+    animation: hero-dryf 22s ease-in-out infinite alternate;
+  }
+
+  @keyframes hero-dryf {
+    from {
+      transform: translate3d(0, 0, 0) scale(1);
+      opacity: 0.75;
+    }
+    to {
+      transform: translate3d(12%, 6%, 0) scale(1.15);
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-inner::before {
+      animation: none;
+    }
   }
 
   .hero-content {

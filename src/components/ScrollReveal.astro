@@ -17,6 +17,39 @@
       return;
     }
 
+    // Nagłówki rozbijamy na słowa, żeby wjeżdżały kaskadą zamiast całym
+    // blokiem. Robimy to automatycznie dla h1/h2 z [data-reveal], zamiast
+    // oznaczać ręcznie kilkanaście miejsc w kodzie.
+    //
+    // Tylko gdy nagłówek to czysty tekst — jeśli zawiera <a> albo <span>,
+    // przepisanie zawartości zniszczyłoby te elementy.
+    const rozbijNaSlowa = (el: HTMLElement) => {
+      if (el.dataset.slowaGotowe === "true") return;
+      if (el.children.length > 0) return;
+
+      const tekst = el.textContent?.trim();
+      if (!tekst) return;
+
+      const slowa = tekst.split(/\s+/);
+      if (slowa.length < 2) return;
+
+      el.textContent = "";
+      slowa.forEach((slowo, i) => {
+        const zewn = document.createElement("span");
+        zewn.className = "slowo";
+        const wewn = document.createElement("span");
+        wewn.className = "slowo-tekst";
+        wewn.textContent = slowo;
+        wewn.style.transitionDelay = `${i * 55}ms`;
+        zewn.appendChild(wewn);
+        el.appendChild(zewn);
+        // odstęp jako zwykły tekst — inaczej słowa skleiłyby się w jedno
+        if (i < slowa.length - 1) el.appendChild(document.createTextNode(" "));
+      });
+
+      el.dataset.slowaGotowe = "true";
+    };
+
     const observer = new IntersectionObserver(
       (entries, obs) => {
         for (const entry of entries) {
@@ -31,7 +64,10 @@
       { threshold: 0.15, rootMargin: "0px 0px -40px 0px" }
     );
 
-    items.forEach((el) => observer.observe(el));
+    items.forEach((el) => {
+      if (el.tagName === "H1" || el.tagName === "H2") rozbijNaSlowa(el);
+      observer.observe(el);
+    });
   }
 
   setupScrollReveal();

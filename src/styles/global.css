@@ -104,3 +104,38 @@ body {
   opacity: 1;
   transform: none;
 }
+
+/* Nagłówki wjeżdżające słowo po słowie. ScrollReveal.astro rozbija treść
+   h1/h2 na .slowo > .slowo-tekst i nadaje każdemu opóźnienie.
+   Nagłówek jako całość przestaje wtedy jechać w górę (byłby to podwójny
+   ruch) — animują się same słowa. */
+h1[data-reveal],
+h2[data-reveal] {
+  transform: none;
+}
+
+.slowo {
+  display: inline-block;
+  overflow: hidden;
+  /* Zjadłoby ogonki (ą, ę, ł) i akcenty przy overflow: hidden — stąd
+     odrobina luzu w pionie, skompensowana ujemnym marginesem. */
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+  vertical-align: bottom;
+}
+
+.slowo-tekst {
+  display: inline-block;
+  transform: translateY(105%);
+  transition: transform 620ms var(--ease);
+}
+
+.is-revealed .slowo-tekst {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slowo-tekst {
+    transform: none;
+  }
+}
