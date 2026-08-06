@@ -10,15 +10,8 @@ import Section from "../components/ui/Section.astro";
 import WyszukiwarkaModelu from "../components/WyszukiwarkaModelu.astro";
 import { site } from "../data/site.ts";
 
-import fotoOw1360b from "../assets/produkty/hero/ow-1360b.jpg";
-import fotoOw2856 from "../assets/produkty/hero/ow-2856.jpg";
-import fotoOw2859 from "../assets/produkty/hero/ow-2859.jpg";
-import fotoOw3097 from "../assets/produkty/hero/ow-3097.jpg";
-import fotoOw3300 from "../assets/produkty/hero/ow-3300.jpg";
-import fotoOw4634 from "../assets/produkty/hero/ow-4634.jpg";
-import fotoOw4819 from "../assets/produkty/hero/ow-4819.jpg";
-import fotoOw8058 from "../assets/produkty/hero/ow-8058.jpg";
-import fotoOw8805 from "../assets/produkty/hero/ow-8805.jpg";
+import { kategorie as kategorieDane } from "../data/kategorie.ts";
+import { zdjecia } from "../data/zdjecia.ts";
 
 const breadcrumbs = [
   { name: "Owell", path: "/" },
@@ -26,100 +19,19 @@ const breadcrumbs = [
 ];
 
 const wszystkieProdukty = await getCollection("produkty");
-const znajdzProdukt = (slug: string) => wszystkieProdukty.find((p) => p.id === slug);
 
-const fotki: Record<string, ImageMetadata> = {
-  "ow-1360b": fotoOw1360b,
-  "ow-2856": fotoOw2856,
-  "ow-2859": fotoOw2859,
-  "ow-3097": fotoOw3097,
-  "ow-3300": fotoOw3300,
-  "ow-4634": fotoOw4634,
-  "ow-4819": fotoOw4819,
-  "ow-8058": fotoOw8058,
-  "ow-8805": fotoOw8805,
-};
-
-const kategorieRaw = [
-  {
-    nazwa: "Czajnik elektryczny",
-    slug: "ow-1360b",
-    grupa: "kuchnia",
-    opis: "Szybkie gotowanie wody z regulacją temperatury — do kawy, herbaty i innych naparów.",
-  },
-  {
-    nazwa: "Rozdrabniacze i szatkownice",
-    slug: "ow-4819",
-    grupa: "kuchnia",
-    opis: "Krojenie, szatkowanie i rozdrabnianie warzyw i owoców bez ręcznej pracy.",
-  },
-  {
-    nazwa: "Blender ręczny",
-    slug: "ow-4634",
-    grupa: "kuchnia",
-    opis: "Miksowanie, ubijanie i rozdrabnianie w jednym urządzeniu, bez wielu sprzętów na blacie.",
-  },
-  {
-    nazwa: "Blender kielichowy",
-    slug: null,
-    grupa: "kuchnia",
-    opis: "Przygotowywanie smoothie, koktajli i zup w jednym naczyniu.",
-  },
-  {
-    nazwa: "Opiekacz do kanapek",
-    slug: "ow-3300",
-    grupa: "kuchnia",
-    opis: "Opiekanie kanapek i tostów w kilka minut, bez patelni i pilnowania.",
-  },
-  {
-    nazwa: "Maszynka do strzyżenia włosów",
-    slug: "ow-2856",
-    grupa: "pielegnacja",
-    opis: "Strzyżenie włosów w domu, między wizytami u fryzjera.",
-  },
-  {
-    nazwa: "Strzyżarka dla zwierząt",
-    slug: "ow-2859",
-    grupa: "pielegnacja",
-    opis: "Pielęgnacja sierści psów i kotów w domowych warunkach.",
-  },
-  {
-    nazwa: "Lodówka turystyczna",
-    slug: "ow-8805",
-    grupa: "agd-turystyczne",
-    opis: "Chłodzenie i utrzymywanie temperatury w podróży, zasilana z gniazda 12V lub 230V.",
-  },
-  {
-    nazwa: "Pralko-wirówka turystyczna",
-    slug: "ow-8058",
-    grupa: "agd-turystyczne",
-    opis: "Pranie i odwirowywanie w małych ilościach — do kempingu, przyczepy lub małych przestrzeni.",
-  },
-  {
-    nazwa: "Grzejnik elektryczny",
-    slug: null,
-    grupa: "dom",
-    opis: "Dogrzewanie pomieszczeń w chłodniejsze dni, bez instalacji i bez czekania.",
-  },
-  {
-    nazwa: "Czyścik parowy",
-    slug: null,
-    grupa: "dom",
-    opis: "Czyszczenie powierzchni parą, bez chemii i szorowania.",
-  },
-  {
-    nazwa: "Koce i poduszki elektryczne",
-    slug: null,
-    grupa: "dom",
-    opis: "Ogrzewanie łóżka i ciała zimą, z regulacją temperatury.",
-  },
-];
-
-const kategorie = kategorieRaw.map((k) => ({
-  ...k,
-  produkt: k.slug ? znajdzProdukt(k.slug) : undefined,
-  foto: k.slug ? fotki[k.slug] : undefined,
-}));
+const kategorie = kategorieDane.map((k) => {
+  // Model wiodący = pierwszy z listy w kategorii. Z niego bierzemy zdjęcie
+  // na kafelek; reszta modeli jest widoczna dopiero na stronie kategorii.
+  const wiodacyId = k.produkty[0];
+  const wiodacy = wiodacyId ? wszystkieProdukty.find((p) => p.id === wiodacyId) : undefined;
+  return {
+    ...k,
+    wiodacy,
+    foto: wiodacyId ? zdjecia[wiodacyId] : undefined,
+    ileModeli: k.produkty.length,
+  };
+});
 
 const grupy = site.kategorie.map((g) => ({
   ...g,
@@ -129,7 +41,7 @@ const grupy = site.kategorie.map((g) => ({
 
 <Base
   title="Produkty — Owell"
-  description="Kategorie produktów Owell: małe AGD do kuchni, pielęgnacji i podróży, z przykładowym modelem z każdej kategorii."
+  description="Kategorie produktów Owell: małe AGD do kuchni, pielęgnacji, domu i podróży. Wybierz kategorię i zobacz dostępne modele."
 >
   <BreadcrumbSchema slot="head" items={breadcrumbs} />
 
@@ -140,7 +52,8 @@ const grupy = site.kategorie.map((g) => ({
       <Container>
         <h1 class="page-title" data-reveal>Produkty</h1>
         <p class="page-lead" data-reveal data-reveal-delay="80">
-          Kategorie sprzętu, który projektujemy. Przy każdej — jeden przykładowy model z oferty.
+          Wybierz kategorię, żeby zobaczyć dostępne modele. Przy każdym znajdziesz pełne dane techniczne, instrukcję
+          i kartę producenta.
         </p>
 
         <WyszukiwarkaModelu class="szukaj-na-produktach" />
@@ -154,24 +67,21 @@ const grupy = site.kategorie.map((g) => ({
 
             <div class="grid">
               {g.kategorie.map((k) => {
-                // Karta z produktem jest linkiem do jego strony — dzięki temu
-                // treść z tyłu karty (widoczna tylko na hover) jest osiągalna
-                // także na dotyku, gdzie hover nie istnieje.
-                const Tag = k.produkt ? "a" : "article";
+                // Kafelek prowadzi do STRONY KATEGORII, nie do pojedynczego
+                // produktu — w kategorii bywa kilka modeli i to klient ma
+                // wybrać, który go interesuje. Przy okazji treść z tyłu karty
+                // (widoczna tylko na hover) staje się osiągalna na dotyku.
+                const Tag = k.ileModeli > 0 ? "a" : "article";
                 return (
                 <Tag
-                  class:list={["karta", { "karta--puste": !k.produkt }]}
-                  {...(k.produkt ? { href: `/produkty/${k.produkt.id}` } : {})}
+                  class:list={["karta", { "karta--puste": k.ileModeli === 0 }]}
+                  {...(k.ileModeli > 0 ? { href: `/produkty/kategoria/${k.slug}` } : {})}
                 >
                   <div class="karta-flip">
                     <div class="karta-face karta-face--przod">
                       <div class="karta-foto">
                         {k.foto ? (
-                          <Image src={k.foto} alt={k.produkt!.data.nazwa} width={640} height={640} class="foto-img" />
-                        ) : k.produkt ? (
-                          <div class="foto-placeholder">
-                            <span class="foto-placeholder-label">{k.produkt.data.model}</span>
-                          </div>
+                          <Image src={k.foto} alt={k.nazwa} width={640} height={640} class="foto-img" />
                         ) : (
                           <div class="foto-placeholder foto-placeholder--puste">
                             <span class="foto-placeholder-label">Wkrótce w ofercie</span>
@@ -182,16 +92,21 @@ const grupy = site.kategorie.map((g) => ({
                       <div class="karta-info">
                         <h3 class="karta-nazwa">{k.nazwa}</h3>
                         <p class="karta-tagline">{k.opis}</p>
-                        {!k.produkt && <p class="karta-status">Wkrótce w ofercie.</p>}
+                        {k.ileModeli === 0 && <p class="karta-status">Wkrótce w ofercie.</p>}
                       </div>
                     </div>
 
-                    {k.produkt && (
+                    {k.ileModeli > 0 && (
                       <div class="karta-face karta-face--tyl">
-                        <span class="karta-tyl-model">{k.produkt.data.model}</span>
                         <h3 class="karta-tyl-nazwa">{k.nazwa}</h3>
-                        <p class="karta-tyl-opis">{k.produkt.data.opis.split("\n\n")[0]}</p>
-                        <span class="karta-tyl-link">Zobacz produkt →</span>
+                        {/* Krótko i bez kodów modeli — tył ma zachęcić do wejścia
+                            w kategorię, a nie streszczać jeden produkt. Dzięki temu
+                            mieści się bez przewijania. */}
+                        <p class="karta-tyl-opis">{k.opis}</p>
+                        <span class="karta-tyl-ile">
+                          {k.ileModeli === 1 ? "1 model w ofercie" : `${k.ileModeli} modele w ofercie`}
+                        </span>
+                        <span class="karta-tyl-link">Wybierz model →</span>
                       </div>
                     )}
                   </div>
@@ -276,6 +191,178 @@ const grupy = site.kategorie.map((g) => ({
 
   .karta--puste {
     cursor: default;
+  }
+
+  .karta-tyl-link {
+    flex: none;
+    margin-top: var(--sp-3);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--gold);
+  }
+
+  .karta:not(.karta--puste):hover {
+    z-index: 10;
+  }
+
+  .karta-flip {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    will-change: transform;
+    transition: transform 700ms var(--ease);
+  }
+
+  /* Lekkie powiększenie razem z obrotem — ten sam tekst zajmuje więcej
+     miejsca na ekranie, łatwiej się czyta bez zmiany layoutu siatki. */
+  .karta:not(.karta--puste):hover .karta-flip {
+    transform: rotateY(180deg) scale(1.12);
+  }
+
+  .karta-face {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--hairline-soft);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    /* translateZ(0) wymusza osobną warstwę kompozytowania GPU dla każdej
+       ścianki — bez tego część przeglądarek "prześwietla" ukrytą stronę
+       mimo backface-visibility, dając rozjechany, podwójny tekst.
+       To wystarcza i NIE wolno dokładać tu przełącznika opacity z opóźnieniem:
+       --ease jest krzywą ease-out, więc obrót mija 90° już po ~175 ms z 700 ms.
+       Skok opacity ustawiony na sztywno w połowie czasu wypadał wtedy grubo po
+       tym, jak tył zwrócił się do widza — i przez ~175 ms nie było widać nic. */
+    transform: translateZ(0);
+    transition: border-color var(--dur) var(--ease);
+  }
+
+  .karta-face--tyl {
+    transform: rotateY(180deg) translateZ(0);
+  }
+
+  .karta:hover .karta-face {
+    border-color: var(--gold);
+  }
+
+  .karta-face--przod {
+    background-color: var(--photo-bg);
+  }
+
+  .karta-foto {
+    position: absolute;
+    inset: 0;
+  }
+
+  .foto-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .foto-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  .foto-placeholder--puste {
+    background-color: var(--bg-1);
+  }
+
+  .foto-placeholder-label {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+  }
+
+  .karta--puste .karta-foto {
+    opacity: 0.6;
+  }
+
+  .karta-info {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: var(--sp-5);
+    padding-top: var(--sp-10);
+    /* Pełna krycie aż do końca tekstu — .karta-info owija się tylko wokół
+       tytułu/taglinu (auto height), więc dawny gradient przygasał do
+       przezroczystości zanim doszedł do glifów, przez co prześwitywał wzór
+       zdjęcia (np. wyświetlacz czajnika) i tekst wyglądał na "rozjechany". */
+    background: linear-gradient(
+      to top,
+      var(--bg-0) 0%,
+      var(--bg-0) 70%,
+      transparent 100%
+    );
+  }
+
+  .karta-nazwa {
+    font-family: var(--font-display);
+    font-size: var(--fs-lead);
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .karta-tagline {
+    margin-top: var(--sp-1);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .karta-status {
+    margin-top: var(--sp-1);
+    font-size: var(--fs-small);
+    font-style: italic;
+    color: var(--text-muted);
+  }
+
+  /* Obrót o 180° na starcie (żeby po obrocie rodzica .karta-flip tekst
+     czytał się normalnie) ustawiony wyżej razem z translateZ(0). */
+  .karta-face--tyl {
+    gap: var(--sp-2);
+    padding: var(--sp-6);
+    background-color: var(--bg-1);
+  }
+
+  .karta-tyl-nazwa {
+    flex: none;
+    font-family: var(--font-display);
+    font-size: var(--fs-lead);
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  /* Tył trzyma krótki opis kategorii, nie akapit z karty produktu — mieści
+     się w całości, więc nie ma już przewijania wewnątrz karty. */
+  .karta-tyl-opis {
+    flex: none;
+    margin-top: var(--sp-2);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .karta-tyl-ile {
+    flex: none;
+    margin-top: var(--sp-4);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
   }
 
   .karta-tyl-link {
