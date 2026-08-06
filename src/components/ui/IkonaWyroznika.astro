@@ -1,0 +1,228 @@
+---
+interface Props {
+  /** Tytuł wyróżnika — po nim dobieramy piktogram. */
+  tytul: string;
+  /** Ręczne wskazanie ikony, gdy automat trafi nietrafnie. */
+  ikona?: string;
+}
+
+const { tytul, ikona } = Astro.props;
+
+/**
+ * Piktogram dobierany po słowach kluczowych z tytułu wyróżnika.
+ *
+ * Wyróżniki są inne dla każdego produktu (jest ich ~40), więc ręczne
+ * przypisywanie ikony do każdego byłoby pracą, która rozjedzie się przy
+ * pierwszej zmianie treści. Dopasowanie po słowach działa samo, a gdy trafi
+ * nietrafnie, wystarczy podać `ikona` wprost.
+ *
+ * Kolejność ma znaczenie — pierwsze trafienie wygrywa, więc bardziej
+ * szczegółowe wzorce muszą być wyżej niż ogólne.
+ */
+const REGULY: { klucze: RegExp; ikona: string }[] = [
+  { klucze: /temperatur|°c|stopni|termo|eco\/max|tryb eco/i, ikona: "termometr" },
+  { klucze: /wodoodporn|ipx|zabezpiecz|przypadkow|ochron|cool touch|nie nagrzewa/i, ikona: "tarcza" },
+  { klucze: /\bh\b|godzin|minut|czas|timer|podtrzym/i, ikona: "zegar" },
+  { klucze: /led|wyświetlacz|panel|dotykow|ekran|lampk/i, ikona: "panel" },
+  { klucze: /akumulator|bateri|ładowan|usb|źródł(a|o) zasilan/i, ikona: "bateria" },
+  { klucze: /ostrz|nóż|tarcz(a|e) |szatkow|krojen|tnąc|strzyż|nasadk|grzebien|nasadek|regulacj.*długoś|długoś.*regulacj/i, ikona: "ostrze" },
+  { klucze: /chłodz|lodów|mroż|zimn/i, ikona: "chlodzenie" },
+  { klucze: /grzał|ogrzew|nagrzew|ciepł|izolacj/i, ikona: "ciepło" },
+  { klucze: /pojemn|litr|\bml\b|\bkg\b|woda|wodn|pran|wirowan|jednocześnie|na raz|kanapek|kanapki|tostów/i, ikona: "pojemnosc" },
+  { klucze: /myci|czyszcz|zmywar|higien|stal nierdzewn|nieprzywieraj/i, ikona: "czystosc" },
+  { klucze: /moc|\bw\b|silnik|obrot|prędkoś|poziom(y|ów) prędkości/i, ikona: "moc" },
+  { klucze: /uchwyt|stojak|konstrukcj|przechowywan|w pionie|kompaktow/i, ikona: "uchwyt" },
+  { klucze: /obsług|prost(a|ota)|wygod/i, ikona: "reka" },
+];
+
+const wybrana = ikona ?? REGULY.find((r) => r.klucze.test(tytul))?.ikona ?? "kropka";
+---
+
+<span class="ikona" data-ikona={wybrana} aria-hidden="true">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    {wybrana === "termometr" && (
+      <>
+        <path d="M14 14.8V4a2 2 0 1 0-4 0v10.8a4 4 0 1 0 4 0Z" pathLength="1" />
+        <path d="M12 9v7" pathLength="1" />
+      </>
+    )}
+    {wybrana === "tarcza" && (
+      <>
+        <path d="M12 3l8 3.5v5c0 5-3.4 8.6-8 10.5-4.6-1.9-8-5.5-8-10.5v-5L12 3Z" pathLength="1" />
+        <path d="M9 12l2.2 2.2L15 10" pathLength="1" />
+      </>
+    )}
+    {wybrana === "zegar" && (
+      <>
+        <circle cx="12" cy="12" r="8.5" pathLength="1" />
+        <path d="M12 7.5V12l3 2" pathLength="1" class="wskazowka" />
+      </>
+    )}
+    {wybrana === "panel" && (
+      <>
+        <rect x="3.5" y="4.5" width="17" height="12" rx="2" pathLength="1" />
+        <path d="M8 20h8" pathLength="1" />
+        <path d="M8 9.5h8M8 12.5h4" pathLength="1" />
+      </>
+    )}
+    {wybrana === "bateria" && (
+      <>
+        <rect x="2.5" y="7.5" width="16" height="9" rx="2" pathLength="1" />
+        <path d="M21.5 11v2" pathLength="1" />
+        <path d="M12 9.5 9.5 12.5h3L10 15" pathLength="1" class="iskra" />
+      </>
+    )}
+    {wybrana === "ostrze" && (
+      <>
+        <circle cx="12" cy="12" r="8.5" pathLength="1" />
+        <path d="M12 3.5v8.5l6 4.2" pathLength="1" class="wirnik" />
+        <path d="M12 12 6 16.7" pathLength="1" class="wirnik" />
+      </>
+    )}
+    {wybrana === "chlodzenie" && (
+      <>
+        <path d="M12 3v18M4.2 7.5l15.6 9M19.8 7.5l-15.6 9" pathLength="1" />
+        <path d="M12 6.6 10 4.6M12 6.6l2-2M12 17.4l-2 2M12 17.4l2 2" pathLength="1" />
+      </>
+    )}
+    {wybrana === "ciepło" && (
+      <>
+        <path d="M8 20c-2.5-2-3-4.5-1.5-7C8 10.5 8.5 8.5 7.5 6c3 1 5 3 5.5 5.5.8-1 1-2.5.5-4 3 2 4.5 5 3.5 8-.7 2-2.2 3.6-4.5 4.5" pathLength="1" />
+      </>
+    )}
+    {wybrana === "pojemnosc" && (
+      <>
+        <path d="M12 3.5c3.5 4 6 7 6 10a6 6 0 0 1-12 0c0-3 2.5-6 6-10Z" pathLength="1" />
+        <path d="M8.5 14.5c1.5 1 2 1 3.5 0s2 -1 3.5 0" pathLength="1" class="fala" />
+      </>
+    )}
+    {wybrana === "czystosc" && (
+      <>
+        <path d="M12 3.5 13.6 9l5.4 1.6-5.4 1.6L12 17.6 10.4 12.2 5 10.6 10.4 9 12 3.5Z" pathLength="1" />
+        <path d="M18.5 16.5l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7.7-2Z" pathLength="1" class="iskierka" />
+      </>
+    )}
+    {wybrana === "moc" && (
+      <>
+        <path d="M13.5 2.5 5 13.5h6l-.5 8L19 10.5h-6l.5-8Z" pathLength="1" />
+      </>
+    )}
+    {wybrana === "uchwyt" && (
+      <>
+        <path d="M8 21V9a4 4 0 0 1 8 0v3" pathLength="1" />
+        <rect x="4.5" y="12" width="6" height="9" rx="1.5" pathLength="1" />
+      </>
+    )}
+    {wybrana === "reka" && (
+      <>
+        <path d="M7 12.5V6a1.6 1.6 0 0 1 3.2 0v5" pathLength="1" />
+        <path d="M10.2 10.5V4.6a1.6 1.6 0 0 1 3.2 0v6" pathLength="1" />
+        <path d="M13.4 10.8V6a1.6 1.6 0 0 1 3.2 0v7" pathLength="1" />
+        <path d="M16.6 11.5a1.6 1.6 0 0 1 3.2 0v4c0 3.5-2.2 6-5.6 6h-1c-2 0-3-.6-4.2-2l-3.5-4c-.7-.9-.2-2.2 1-2.3.6 0 1.2.3 1.6.8L9 15.8" pathLength="1" />
+      </>
+    )}
+    {wybrana === "kropka" && (
+      <>
+        <circle cx="12" cy="12" r="8.5" pathLength="1" />
+        <circle cx="12" cy="12" r="3" pathLength="1" />
+      </>
+    )}
+  </svg>
+</span>
+
+<style>
+  .ikona {
+    display: inline-flex;
+    width: 32px;
+    height: 32px;
+    color: var(--gold);
+    transition: color var(--dur) var(--ease);
+  }
+
+  .ikona svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  /* Kontur rysuje się po wjechaniu w kadr. pathLength="1" na każdej ścieżce
+     sprowadza jej długość do 1, więc jedna reguła obsługuje wszystkie
+     piktogramy niezależnie od tego, jak długie są ich ścieżki. */
+  .ikona svg :is(path, circle, rect) {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+
+  :global(.is-revealed) .ikona svg :is(path, circle, rect) {
+    animation: ikona-rysuj 800ms var(--ease) forwards;
+  }
+
+  :global(.is-revealed) .ikona svg :is(path, circle, rect):nth-child(2) {
+    animation-delay: 180ms;
+  }
+
+  :global(.is-revealed) .ikona svg :is(path, circle, rect):nth-child(3) {
+    animation-delay: 320ms;
+  }
+
+  @keyframes ikona-rysuj {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  /* Elementy, które po narysowaniu żyją dalej własnym ruchem — po jednym
+     detalu na piktogram, żeby sekcja oddychała, a nie migotała. */
+  :global(.is-revealed) .ikona .wskazowka {
+    transform-origin: 12px 12px;
+    animation:
+      ikona-rysuj 800ms var(--ease) forwards,
+      obrot 8s linear 800ms infinite;
+  }
+
+  @keyframes obrot {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  :global(.is-revealed) .ikona .iskra,
+  :global(.is-revealed) .ikona .iskierka {
+    animation:
+      ikona-rysuj 800ms var(--ease) forwards,
+      puls 2.6s var(--ease) 800ms infinite;
+  }
+
+  @keyframes puls {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.35;
+    }
+  }
+
+  :global(.is-revealed) .ikona .fala {
+    animation:
+      ikona-rysuj 800ms var(--ease) forwards,
+      kolysanie 3.2s var(--ease) 800ms infinite;
+  }
+
+  @keyframes kolysanie {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-1.5px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ikona svg :is(path, circle, rect) {
+      stroke-dashoffset: 0;
+      animation: none !important;
+    }
+  }
+</style>

@@ -9,6 +9,7 @@ import Container from "../../components/ui/Container.astro";
 import Section from "../../components/ui/Section.astro";
 import Button from "../../components/ui/Button.astro";
 import Eyebrow from "../../components/ui/Eyebrow.astro";
+import IkonaWyroznika from "../../components/ui/IkonaWyroznika.astro";
 import { site } from "../../data/site.ts";
 import instrukcje from "../../data/instrukcje.json";
 
@@ -286,8 +287,9 @@ const faqSchema = {
       <Container>
         <h2 class="naglowek" data-reveal>Co wyróżnia ten model</h2>
         <div class="wyroznniki">
-          {d.wyroznniki.map((w) => (
-            <article class="wyroznnik">
+          {d.wyroznniki.map((w, i) => (
+            <article class="wyroznnik" data-reveal data-reveal-delay={i * 90}>
+              <IkonaWyroznika tytul={w.tytul} />
               <h3 class="wyroznnik-tytul">{w.tytul}</h3>
               <p class="wyroznnik-opis">{w.opis}</p>
             </article>
@@ -522,6 +524,7 @@ const faqSchema = {
   }
 
   .wyroznnik-tytul {
+    margin-top: var(--sp-4);
     font-family: var(--font-display);
     font-size: var(--fs-lead);
     font-weight: 600;
