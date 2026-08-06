@@ -47,6 +47,14 @@ const breadcrumbs = [
             <li>Usterek powstałych wskutek użytkowania niezgodnego z instrukcją obsługi.</li>
           </ul>
 
+          <h2>Przedłużenie gwarancji</h2>
+          <p>
+            Po zarejestrowaniu produktu wydłużamy gwarancję z {site.gwarancjaMiesiace} do{" "}
+            {site.gwarancjaMiesiace + site.gwarancjaPlus.dodatkoweMiesiace} miesięcy — bezpłatnie. Zgłoszenie trzeba
+            wysłać w ciągu {site.gwarancjaPlus.terminDni} dni od zakupu. Szczegóły i sposób rejestracji opisaliśmy na
+            stronie <a href="/rejestracja-produktu">rejestracji produktu</a>.
+          </p>
+
           <h2>Jak zgłosić naprawę</h2>
           <p>
             Napisz na <a href={`mailto:${site.kontakt.emailSerwis}`}>{site.kontakt.emailSerwis}</a>, podając model
