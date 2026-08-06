@@ -29,6 +29,15 @@ const produkty = defineCollection({
       })
     ),
     gwarancjaMiesiace: z.number().default(24),
+    // Pytania, które faktycznie zadają klienci o ten konkretny model
+    // („czy zmieści się dwulitrowa butelka", „jak długi jest kabel").
+    // Wyświetlają się na stronie produktu i trafiają do danych strukturalnych
+    // FAQPage, więc Google może pokazać je bezpośrednio w wynikach.
+    // Wpisuj tylko odpowiedzi, które da się obronić — to samo kryterium
+    // co przy danych technicznych.
+    pytania: z
+      .array(z.object({ pytanie: z.string(), odpowiedz: z.string() }))
+      .optional(),
     instrukcjaPdf: z.string().optional(),
     gpsr: z.object({
       producent: z.string(),

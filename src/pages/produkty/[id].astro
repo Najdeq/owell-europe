@@ -94,6 +94,72 @@ const productSchema = {
     value: x.wartosc,
   })),
 };
+
+// Pytania i odpowiedzi dla tego modelu. Część wyliczamy z danych, które i tak
+// mamy — te odpowiedzi nie mogą się zdezaktualizować, bo pochodzą z tego samego
+// źródła co reszta strony. Resztę (realne pytania klientów) dopisuje się
+// w polu `pytania` w pliku produktu.
+const pytaniaAuto: { pytanie: string; odpowiedz: string }[] = [];
+
+const dana = (fragment: string) =>
+  d.dane.find((x) => x.etykieta.toLowerCase().includes(fragment))?.wartosc;
+
+const przewod = dana("przewod") ?? dana("kabl");
+if (przewod) {
+  pytaniaAuto.push({
+    pytanie: "Jak długi jest przewód zasilający?",
+    odpowiedz: `${przewod}.`,
+  });
+}
+
+const wymiary = dana("wymiary produktu") ?? dana("wymiary urządzenia") ?? dana("wymiary zewnętrzne");
+if (wymiary) {
+  pytaniaAuto.push({
+    pytanie: "Jakie są wymiary urządzenia?",
+    odpowiedz: `${wymiary} (szerokość × głębokość × wysokość).`,
+  });
+}
+
+const opakowanie = dana("wymiary opakowania");
+if (opakowanie) {
+  pytaniaAuto.push({
+    pytanie: "Jakie są wymiary opakowania?",
+    odpowiedz: `${opakowanie} — przydatne, jeśli planujesz wysyłkę lub prezent.`,
+  });
+}
+
+pytaniaAuto.push({
+  pytanie: "Ile trwa gwarancja i kto ją realizuje?",
+  odpowiedz: `${d.gwarancjaMiesiace} miesiące od daty zakupu. Zgłoszenia obsługujemy bezpośrednio — napisz na ${site.kontakt.emailSerwis}, bez infolinii i przekierowań.`,
+});
+
+if (instrukcja) {
+  pytaniaAuto.push({
+    pytanie: "Gdzie znajdę instrukcję obsługi?",
+    odpowiedz: `Do pobrania na tej stronie (PDF, ${instrukcja.mb.toFixed(1)} MB) oraz w opakowaniu produktu.`,
+  });
+}
+
+if (d.ean) {
+  pytaniaAuto.push({
+    pytanie: "Jak sprawdzić, czy mam oryginalny produkt?",
+    odpowiedz: `Kod EAN na opakowaniu to ${d.ean}, a model ${d.model}. Producentem jest ${d.gpsr.producent}, ${d.gpsr.adres}.`,
+  });
+}
+
+const pytania = [...(d.pytania ?? []), ...pytaniaAuto];
+
+// FAQPage z pytaniami o ten model — pozwala Google pokazać je bezpośrednio
+// w wynikach wyszukiwania na frazy typu "OW 3300 długość kabla".
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: pytania.map((p) => ({
+    "@type": "Question",
+    name: p.pytanie,
+    acceptedAnswer: { "@type": "Answer", text: p.odpowiedz },
+  })),
+};
 ---
 
 <Base
@@ -105,6 +171,11 @@ const productSchema = {
     slot="head"
     type="application/ld+json"
     set:html={JSON.stringify(productSchema)}
+  />
+  <script
+    slot="head"
+    type="application/ld+json"
+    set:html={JSON.stringify(faqSchema)}
   />
 
   <Header />
@@ -225,7 +296,34 @@ const productSchema = {
       </Container>
     </Section>
 
-    <Section bg="raised">
+    {pytania.length > 0 && (
+      <Section bg="raised">
+        <Container>
+          <h2 class="naglowek" data-reveal>Pytania o ten model</h2>
+
+          {/* Natywny <details> zamiast własnej harmonijki na JS: działa
+              z klawiatury, czyta się poprawnie czytnikiem ekranu i pozwala
+              przeglądarce znaleźć tekst wyszukiwarką Ctrl+F także w zwiniętych
+              odpowiedziach. */}
+          <div class="pytania">
+            {pytania.map((p: { pytanie: string; odpowiedz: string }) => (
+              <details class="pytanie">
+                <summary>{p.pytanie}</summary>
+                <p>{p.odpowiedz}</p>
+              </details>
+            ))}
+          </div>
+
+          <p class="pytania-nota">
+            Nie znalazłeś odpowiedzi? Napisz na{" "}
+            <a href={`mailto:${site.kontakt.emailSerwis}`}>{site.kontakt.emailSerwis}</a> albo na WhatsApp —
+            dopiszemy ją tutaj dla kolejnych osób.
+          </p>
+        </Container>
+      </Section>
+    )}
+
+    <Section bg="base">
       <Container>
         <div class="gpsr">
           <Eyebrow>Bezpieczeństwo produktu (GPSR)</Eyebrow>
@@ -435,6 +533,85 @@ const productSchema = {
     font-size: var(--fs-small);
     line-height: var(--lh-body);
     color: var(--text-2);
+  }
+
+  .pytania {
+    max-width: var(--maxw-prose);
+    margin-top: var(--sp-8);
+  }
+
+  .pytanie {
+    border-top: 1px solid var(--hairline-soft);
+  }
+
+  .pytania .pytanie:last-of-type {
+    border-bottom: 1px solid var(--hairline-soft);
+  }
+
+  .pytanie summary {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--sp-4);
+    padding-block: var(--sp-5);
+    font-size: var(--fs-body);
+    font-weight: 500;
+    color: var(--text);
+    cursor: pointer;
+    list-style: none;
+    transition: color var(--dur) var(--ease);
+  }
+
+  /* Domyślny trójkącik znacznika wygląda inaczej w każdej przeglądarce —
+     chowamy go i rysujemy własny plus/minus. */
+  .pytanie summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .pytanie summary::after {
+    content: "+";
+    flex: none;
+    font-family: var(--font-mono);
+    font-size: var(--fs-lead);
+    line-height: 1;
+    color: var(--gold);
+    transition: transform var(--dur) var(--ease);
+  }
+
+  .pytanie[open] summary::after {
+    content: "−";
+  }
+
+  .pytanie summary:hover {
+    color: var(--gold-bright);
+  }
+
+  .pytanie summary:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  .pytanie p {
+    max-width: 60ch;
+    padding-bottom: var(--sp-5);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .pytania-nota {
+    max-width: var(--maxw-prose);
+    margin-top: var(--sp-6);
+    font-size: var(--fs-small);
+    color: var(--text-muted);
+  }
+
+  .pytania-nota a {
+    color: var(--gold);
+  }
+
+  .pytania-nota a:hover {
+    color: var(--gold-bright);
   }
 
   .gpsr {
