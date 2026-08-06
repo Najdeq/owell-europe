@@ -24,30 +24,74 @@ if (nieznane.length > 0) {
 // Wartości w układzie odwzorowania z scripts/mapa.mjs (equirectangular 1000×500).
 const kadr = "425 35 258 182";
 
-// Kolejność zapalania krajów: z zachodu na wschód. Bez sortowania kraje
-// zapalałyby się w losowej kolejności z pliku danych, co wygląda jak awaria,
-// a nie jak zamierzony efekt. Środek ciężkości liczymy zgrubnie ze współrzędnych
-// ścieżki — do ustalenia kolejności to w zupełności wystarcza.
-const srodekX = (d: string) => {
-  const liczby = d.match(/-?\d+(?:\.\d+)?/g);
-  if (!liczby) return 0;
-  let suma = 0;
-  let ile = 0;
-  for (let i = 0; i < liczby.length; i += 2) {
-    suma += Number(liczby[i]);
-    ile++;
-  }
-  return ile ? suma / ile : 0;
-};
-
 const konturyMap = mapa.kraje as Record<string, string>;
 
-const posortowane: string[] = rynki
-  .filter((r: { mapa: string }) => r.mapa in konturyMap)
-  .map((r: { mapa: string }) => r.mapa)
-  .sort((a: string, b: string) => srodekX(konturyMap[a]) - srodekX(konturyMap[b]));
+/**
+ * Środek największej części kraju.
+ *
+ * Liczenie średniej ze WSZYSTKICH punktów ścieżki dawałoby błędne wyniki tam,
+ * gdzie kontur zawiera odległe wyspy albo terytoria zamorskie — środek Francji
+ * (z Gujaną) czy Norwegii (ze Svalbardem) wylądowałby na oceanie. Dlatego
+ * bierzemy tylko podścieżkę o największej liczbie punktów, czyli w praktyce
+ * kontynentalny trzon kraju.
+ */
+const srodek = (d: string): [number, number] => {
+  let najlepszy: [number, number] = [0, 0];
+  let najwiecej = 0;
 
-const kolejnosc = new Map<string, number>(posortowane.map((nazwa, i) => [nazwa, i]));
+  for (const kawalek of d.split("M").filter(Boolean)) {
+    const liczby = kawalek.match(/-?\d+(?:\.\d+)?/g);
+    if (!liczby || liczby.length < 4) continue;
+
+    let sx = 0;
+    let sy = 0;
+    let ile = 0;
+    for (let i = 0; i + 1 < liczby.length; i += 2) {
+      sx += Number(liczby[i]);
+      sy += Number(liczby[i + 1]);
+      ile++;
+    }
+    if (ile > najwiecej) {
+      najwiecej = ile;
+      najlepszy = [sx / ile, sy / ile];
+    }
+  }
+  return najlepszy;
+};
+
+const START = srodek(konturyMap["Poland"]);
+
+/**
+ * Łuk z Polski do kraju docelowego jako krzywa kwadratowa. Punkt kontrolny
+ * odsuwamy prostopadle do odcinka, żeby trasy się wachlarzowały zamiast
+ * nakładać na siebie w wiązkę prostych. Znak odchylenia zależy od kierunku —
+ * dzięki temu łuki na zachód i na wschód wyginają się zgodnie, a nie lustrzanie.
+ */
+const luk = (do_: [number, number]) => {
+  const [x1, y1] = START;
+  const [x2, y2] = do_;
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const dl = Math.hypot(dx, dy) || 1;
+  const wygiecie = Math.min(dl * 0.22, 26);
+  const kx = (x1 + x2) / 2 + (-dy / dl) * wygiecie * (dx >= 0 ? 1 : -1);
+  const ky = (y1 + y2) / 2 + (dx / dl) * wygiecie * (dx >= 0 ? 1 : -1);
+  return `M${x1.toFixed(1)} ${y1.toFixed(1)}Q${kx.toFixed(1)} ${ky.toFixed(1)} ${x2.toFixed(1)} ${y2.toFixed(1)}`;
+};
+
+// Trasy sortujemy po długości, żeby impulsy startowały od najbliższych krajów
+// i „rozchodziły się" na zewnątrz, zamiast zapalać się w losowej kolejności.
+const trasy = rynki
+  .filter((r: { mapa: string }) => r.mapa in konturyMap && r.mapa !== "Poland")
+  .map((r: { mapa: string; nazwa: string }) => {
+    const cel = srodek(konturyMap[r.mapa]);
+    return {
+      nazwa: r.nazwa,
+      d: luk(cel),
+      dystans: Math.hypot(cel[0] - START[0], cel[1] - START[1]),
+    };
+  })
+  .sort((a: { dystans: number }, b: { dystans: number }) => a.dystans - b.dystans);
 ---
 
 {rynki.length > 0 && (
@@ -70,15 +114,51 @@ const kolejnosc = new Map<string, number>(posortowane.map((nazwa, i) => [nazwa, 
           role="img"
           aria-label={`Mapa Europy z zaznaczonymi krajami, w których sprzedaje ${site.grupa.nazwa}`}
         >
+          <defs>
+            <marker
+              id="grot"
+              viewBox="0 0 8 8"
+              refX="6"
+              refY="4"
+              markerWidth="5"
+              markerHeight="5"
+              orient="auto-start-reverse"
+              markerUnits="strokeWidth"
+            >
+              <path d="M0 0 L8 4 L0 8 Z" class="grot" />
+            </marker>
+          </defs>
+
           {Object.entries(mapa.kraje).map(([nazwa, d]) => (
             <path
               d={d}
               class:list={["kraj", { "kraj--aktywny": zaznaczone.has(nazwa) }]}
-              style={
-                kolejnosc.has(nazwa) ? `--opoznienie: ${kolejnosc.get(nazwa)! * 45}ms` : undefined
-              }
             />
           ))}
+
+          {/* Trasy rysujemy podwójnie: statyczna nitka pokazuje cały układ
+              połączeń nawet zanim ruszy animacja, a druga ścieżka to biegnący
+              po niej impuls. Animujemy stroke-dashoffset na cienkich liniach,
+              a nie fill na dużych kształtach — to drugie wymuszało
+              przemalowywanie całych konturów i przez to mapa się zacinała. */}
+          <g class="trasy">
+            {trasy.map((t: { d: string }) => (
+              <path d={t.d} class="trasa" />
+            ))}
+            {trasy.map((t: { d: string; nazwa: string }, i: number) => (
+              <path
+                d={t.d}
+                class="impuls"
+                pathLength="100"
+                marker-end="url(#grot)"
+                style={`animation-delay: ${(i * 260) % 5200}ms`}
+              >
+                <title>{t.nazwa}</title>
+              </path>
+            ))}
+          </g>
+
+          <circle class="zrodlo" cx={START[0]} cy={START[1]} r="1.6" />
         </svg>
 
         <figcaption class="podpis">
@@ -139,25 +219,60 @@ const kolejnosc = new Map<string, number>(posortowane.map((nazwa, i) => [nazwa, 
     transition: fill var(--dur) var(--ease);
   }
 
-  /* Kraje zapalają się kolejno z zachodu na wschód (kolejność liczona
-     w frontmatterze, opóźnienie wstrzykiwane jako --opoznienie). Start
-     dopiero po wjechaniu mapy w kadr — .is-revealed dokłada ScrollReveal,
-     inaczej cały efekt przepadłby u kogoś, kto wchodzi wysoko nad sekcją. */
+  /* Kraje są statyczne i celowo przygaszone — ruch należy do tras, a złoto
+     w pełnej sile na 43 dużych kształtach zabierałoby im uwagę. */
   .kraj--aktywny {
-    fill: var(--bg-3);
+    fill: color-mix(in srgb, var(--gold) 42%, var(--bg-2));
   }
 
-  .mapa-blok.is-revealed .kraj--aktywny {
-    animation: zapal 520ms var(--ease) forwards;
-    animation-delay: var(--opoznienie, 0ms);
+  .zrodlo {
+    fill: var(--gold-bright);
   }
 
-  @keyframes zapal {
-    from {
-      fill: var(--bg-3);
+  .trasa {
+    fill: none;
+    stroke: color-mix(in srgb, var(--gold) 28%, transparent);
+    stroke-width: 0.4;
+  }
+
+  /* Impuls: krótka kreska biegnąca wzdłuż trasy. pathLength normalizuje
+     długość każdego łuku do 100, dzięki czemu jedna reguła daje ten sam
+     efekt niezależnie od tego, czy trasa biegnie do Czech, czy do Islandii. */
+  .impuls {
+    fill: none;
+    stroke: var(--gold-bright);
+    stroke-width: 0.7;
+    stroke-linecap: round;
+    stroke-dasharray: 14 100;
+    stroke-dashoffset: 114;
+    opacity: 0;
+  }
+
+  .grot {
+    fill: var(--gold-bright);
+  }
+
+  /* Animacja startuje dopiero, gdy mapa wjedzie w kadr — inaczej biegłaby
+     w tle u kogoś, kto jest wysoko nad sekcją, i zjadała baterię. */
+  .mapa-blok.is-revealed .impuls {
+    animation: leci 5.2s linear infinite;
+  }
+
+  @keyframes leci {
+    0% {
+      stroke-dashoffset: 114;
+      opacity: 0;
     }
-    to {
-      fill: var(--gold);
+    8% {
+      opacity: 1;
+    }
+    72% {
+      opacity: 1;
+    }
+    80%,
+    100% {
+      stroke-dashoffset: 0;
+      opacity: 0;
     }
   }
 
@@ -217,12 +332,19 @@ const kolejnosc = new Map<string, number>(posortowane.map((nazwa, i) => [nazwa, 
     content: "";
   }
 
-  /* Bez ruchu: kraje od razu złote, żadnego kaskadowego zapalania. */
+  /* Bez ruchu: trasy zostają widoczne jako statyczna siatka połączeń,
+     ale nic nimi nie biegnie. */
   @media (prefers-reduced-motion: reduce) {
-    .kraj--aktywny,
-    .mapa-blok.is-revealed .kraj--aktywny {
-      fill: var(--gold);
+    .mapa-blok.is-revealed .impuls {
       animation: none !important;
+    }
+
+    .impuls {
+      opacity: 0;
+    }
+
+    .trasa {
+      stroke: color-mix(in srgb, var(--gold) 45%, transparent);
     }
   }
 </style>

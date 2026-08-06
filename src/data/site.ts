@@ -84,7 +84,6 @@ export const site = {
       { mapa: "Belarus", nazwa: "Białoruś" },
       { mapa: "Ukraine", nazwa: "Ukraina" },
       { mapa: "Moldova", nazwa: "Mołdawia" },
-      { mapa: "Russia", nazwa: "Rosja" },
       { mapa: "Romania", nazwa: "Rumunia" },
       { mapa: "Bulgaria", nazwa: "Bułgaria" },
       { mapa: "Slovenia", nazwa: "Słowenia" },
