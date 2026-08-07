@@ -1,0 +1,48 @@
+# Konfiguracja panelu Decap CMS. Dokumentacja: https://decapcms.org/docs/configuration-options/
+#
+# UWAGA przy zmianie domeny na docelową (owelleurope.com): zaktualizuj
+# `backend.base_url` poniżej ORAZ callback URL w ustawieniach aplikacji
+# OAuth na GitHubie — patrz DEPLOY.md, sekcja „Panel CMS”. Do tego czasu
+# panel działa pod adresem *.workers.dev.
+backend:
+  name: github
+  repo: Najdeq/owell-europe
+  branch: main
+  base_url: https://owell-europe.dnajdul.workers.dev
+  auth_endpoint: api/decap/auth
+
+# Podgląd wpisu w panelu ma być spójny z tym, co widać na /blog/[slug] —
+# inaczej "wygląda dobrze w panelu" i "wygląda dobrze na stronie" to dwie
+# różne obietnice.
+site_url: https://owell-europe.dnajdul.workers.dev
+display_url: https://owell-europe.dnajdul.workers.dev
+
+media_folder: "public/blog"
+public_folder: "/blog"
+
+collections:
+  - name: "blog"
+    label: "Blog"
+    label_singular: "Wpis"
+    folder: "src/content/blog"
+    create: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    identifier_field: tytul
+    summary: "{{tytul}} — {{opublikowany}}"
+    fields:
+      - { label: "Tytuł", name: "tytul", widget: "string" }
+      - { label: "Opis (pod tytułem i w meta description)", name: "opis", widget: "text" }
+      - { label: "Data publikacji", name: "data", widget: "datetime", format: "YYYY-MM-DD" }
+      - { label: "Zdjęcie okładkowe", name: "okladka", widget: "image", required: false }
+      - { label: "Autor", name: "autor", widget: "string", default: "Owell" }
+      - { label: "Tagi", name: "tagi", widget: "list", required: false, default: [] }
+      - {
+          label: "Opublikowany",
+          name: "opublikowany",
+          widget: "boolean",
+          default: false,
+          hint: "Wyłączone = wpis widoczny tylko w panelu, nie na żywej stronie.",
+        }
+      - { label: "Treść", name: "body", widget: "markdown" }

@@ -9,6 +9,9 @@ export const GET: APIRoute = ({ site }) => {
     ? [
         "User-agent: *",
         "Allow: /",
+        // Panel CMS: chroniony logowaniem GitHuba, ale nie ma po co go
+        // indeksować niezależnie od trybu produkcyjnego.
+        "Disallow: /admin",
         "",
         `Sitemap: ${new URL("sitemap-index.xml", site)}`,
         "",

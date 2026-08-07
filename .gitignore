@@ -3,6 +3,10 @@ dist/
 # generated types
 .astro/
 
+# lokalny stan Cloudflare (miniflare) dla `astro dev` / `wrangler dev` —
+# maszynowo-specyficzny cache, sqlite z symulowanego środowiska Workers
+.wrangler/
+
 # dependencies
 node_modules/
 

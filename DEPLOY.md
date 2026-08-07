@@ -71,6 +71,69 @@ Logika: `src/data/deploy.ts`, `src/pages/robots.txt.ts`.
 
 ---
 
+## Panel CMS (/admin) — samodzielna publikacja wpisów na blogu
+
+Panel to [Decap CMS](https://decapcms.org) (dawniej Netlify CMS) — edytuje
+pliki `.md` w `src/content/blog/` wprost w repozytorium na GitHubie, przez
+commit. Bez osobnej bazy danych: to, co widać w panelu, to dokładnie to,
+co jest w repo.
+
+**Kto może się zalogować:** każdy, kto ma dostęp do zapisu w repozytorium
+`Najdeq/owell-europe` na GitHubie (właściciel + collaboratorzy). Panel nie
+ma własnej listy użytkowników — dodanie/odebranie komuś dostępu do bloga
+to dodanie/odebranie mu dostępu do repo w ustawieniach GitHuba.
+
+### Konfiguracja (jednorazowo, ~5 minut)
+
+1. **Utwórz aplikację OAuth na GitHubie:**
+   [github.com/settings/developers](https://github.com/settings/developers)
+   → **OAuth Apps** → **New OAuth App**.
+
+   | Pole | Wartość |
+   |------|---------|
+   | Application name | `Owell CMS` (dowolna) |
+   | Homepage URL | `https://owell-europe.dnajdul.workers.dev` |
+   | Authorization callback URL | `https://owell-europe.dnajdul.workers.dev/api/decap/callback` |
+
+2. Po utworzeniu: skopiuj **Client ID**, kliknij **Generate a new client
+   secret** i skopiuj **Client Secret** (widoczny tylko raz).
+
+3. W Cloudflare, w ustawieniach projektu (**Settings → Variables and
+   Secrets** dla Workers / **Environment variables** dla Pages) dodaj:
+
+   | Zmienna | Wartość | Typ |
+   |---------|---------|-----|
+   | `GITHUB_OAUTH_ID` | Client ID z kroku 2 | zwykła |
+   | `GITHUB_OAUTH_SECRET` | Client Secret z kroku 2 | **Secret** (szyfrowana) |
+
+   `GITHUB_OAUTH_SECRET` koniecznie jako Secret — inaczej byłby widoczny
+   w panelu Cloudflare w postaci jawnej.
+
+4. Redeploy (albo poczekaj na najbliższy `git push`), potem wejdź na
+   `/admin/` i zaloguj się przez GitHuba.
+
+### Przy zmianie domeny na docelową
+
+Trzy miejsca do zaktualizowania jednocześnie — pominięcie któregoś
+skutkuje błędem logowania:
+
+- `public/admin/config.yml` — `base_url`, `site_url`, `display_url`
+- aplikacja OAuth na GitHubie — Homepage URL i Authorization callback URL
+- nic więcej: `/api/decap/auth` i `/api/decap/callback` budują adresy
+  z bieżącego `url.origin`, więc same się dostosowują
+
+### Jak to działa (dla porządku)
+
+`src/pages/api/decap/auth.ts` i `callback.ts` implementują standardowy
+handshake OAuth GitHuba, którego wymaga Decap CMS: `auth` przekierowuje do
+ekranu zgody GitHuba (z `state` w ciasteczku HttpOnly jako ochroną przed
+CSRF), `callback` wymienia zwrócony kod na token **po stronie serwera**
+(sekret nigdy nie trafia do przeglądarki) i odsyła go do okna panelu przez
+`postMessage`. To jedyne dwie trasy w całym serwisie z `prerender = false`
+— działają na żądanie, reszta strony zostaje w pełni statyczna.
+
+---
+
 ## Przed publicznym uruchomieniem
 
 - [ ] `site.sklep` w `src/data/site.ts` — obecnie `null`, przez co CTA kierują
@@ -78,5 +141,7 @@ Logika: `src/data/deploy.ts`, `src/pages/robots.txt.ts`.
 - [ ] Pozostałe `[DO UZUPEŁNIENIA]` — okres retencji danych w polityce
       prywatności, data deklaracji dostępności
 - [ ] `PUBLIC_PRODUKCJA=true` dopiero po przepięciu docelowej domeny
+- [ ] `GITHUB_OAUTH_ID` / `GITHUB_OAUTH_SECRET` w Cloudflare, żeby panel
+      `/admin` działał — patrz sekcja „Panel CMS" wyżej
 
 Pełna lista otwartych zadań: `AUDYT.md`.
