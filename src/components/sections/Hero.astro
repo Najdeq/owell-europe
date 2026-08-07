@@ -133,9 +133,13 @@ const fakty = [
   .hero-title {
     margin-top: var(--sp-4);
     font-family: var(--font-display);
-    font-size: var(--fs-display);
+    /* Nagłówek to teraz pełne zdanie misji, nie 3-4-wyrazowe hasło — przy
+       --fs-display (dobranym pod krótki tekst) łamał się na kilkanaście
+       wierszy i wybijał poza kadr. --fs-h2 trzyma go w rozsądnej wysokości
+       przy każdej szerokości ekranu. */
+    font-size: var(--fs-h2);
     font-weight: 600;
-    line-height: var(--lh-tight);
+    line-height: var(--lh-snug);
     letter-spacing: var(--tracking-display);
     color: var(--text);
   }
@@ -222,7 +226,10 @@ const fakty = [
 
   @media (min-width: 960px) {
     .hero-inner {
-      grid-template-columns: 0.7fr 1.3fr;
+      /* Szerszy lewy słupek niż wcześniej (było 0.7fr) — nagłówek to teraz
+         pełne zdanie, przy wąskiej kolumnie łamał się na kilkanaście
+         wierszy. */
+      grid-template-columns: 0.9fr 1.1fr;
       gap: var(--sp-16);
     }
 

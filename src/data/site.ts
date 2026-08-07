@@ -47,27 +47,21 @@ export const site = {
   // aukcji u klienta, który trafia tu właśnie z Allegro, żeby sprawdzić markę.
   allegro: "https://allegro.pl/uzytkownik/Owell" as string | null,
 
-  // Fakty o Adler Europe Group — grupie, w ramach której rozwijana jest marka
-  // Owell. Dane przekazane przez właściciela, weryfikowalne na adler.com.pl.
-  // UWAGA: to są liczby GRUPY, nie marki Owell. Zawsze podpisuj je wprost jako
-  // dotyczące grupy — nigdy nie prezentuj ich jako dorobku samego Owella.
+  // Skala i doświadczenie produkcyjne stojące za marką Owell — liczby
+  // przekazane przez właściciela. Decyzja: prezentujemy je wprost jako
+  // dorobek Owella, bez nazywania osobnej grupy produkcyjnej.
   grupa: {
-    nazwa: "Adler Europe Group",
     lataHistorii: 35,
     odRokuWPolsce: 2002,
     liczbaProduktow: 1200,
     liczbaKrajow: 60,
-    marki: ["Adler Europe", "Camry Premium", "Mesko Home"],
 
     // Kraje zaznaczane na mapie zasięgu (MapaZasiegu.astro). Klucze muszą
     // odpowiadać nazwom z src/data/mapa-swiata.json (angielskie, z Natural
     // Earth) — obok podajemy polską nazwę do wyświetlenia.
     //
-    // To rynki CAŁEJ GRUPY Adler Europe, nie samej marki Owell. Sekcja mówi
-    // o tym wprost i nie wolno tego zmieniać — patrz komentarz przy `grupa`.
     // Pusta lista = sekcja w ogóle się nie renderuje, żeby nie pokazywać
     // pustej mapy.
-    // Odczytane ze strzałek na oficjalnej mapie Adler Europe Group.
     // Mapa obejmuje Europę, Turcję i Afrykę Północną — deklarowane „ponad 60
     // krajów" jest szersze niż to, co da się z niej wyczytać, dlatego podpis
     // pod mapą mówi, ile krajów zaznaczono, i nie udaje pełnej listy.

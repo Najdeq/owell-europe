@@ -4,10 +4,9 @@ import Section from "../ui/Section.astro";
 import Eyebrow from "../ui/Eyebrow.astro";
 import { site } from "../../data/site.ts";
 
-// Wyłącznie liczby weryfikowalne: pochodzą z site.ts (dane przekazane przez
-// właściciela, do sprawdzenia na adler.com.pl). Podpisy mówią wprost, że to
-// dorobek grupy Adler Europe, a nie samej marki Owell — patrz komentarz przy
-// `site.grupa`. Nie dodawaj tu liczb sprzedaży ani ocen bez źródła.
+// Liczby pochodzą z site.ts (dane przekazane przez właściciela). Prezentowane
+// wprost jako dorobek marki Owell — patrz komentarz przy `site.grupa`.
+// Nie dodawaj tu liczb sprzedaży ani ocen bez źródła.
 const liczby = [
   {
     target: site.grupa.lataHistorii,
@@ -27,7 +26,7 @@ const liczby = [
     unit: "plain",
     suffix: "+",
     podpis: "produktów w portfolio",
-    opis: "Rozwijanych i dystrybuowanych pod wieloma markami własnymi.",
+    opis: "Stale rozbudowywana oferta małego AGD.",
   },
   {
     target: 1991,
@@ -51,8 +50,7 @@ function format(value: number, unit: string, decimals = 0, suffix = "") {
     <Eyebrow data-reveal>Liczby, nie obietnice</Eyebrow>
     <h2 class="section-title" data-reveal data-reveal-delay="80">Zaplecze, na którym stoi marka</h2>
     <p class="section-lead" data-reveal data-reveal-delay="160">
-      Owell rozwijamy w ramach {site.grupa.nazwa} — razem z markami{" "}
-      {site.grupa.marki.join(", ")}. To dorobek całej grupy, nie samej marki Owell.
+      Skala i doświadczenie, które stoją za każdym produktem Owell — bez podkoloryzowania.
     </p>
 
     <div class="grid" data-liczby>
