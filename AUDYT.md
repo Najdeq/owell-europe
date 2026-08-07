@@ -89,9 +89,9 @@ klientów, wyróżnia na tle Adlera (który tego nie ma).
 ---
 
 ## Pozostałe `[DO UZUPEŁNIENIA]`
-- `polityka-prywatnosci.astro` — okres retencji danych, inni odbiorcy danych
-- `deklaracja-dostepnosci.astro` — data deklaracji, pozostałe ograniczenia
-- `bezpieczenstwo-produktu.astro` — aktualne działania serwisowe / wycofania
+- ✅ `polityka-prywatnosci.astro` — okres retencji danych (3 lata), inni odbiorcy danych (nazwa.pl)
+- ✅ `deklaracja-dostepnosci.astro` — data deklaracji, pozostałe ograniczenia (brak dodatkowych)
+- ✅ `bezpieczenstwo-produktu.astro` — aktualne działania serwisowe / wycofania (formalne „brak")
 - `/produkty` — 4 kategorie bez produktu (grzejnik, blender kielichowy,
   czyścik parowy, koce elektryczne)
 - 4 kategorie bez zdjęcia (OW 4819, OW 2856, OW 2859, OW 8058)
