@@ -53,9 +53,9 @@ export const site = {
   // dotyczące grupy — nigdy nie prezentuj ich jako dorobku samego Owella.
   grupa: {
     nazwa: "Adler Europe Group",
-    lataHistorii: 30,
+    lataHistorii: 35,
     odRokuWPolsce: 2002,
-    liczbaProduktow: 800,
+    liczbaProduktow: 1200,
     liczbaKrajow: 60,
     marki: ["Adler Europe", "Camry Premium", "Mesko Home"],
 

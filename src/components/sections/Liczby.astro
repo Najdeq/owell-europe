@@ -13,25 +13,28 @@ const liczby = [
     target: site.grupa.lataHistorii,
     unit: "plain",
     suffix: "+",
-    podpis: `lat historii ${site.grupa.nazwa}`,
+    podpis: "lat historii",
   },
   {
     target: site.grupa.liczbaKrajow,
     unit: "plain",
     suffix: "+",
-    podpis: "krajów, w których sprzedaje grupa",
+    podpis: "krajów na świecie",
+    opis: "Tyle rynków obejmuje nasza międzynarodowa dystrybucja.",
   },
   {
     target: site.grupa.liczbaProduktow,
     unit: "plain",
     suffix: "+",
-    podpis: "produktów w portfolio grupy",
+    podpis: "produktów w portfolio",
+    opis: "Rozwijanych i dystrybuowanych pod wieloma markami własnymi.",
   },
   {
-    target: site.grupa.odRokuWPolsce,
+    target: 1991,
     unit: "plain",
     suffix: "",
-    podpis: "od tego roku na polskim rynku",
+    podpis: "Od tego wszystko się zaczęło",
+    opis: "Ponad trzy dekady doświadczenia w tworzeniu produktów użytkowych.",
   },
 ];
 
@@ -66,6 +69,7 @@ function format(value: number, unit: string, decimals = 0, suffix = "") {
             {format(l.target, l.unit, 0, l.suffix)}
           </p>
           <p class="liczba-podpis">{l.podpis}</p>
+          {l.opis && <p class="liczba-opis">{l.opis}</p>}
         </div>
       ))}
     </div>
@@ -116,6 +120,13 @@ function format(value: number, unit: string, decimals = 0, suffix = "") {
     text-transform: uppercase;
     letter-spacing: var(--tracking-mono);
     color: var(--steel);
+  }
+
+  .liczba-opis {
+    margin-top: var(--sp-2);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--text-2);
   }
 
   @media (min-width: 560px) {

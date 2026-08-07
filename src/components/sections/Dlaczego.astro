@@ -1,5 +1,4 @@
 ---
-import { getCollection } from "astro:content";
 import { Image } from "astro:assets";
 import Container from "../ui/Container.astro";
 import Section from "../ui/Section.astro";
@@ -7,32 +6,38 @@ import Eyebrow from "../ui/Eyebrow.astro";
 import { site } from "../../data/site.ts";
 import detalCzajnik from "../../assets/marka/detal-czajnik.jpg";
 
-const produkty = await getCollection("produkty");
-
-// Tylko dane, które da się sprawdzić: gwarancja i liczba modeli wynikają
-// wprost z site.ts i kolekcji produktów, pozostałe dwie z site.grupa
-// (fakty o Adler Europe Group przekazane przez właściciela).
-// Nie dodawaj tu liczb sprzedaży, ocen ani lat doświadczenia bez źródła.
+// Liczby przekazane przez właściciela marki — dotyczą zespołu i grupy Adler
+// Europe stojącej za Owell, nie samej działalności Owell pod tą nazwą.
 const argumenty = [
   {
+    prefix: "",
     liczba: String(site.gwarancjaMiesiace),
-    jednostka: "miesiące",
-    opis: "gwarancji na każdy produkt, bez wyjątków.",
+    jednostka: "miesiące gwarancji",
+    opis: "Każdy produkt Owell objęty jest 24-miesięczną gwarancją. Zapewniamy również profesjonalny serwis pogwarancyjny oraz łatwy dostęp do części zamiennych.",
   },
   {
-    liczba: String(produkty.length),
-    jednostka: "modeli",
-    opis: "w aktualnej ofercie, każdy z pełną kartą GPSR.",
+    prefix: "Ponad",
+    liczba: "40",
+    jednostka: "starannie opracowanych modeli",
+    opis: "Nasze produkty powstają z myślą o codziennym komforcie użytkowania. Łączą funkcjonalność, nowoczesny design oraz zgodność z wymaganiami i normami obowiązującymi w Unii Europejskiej.",
   },
   {
-    liczba: "100%",
-    jednostka: "produktów",
-    opis: "z pełnymi danymi producenta i dokumentacją zgodności.",
+    prefix: "Doświadczenie budowane od",
+    liczba: "1991",
+    jednostka: "roku",
+    opis: "Za marką Owell stoi zespół z ponad 35-letnim doświadczeniem w branży małego AGD i produktów użytkowych. Wiedza zdobywana przez lata pozwala nam tworzyć produkty, którym zaufały miliony klientów.",
   },
   {
-    liczba: String(site.grupa.odRokuWPolsce),
-    jednostka: "rok",
-    opis: `od którego ${site.grupa.nazwa} działa na polskim rynku.`,
+    prefix: "Obecność w ponad",
+    liczba: "60",
+    jednostka: "krajach",
+    opis: "Produkty tworzone przez nasz zespół trafiają do klientów w 60 krajach na całym świecie. Stale rozwijamy naszą międzynarodową obecność.",
+  },
+  {
+    prefix: "",
+    liczba: "30 000",
+    jednostka: "m² centrum logistycznego",
+    opis: "Dysponujemy własnym zapleczem logistycznym o powierzchni 30 000 m². Dzięki temu zapewniamy wysoką dostępność produktów, sprawną realizację zamówień oraz profesjonalną obsługę.",
   },
 ];
 ---
@@ -56,6 +61,7 @@ const argumenty = [
         {argumenty.map((a) => (
           <div class="argument">
             <dt class="argument-liczba">
+              {a.prefix && <span class="argument-prefix">{a.prefix} </span>}
               {a.liczba} <span class="argument-jednostka">{a.jednostka}</span>
             </dt>
             <dd class="argument-opis">{a.opis}</dd>
@@ -104,6 +110,13 @@ const argumenty = [
     color: var(--gold-bright);
   }
 
+  .argument-prefix {
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    font-weight: 400;
+    color: var(--text-2);
+  }
+
   .argument-jednostka {
     font-size: var(--fs-small);
     font-weight: 400;
@@ -122,6 +135,12 @@ const argumenty = [
   @media (min-width: 720px) {
     .argumenty {
       grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Piąty argument (nieparzysta liczba elementów) rozciąga się na całą
+       szerokość, żeby nie zostawiać osamotnionej karty w prawej kolumnie. */
+    .argument:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
     }
   }
 
