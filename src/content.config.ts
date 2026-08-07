@@ -68,6 +68,10 @@ const blog = defineCollection({
     okladka: z.string().optional(),
     autor: z.string().default("Owell"),
     tagi: z.array(z.string()).default([]),
+    // Identyfikatory z kolekcji `produkty` (nazwy plików bez .md), np. "ow-8805".
+    // Wypełnia je redaktor wpisu — na tej podstawie pod treścią renderuje się
+    // karta produktu zamiast zwykłego linku tekstowego w treści.
+    produkty: z.array(z.string()).default([]),
     // Domyślnie false — wpis dodany przez CMS nie trafia na żywo, dopóki
     // ktoś świadomie nie przełączy go na opublikowany. Bez tego każdy zapis
     // roboczy w panelu byłby od razu widoczny publicznie.

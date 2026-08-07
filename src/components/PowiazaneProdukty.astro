@@ -1,0 +1,141 @@
+---
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+import { zdjecia } from "../data/zdjecia.ts";
+
+interface Props {
+  produkty: string[];
+}
+
+const { produkty: identyfikatory } = Astro.props;
+
+const wszystkieProdukty = await getCollection("produkty");
+const powiazane = identyfikatory
+  .map((id) => wszystkieProdukty.find((p) => p.id === id && p.data.opublikowany))
+  .filter((p): p is NonNullable<typeof p> => Boolean(p));
+---
+
+{powiazane.length > 0 && (
+  <aside class="powiazane" aria-label="Powiązane produkty">
+    <p class="powiazane-etykieta">Produkty z tego wpisu</p>
+
+    <div class="powiazane-lista">
+      {powiazane.map((p) => (
+        <a href={`/produkty/${p.id}`} class="karta">
+          <div class="karta-foto">
+            {zdjecia[p.id] ? (
+              <Image src={zdjecia[p.id]} alt={p.data.nazwa} width={320} height={320} class="foto-img" />
+            ) : (
+              <div class="foto-placeholder" />
+            )}
+          </div>
+          <div class="karta-tresc">
+            <span class="karta-model">{p.data.model}</span>
+            <h3 class="karta-nazwa">{p.data.nazwa}</h3>
+            <p class="karta-tagline">{p.data.tagline}</p>
+            <span class="karta-link">Zobacz produkt →</span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </aside>
+)}
+
+<style>
+  .powiazane {
+    margin-top: var(--sp-10);
+    padding-top: var(--sp-8);
+    border-top: 1px solid var(--hairline-soft);
+  }
+
+  .powiazane-etykieta {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+  }
+
+  .powiazane-lista {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-6);
+    margin-top: var(--sp-5);
+  }
+
+  .karta {
+    display: flex;
+    gap: var(--sp-5);
+    align-items: center;
+    padding: var(--sp-5);
+    border: 1px solid var(--hairline-soft);
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    transition:
+      border-color var(--dur) var(--ease),
+      transform var(--dur) var(--ease);
+  }
+
+  .karta:hover {
+    border-color: var(--gold);
+    transform: translateY(-2px);
+  }
+
+  .karta-foto {
+    flex: none;
+    width: 6rem;
+    height: 6rem;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background-color: var(--photo-bg);
+  }
+
+  .foto-img,
+  .foto-placeholder {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .karta-model {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    letter-spacing: var(--tracking-mono);
+    color: var(--gold);
+  }
+
+  .karta-nazwa {
+    margin-top: var(--sp-1);
+    font-family: var(--font-display);
+    font-size: var(--fs-lead);
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .karta-tagline {
+    margin-top: var(--sp-1);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .karta-link {
+    display: inline-block;
+    margin-top: var(--sp-2);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--gold);
+  }
+
+  .karta:hover .karta-link {
+    color: var(--gold-bright);
+  }
+
+  @media (min-width: 640px) {
+    .powiazane-lista {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

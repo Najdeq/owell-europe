@@ -3,6 +3,7 @@ import { getCollection } from "astro:content";
 import Section from "../ui/Section.astro";
 import Button from "../ui/Button.astro";
 import Eyebrow from "../ui/Eyebrow.astro";
+import WyszukiwarkaModelu from "../WyszukiwarkaModelu.astro";
 import { site } from "../../data/site.ts";
 
 const produkty = await getCollection("produkty");
@@ -33,6 +34,8 @@ const fakty = [
         <Button href="/gdzie-kupic" variant="primary">Gdzie kupić</Button>
         <Button href="/o-nas" variant="ghost">Poznaj nas</Button>
       </div>
+
+      <WyszukiwarkaModelu class="hero-szukaj" />
 
       <dl class="hero-fakty" data-hero-fakty>
         {fakty.map((f) => (
@@ -144,6 +147,11 @@ const fakty = [
     flex-wrap: wrap;
     gap: var(--sp-4);
     margin-top: var(--sp-8);
+  }
+
+  :global(.hero-szukaj) {
+    margin-top: var(--sp-8);
+    max-width: 28rem;
   }
 
   .hero-fakty {

@@ -4,6 +4,7 @@ opis: "Dwie różne technologie chłodzenia, dwa różne zastosowania. Wyjaśnia
 data: 2026-08-01
 okladka: "/blog/lodowka-turystyczna.jpg"
 tagi: ["poradnik", "AGD turystyczne"]
+produkty: ["ow-8805"]
 opublikowany: true
 ---
 

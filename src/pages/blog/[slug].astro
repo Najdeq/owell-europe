@@ -7,6 +7,7 @@ import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
 import Container from "../../components/ui/Container.astro";
 import Section from "../../components/ui/Section.astro";
 import Prose from "../../components/ui/Prose.astro";
+import PowiazaneProdukty from "../../components/PowiazaneProdukty.astro";
 import { site } from "../../data/site.ts";
 
 export async function getStaticPaths() {
@@ -81,6 +82,8 @@ const articleSchema = {
             ))}
           </ul>
         )}
+
+        <PowiazaneProdukty produkty={wpis.data.produkty} />
       </Container>
     </Section>
   </main>
