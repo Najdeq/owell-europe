@@ -231,10 +231,24 @@ const fakty = [
          wierszy. */
       grid-template-columns: 0.9fr 1.1fr;
       gap: var(--sp-16);
+      /* Tekst (nagłówek + lead + CTA + szukajka + statystyki) jest teraz
+         wyższy niż stały kadr 4:3 wideo — stretch zamiast center pozwala
+         prawej kolumnie dorównać jej wysokością, zamiast wisieć wyśrodkowana
+         nad pustym miejscem pod spodem. */
+      align-items: stretch;
     }
 
     .hero-media {
       justify-content: flex-end;
+    }
+
+    .hero-media-frame {
+      /* Wypełnia całą wysokość wiersza gridu (czyli wysokość lewej kolumny)
+         zamiast trzymać sztywne aspect-ratio 4:3 — na mobile/tablet, gdzie
+         kolumny się układają jedna pod drugą, aspect-ratio niżej w tym samym
+         pliku nadal obowiązuje. */
+      aspect-ratio: auto;
+      height: 100%;
     }
   }
 </style>

@@ -96,10 +96,15 @@ const argumenty = [
   }
 
   .argumenty {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--sp-8);
     margin-top: var(--sp-12);
+  }
+
+  .argument {
+    break-inside: avoid;
+  }
+
+  .argument + .argument {
+    margin-top: var(--sp-8);
   }
 
   .argument-liczba {
@@ -132,14 +137,14 @@ const argumenty = [
   }
 
   @media (min-width: 720px) {
+    /* column-count zamiast grid: przy nierównej długości opisów grid
+       wymuszałby wspólną wysokość wiersza w obu kolumnach, zostawiając
+       pustą przerwę pod krótszym argumentem. Kolumny CSS pakują każdy
+       .argument tam, gdzie akurat jest miejsce — przeglądarka sama kasuje
+       górny margines elementu, który wypadnie na starcie nowej kolumny. */
     .argumenty {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    /* Piąty argument (nieparzysta liczba elementów) rozciąga się na całą
-       szerokość, żeby nie zostawiać osamotnionej karty w prawej kolumnie. */
-    .argument:last-child:nth-child(odd) {
-      grid-column: 1 / -1;
+      column-count: 2;
+      column-gap: var(--sp-8);
     }
   }
 
