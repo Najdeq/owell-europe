@@ -289,9 +289,11 @@ const faqSchema = {
         <div class="wyroznniki">
           {d.wyroznniki.map((w, i) => (
             <article class="wyroznnik" data-reveal data-reveal-delay={i * 90}>
-              <IkonaWyroznika tytul={w.tytul} />
-              <h3 class="wyroznnik-tytul">{w.tytul}</h3>
-              <p class="wyroznnik-opis">{w.opis}</p>
+              <IkonaWyroznika tytul={w.tytul} class="wyroznnik-ikona" />
+              <div>
+                <h3 class="wyroznnik-tytul">{w.tytul}</h3>
+                <p class="wyroznnik-opis">{w.opis}</p>
+              </div>
             </article>
           ))}
         </div>
@@ -523,8 +525,19 @@ const faqSchema = {
     margin-top: var(--sp-8);
   }
 
+  .wyroznnik {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--sp-5);
+  }
+
+  :global(span.ikona.wyroznnik-ikona) {
+    flex: none;
+    width: 48px;
+    height: 48px;
+  }
+
   .wyroznnik-tytul {
-    margin-top: var(--sp-4);
     font-family: var(--font-display);
     font-size: var(--fs-lead);
     font-weight: 600;
@@ -667,7 +680,8 @@ const faqSchema = {
     }
 
     .wyroznniki {
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(2, 1fr);
+      column-gap: var(--sp-12);
     }
   }
 </style>
