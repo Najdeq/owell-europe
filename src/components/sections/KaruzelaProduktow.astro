@@ -1,0 +1,173 @@
+---
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+import Section from "../ui/Section.astro";
+import Eyebrow from "../ui/Eyebrow.astro";
+import { site } from "../../data/site.ts";
+import { zdjecia } from "../../data/zdjecia.ts";
+
+const kategorieNazwy = Object.fromEntries(site.kategorie.map((k) => [k.slug, k.nazwa]));
+
+const produkty = (await getCollection("produkty"))
+  .filter((p) => p.data.opublikowany)
+  .sort((a, b) => a.data.kolejnosc - b.data.kolejnosc);
+---
+
+{produkty.length > 0 && (
+  <Section bg="base" class="karuzela-sekcja">
+    <Eyebrow data-reveal class="karuzela-eyebrow">Cały katalog</Eyebrow>
+    <h2 class="karuzela-tytul" data-reveal data-reveal-delay="80">Owell w jednym spojrzeniu</h2>
+
+    <div class="marquee" data-marquee>
+      <div class="marquee-track">
+        {[...produkty, ...produkty].map((p, i) => (
+          <a
+            href={`/produkty/${p.id}`}
+            class="karta"
+            aria-hidden={i >= produkty.length ? "true" : undefined}
+            tabindex={i >= produkty.length ? "-1" : undefined}
+          >
+            <div class="karta-foto">
+              {zdjecia[p.id] && (
+                <Image src={zdjecia[p.id]} alt={p.data.nazwa} width={240} height={240} loading="lazy" />
+              )}
+            </div>
+            <p class="karta-kategoria">{kategorieNazwy[p.data.kategoria]}</p>
+            <p class="karta-nazwa">{p.data.nazwa}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </Section>
+)}
+
+<style>
+  .karuzela-sekcja {
+    overflow: hidden;
+  }
+
+  :global(.karuzela-eyebrow) {
+    padding-inline: var(--gutter);
+  }
+
+  .karuzela-tytul {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-10);
+    padding-inline: var(--gutter);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .marquee {
+    width: 100%;
+    /* Rozmycie krawędzi zamiast twardego obcięcia — pasek wygląda, jakby
+       wjeżdżał i wyjeżdżał poza kadr, nie jakby był ucięty nożyczkami. */
+    -webkit-mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
+    mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
+  }
+
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    gap: var(--sp-5);
+    animation: karuzela-scroll linear infinite;
+    /* 6s na kartę — przy krótszym katalogu pasek nie pędzi, przy dłuższym
+       nie wlecze się. Liczone z liczby unikalnych produktów, nie zdublowanej listy. */
+    animation-duration: calc(var(--karuzela-liczba, 8) * 6s);
+  }
+
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
+
+  @keyframes karuzela-scroll {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      /* -50% bo lista jest zdublowana — w połowie animacji drugi komplet
+         kart jest dokładnie tam, gdzie zaczynał się pierwszy. */
+      transform: translateX(-50%);
+    }
+  }
+
+  .karta {
+    flex: none;
+    width: 11rem;
+    text-decoration: none;
+  }
+
+  .karta-foto {
+    aspect-ratio: 1 / 1;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background-color: var(--photo-bg);
+    border: 1px solid var(--hairline-soft);
+    transition: border-color var(--dur) var(--ease);
+  }
+
+  .karta:hover .karta-foto {
+    border-color: var(--gold);
+  }
+
+  .karta-foto :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  .karta-kategoria {
+    margin-top: var(--sp-3);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--gold);
+  }
+
+  .karta-nazwa {
+    margin-top: var(--sp-1);
+    font-size: var(--fs-small);
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  @media (min-width: 640px) {
+    .karta {
+      width: 13rem;
+    }
+  }
+
+  /* Bez ruchu: pasek zamienia się w zwykłą listę przewijaną scrollem/dotykiem,
+     zamiast jechać automatycznie w nieskończoność. */
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track {
+      animation: none;
+    }
+
+    .marquee {
+      overflow-x: auto;
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+  }
+</style>
+
+<script>
+  // Liczba unikalnych kart (lista w DOM jest zdublowana dla pętli) — ustawia
+  // czas trwania animacji tak, by tempo nie zależało od długości katalogu.
+  function ustawTempoKaruzeli() {
+    const track = document.querySelector<HTMLElement>("[data-marquee] .marquee-track");
+    if (!track) return;
+    const polowa = track.children.length / 2;
+    track.style.setProperty("--karuzela-liczba", String(polowa));
+  }
+
+  ustawTempoKaruzeli();
+  document.addEventListener("astro:page-load", ustawTempoKaruzeli);
+</script>
