@@ -19,17 +19,25 @@ const produkty = (await getCollection("produkty"))
     <h2 class="karuzela-tytul" data-reveal data-reveal-delay="80">Owell w jednym spojrzeniu</h2>
 
     <div class="marquee" data-marquee>
-      <div class="marquee-track">
+      <div class="marquee-track" data-track>
         {[...produkty, ...produkty].map((p, i) => (
           <a
             href={`/produkty/${p.id}`}
             class="karta"
             aria-hidden={i >= produkty.length ? "true" : undefined}
             tabindex={i >= produkty.length ? "-1" : undefined}
+            draggable="false"
           >
             <div class="karta-foto">
               {zdjecia[p.id] && (
-                <Image src={zdjecia[p.id]} alt={p.data.nazwa} width={240} height={240} loading="lazy" />
+                <Image
+                  src={zdjecia[p.id]}
+                  alt={p.data.nazwa}
+                  width={240}
+                  height={240}
+                  loading="lazy"
+                  draggable={false}
+                />
               )}
             </div>
             <p class="karta-kategoria">{kategorieNazwy[p.data.kategoria]}</p>
@@ -42,8 +50,17 @@ const produkty = (await getCollection("produkty"))
 )}
 
 <style>
-  .karuzela-sekcja {
+  /* Podwójna klasa (.section + .karuzela-sekcja) celowo — samo .karuzela-sekcja
+     ma taką samą specyficzność jak .section z Section.astro, więc bez tego
+     wygrywałby ten, który akurat załadował się później w bundlu. */
+  :global(.section.karuzela-sekcja) {
     overflow: hidden;
+    /* Ta sekcja to przerywnik między dwoma innymi, nie ma własnej treści do
+       "odpoczynku" jak reszta — pełny --section-y z obu stron dawał pustą
+       czarną dziurę nad paskiem (suma dolnego marginesu Kategorii i górnego
+       tej sekcji). */
+    padding-top: var(--sp-10);
+    padding-bottom: var(--sp-16);
   }
 
   :global(.karuzela-eyebrow) {
@@ -64,41 +81,35 @@ const produkty = (await getCollection("produkty"))
 
   .marquee {
     width: 100%;
+    overflow: hidden;
+    /* Pionowy zapas na skalowanie kart pod kursorem — bez tego hover-zoom
+       obcinałby się na górnej/dolnej krawędzi kontenera. */
+    padding-block: var(--sp-4);
+    cursor: grab;
+    touch-action: pan-y;
     /* Rozmycie krawędzi zamiast twardego obcięcia — pasek wygląda, jakby
        wjeżdżał i wyjeżdżał poza kadr, nie jakby był ucięty nożyczkami. */
     -webkit-mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
     mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
   }
 
+  .marquee[data-dragging="true"] {
+    cursor: grabbing;
+  }
+
   .marquee-track {
     display: flex;
     width: max-content;
     gap: var(--sp-5);
-    animation: karuzela-scroll linear infinite;
-    /* 6s na kartę — przy krótszym katalogu pasek nie pędzi, przy dłuższym
-       nie wlecze się. Liczone z liczby unikalnych produktów, nie zdublowanej listy. */
-    animation-duration: calc(var(--karuzela-liczba, 8) * 6s);
-  }
-
-  .marquee:hover .marquee-track {
-    animation-play-state: paused;
-  }
-
-  @keyframes karuzela-scroll {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      /* -50% bo lista jest zdublowana — w połowie animacji drugi komplet
-         kart jest dokładnie tam, gdzie zaczynał się pierwszy. */
-      transform: translateX(-50%);
-    }
+    will-change: transform;
   }
 
   .karta {
     flex: none;
     width: 11rem;
     text-decoration: none;
+    -webkit-user-select: none;
+    user-select: none;
   }
 
   .karta-foto {
@@ -107,11 +118,14 @@ const produkty = (await getCollection("produkty"))
     overflow: hidden;
     background-color: var(--photo-bg);
     border: 1px solid var(--hairline-soft);
-    transition: border-color var(--dur) var(--ease);
+    transition:
+      border-color var(--dur) var(--ease),
+      transform var(--dur) var(--ease);
   }
 
   .karta:hover .karta-foto {
     border-color: var(--gold);
+    transform: scale(1.08);
   }
 
   .karta-foto :global(img) {
@@ -119,6 +133,7 @@ const produkty = (await getCollection("produkty"))
     height: 100%;
     object-fit: contain;
     display: block;
+    pointer-events: none;
   }
 
   .karta-kategoria {
@@ -143,31 +158,119 @@ const produkty = (await getCollection("produkty"))
     }
   }
 
-  /* Bez ruchu: pasek zamienia się w zwykłą listę przewijaną scrollem/dotykiem,
-     zamiast jechać automatycznie w nieskończoność. */
   @media (prefers-reduced-motion: reduce) {
-    .marquee-track {
-      animation: none;
+    .karta-foto {
+      transition: border-color var(--dur) var(--ease);
     }
 
-    .marquee {
-      overflow-x: auto;
-      -webkit-mask-image: none;
-      mask-image: none;
+    .karta:hover .karta-foto {
+      transform: none;
     }
   }
 </style>
 
 <script>
-  // Liczba unikalnych kart (lista w DOM jest zdublowana dla pętli) — ustawia
-  // czas trwania animacji tak, by tempo nie zależało od długości katalogu.
-  function ustawTempoKaruzeli() {
-    const track = document.querySelector<HTMLElement>("[data-marquee] .marquee-track");
-    if (!track) return;
-    const polowa = track.children.length / 2;
-    track.style.setProperty("--karuzela-liczba", String(polowa));
+  // Pasek jedzie sam (rAF, nie CSS @keyframes) — dzięki temu ten sam offset
+  // obsługuje i autoplay, i ręczne przeciąganie/swipe, bez dwóch osobnych
+  // silników animacji, które musiałyby się ze sobą zgadzać.
+  function setupKaruzela() {
+    const marquee = document.querySelector<HTMLElement>("[data-marquee]");
+    const track = document.querySelector<HTMLElement>("[data-track]");
+    if (!marquee || !track) return;
+    if (marquee.dataset.owellBound === "true") return;
+    marquee.dataset.owellBound = "true";
+
+    // Aliasy jako osobne const — zamykają typ jako "na pewno HTMLElement" dla
+    // funkcji zdefiniowanych niżej (TS nie ufa zawężeniu `marquee`/`track"
+    // wewnątrz domknięć zadeklarowanych po guard clause).
+    const marqueeEl = marquee;
+    const trackEl = track;
+
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    let polowaSzerokosci = 0;
+    function mierz() {
+      polowaSzerokosci = trackEl.scrollWidth / 2;
+    }
+    mierz();
+    window.addEventListener("resize", mierz);
+
+    let offset = 0;
+    let hover = false;
+    let dragging = false;
+    let startX = 0;
+    let startOffset = 0;
+    let przesuniete = 0; // suma ruchu w bieżącym geście — odróżnia klik od przeciągnięcia
+    const PREDKOSC = 34; // px/s
+
+    function zawin() {
+      if (polowaSzerokosci <= 0) return;
+      offset = ((offset % polowaSzerokosci) + polowaSzerokosci) % polowaSzerokosci;
+    }
+
+    function rysuj() {
+      trackEl.style.transform = `translateX(${-offset}px)`;
+    }
+
+    let ostatniCzas: number | null = null;
+    function krok(czas: number) {
+      if (ostatniCzas === null) ostatniCzas = czas;
+      const dt = (czas - ostatniCzas) / 1000;
+      ostatniCzas = czas;
+
+      if (!hover && !dragging && !prefersReducedMotion) {
+        offset += PREDKOSC * dt;
+        zawin();
+        rysuj();
+      }
+
+      requestAnimationFrame(krok);
+    }
+    requestAnimationFrame(krok);
+
+    marqueeEl.addEventListener("mouseenter", () => (hover = true));
+    marqueeEl.addEventListener("mouseleave", () => (hover = false));
+
+    marqueeEl.addEventListener("pointerdown", (e) => {
+      dragging = true;
+      przesuniete = 0;
+      startX = e.clientX;
+      startOffset = offset;
+      marqueeEl.dataset.dragging = "true";
+      marqueeEl.setPointerCapture(e.pointerId);
+    });
+
+    marqueeEl.addEventListener("pointermove", (e) => {
+      if (!dragging) return;
+      const delta = e.clientX - startX;
+      przesuniete = Math.max(przesuniete, Math.abs(delta));
+      offset = startOffset - delta;
+      zawin();
+      rysuj();
+    });
+
+    function zakonczPrzeciaganie(e: PointerEvent) {
+      if (!dragging) return;
+      dragging = false;
+      delete marqueeEl.dataset.dragging;
+      try {
+        marqueeEl.releasePointerCapture(e.pointerId);
+      } catch {}
+    }
+    marqueeEl.addEventListener("pointerup", zakonczPrzeciaganie);
+    marqueeEl.addEventListener("pointercancel", zakonczPrzeciaganie);
+
+    // Klik tuż po przeciągnięciu nie powinien otwierać produktu — 6px to
+    // margines na drżenie ręki/palca przy zwykłym kliku.
+    marqueeEl.addEventListener(
+      "click",
+      (e) => {
+        if (przesuniete > 6) e.preventDefault();
+      },
+      { capture: true }
+    );
   }
 
-  ustawTempoKaruzeli();
-  document.addEventListener("astro:page-load", ustawTempoKaruzeli);
+  setupKaruzela();
+  document.addEventListener("astro:page-load", setupKaruzela);
 </script>
