@@ -1,0 +1,160 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { jezykiNazwy, domyslnyJezyk, type Jezyk } from "../../i18n/ui.ts";
+import { useTranslations } from "../../i18n/utils.ts";
+
+const aktualnyJezyk = (Astro.currentLocale ?? domyslnyJezyk) as Jezyk;
+const t = useTranslations(aktualnyJezyk);
+
+// Ścieżka bez przedrostka języka — getRelativeLocaleUrl sam dokłada właściwy
+// prefiks dla każdego celu (żaden dla PL, /en/ itd. dla reszty).
+const segmenty = Astro.url.pathname.split("/").filter(Boolean);
+const bezPrefiksu =
+  segmenty[0] === aktualnyJezyk && aktualnyJezyk !== domyslnyJezyk
+    ? "/" + segmenty.slice(1).join("/")
+    : Astro.url.pathname;
+
+const opcje = Object.keys(jezykiNazwy) as Jezyk[];
+---
+
+<div class="jezyk" data-jezyk>
+  <button
+    type="button"
+    class="jezyk-toggle"
+    data-jezyk-toggle
+    aria-haspopup="listbox"
+    aria-expanded="false"
+    aria-label={t("common.zmienJezyk")}
+  >
+    <span class="jezyk-kod">{aktualnyJezyk.toUpperCase()}</span>
+    <svg viewBox="0 0 12 8" class="jezyk-strzalka" aria-hidden="true">
+      <path d="M1 1.5 6 6.5 11 1.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  </button>
+
+  <ul class="jezyk-lista" role="listbox" data-jezyk-lista hidden>
+    {opcje.map((kod) => (
+      <li role="presentation">
+        <a
+          href={getRelativeLocaleUrl(kod, bezPrefiksu)}
+          role="option"
+          aria-selected={kod === aktualnyJezyk}
+          class:list={["jezyk-opcja", { "jezyk-opcja--aktywna": kod === aktualnyJezyk }]}
+        >
+          {jezykiNazwy[kod]}
+        </a>
+      </li>
+    ))}
+  </ul>
+</div>
+
+<style>
+  .jezyk {
+    position: relative;
+  }
+
+  .jezyk-toggle {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-1);
+    height: 40px;
+    padding-inline: var(--sp-3);
+    background: transparent;
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: var(--fs-small);
+    letter-spacing: var(--tracking-mono);
+    cursor: pointer;
+    transition: border-color var(--dur) var(--ease);
+  }
+
+  .jezyk-toggle:hover {
+    border-color: var(--gold);
+  }
+
+  .jezyk-strzalka {
+    width: 10px;
+    height: 7px;
+    color: var(--steel);
+    transition: transform var(--dur) var(--ease);
+  }
+
+  .jezyk-toggle[aria-expanded="true"] .jezyk-strzalka {
+    transform: rotate(180deg);
+  }
+
+  .jezyk-lista {
+    position: absolute;
+    top: calc(100% + var(--sp-2));
+    right: 0;
+    z-index: 30;
+    min-width: 9rem;
+    list-style: none;
+    background-color: var(--bg-1);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 20px 48px -16px rgba(0, 0, 0, 0.5);
+  }
+
+  .jezyk-opcja {
+    display: block;
+    padding: var(--sp-3) var(--sp-4);
+    font-size: var(--fs-small);
+    color: var(--text-2);
+    text-decoration: none;
+    transition: background-color var(--dur) var(--ease);
+  }
+
+  .jezyk-opcja:hover,
+  .jezyk-opcja:focus-visible {
+    background-color: var(--bg-2);
+    color: var(--text);
+  }
+
+  .jezyk-opcja--aktywna {
+    color: var(--gold-bright);
+    font-weight: 600;
+  }
+</style>
+
+<script>
+  function setupPrzelacznikJezyka() {
+    document.querySelectorAll<HTMLElement>("[data-jezyk]").forEach((root) => {
+      if (root.dataset.owellBound === "true") return;
+      root.dataset.owellBound = "true";
+
+      const toggle = root.querySelector<HTMLButtonElement>("[data-jezyk-toggle]");
+      const lista = root.querySelector<HTMLElement>("[data-jezyk-lista]");
+      if (!toggle || !lista) return;
+
+      function zamknij() {
+        lista!.hidden = true;
+        toggle!.setAttribute("aria-expanded", "false");
+      }
+
+      toggle.addEventListener("click", () => {
+        const otwarta = !lista!.hidden;
+        if (otwarta) {
+          zamknij();
+        } else {
+          lista!.hidden = false;
+          toggle!.setAttribute("aria-expanded", "true");
+        }
+      });
+
+      document.addEventListener("click", (e) => {
+        if (!root.contains(e.target as Node)) zamknij();
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") zamknij();
+      });
+    });
+  }
+
+  setupPrzelacznikJezyka();
+  document.addEventListener("astro:page-load", setupPrzelacznikJezyka);
+</script>

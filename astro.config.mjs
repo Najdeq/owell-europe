@@ -11,6 +11,20 @@ export default defineConfig({
   site: 'https://owelleurope.com',
   output: 'static',
 
+  // Polski zostaje bez przedrostka (/, /produkty...), żeby nie przekierowywać
+  // ani nie zrywać już zaindeksowanych URL-i. Pozostałe języki dostają
+  // przedrostek (/en/, /de/...). routing.fallbackType: "rewrite" pokazuje
+  // polską treść pod obcym URL-em zamiast przekierowywać, dla stron,
+  // których jeszcze nie przetłumaczono — nigdy 404 zamiast tłumaczenia.
+  i18n: {
+    defaultLocale: 'pl',
+    locales: ['pl', 'en', 'de', 'ru', 'fr', 'es', 'cs', 'it'],
+    routing: {
+      prefixDefaultLocale: false,
+      fallbackType: 'rewrite',
+    },
+  },
+
   // Adapter dodany JAWNIE, choć strona jest statyczna. Cloudflare przy
   // projekcie typu Worker i tak wstrzykuje go automatycznie podczas builda —
   // trzymanie go w repo daje kontrolę nad konfiguracją.

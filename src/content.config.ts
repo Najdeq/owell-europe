@@ -54,6 +54,35 @@ const produkty = defineCollection({
   }),
 });
 
+// Tłumaczenia treści produktów per język — TYLKO pola tekstowe. Zdjęcia, EAN,
+// dane GPSR (tożsamość prawna producenta), kolejność i publikacja zostają
+// wspólne ze źródłowym wpisem PL (patrz src/pages/en/produkty/[id].astro).
+// Plik o tym samym id co w produkty/ = tłumaczenie tamtego produktu;
+// brakujące pole = strona pokazuje polski oryginał w tym miejscu.
+const produktyTlumaczenia = (jezyk: string) =>
+  defineCollection({
+    loader: glob({ pattern: "**/*.md", base: `./src/content/produkty-${jezyk}` }),
+    schema: z.object({
+      tagline: z.string().optional(),
+      opis: z.string().optional(),
+      dane: z
+        .array(z.object({ etykieta: z.string(), wartosc: z.string() }))
+        .optional(),
+      wyroznniki: z
+        .array(z.object({ tytul: z.string(), opis: z.string() }))
+        .optional(),
+      pytania: z
+        .array(z.object({ pytanie: z.string(), odpowiedz: z.string() }))
+        .optional(),
+      // Tylko treść ostrzeżeń — tożsamość producenta (nazwa, adres, e-mail)
+      // to ten sam podmiot prawny niezależnie od języka strony, więc nie
+      // duplikujemy jej tutaj.
+      ostrzezeniaGpsr: z.array(z.string()).optional(),
+    }),
+  });
+
+const produktyEn = produktyTlumaczenia("en");
+
 const blog = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/blog" }),
   schema: z.object({
@@ -79,4 +108,4 @@ const blog = defineCollection({
   }),
 });
 
-export const collections = { produkty, blog };
+export const collections = { produkty, "produkty-en": produktyEn, blog };

@@ -1,11 +1,35 @@
 ---
 import "../styles/global.css";
+import { getRelativeLocaleUrl } from "astro:i18n";
 import ConsentBanner from "../components/ConsentBanner.astro";
 import Analytics from "../components/Analytics.astro";
 import WhatsAppWidget from "../components/WhatsAppWidget.astro";
 import ScrollReveal from "../components/ScrollReveal.astro";
 import { site } from "../data/site.ts";
 import { podglad } from "../data/deploy.ts";
+import { ui, domyslnyJezyk, type Jezyk } from "../i18n/ui.ts";
+
+const jezyk = (Astro.currentLocale ?? domyslnyJezyk) as Jezyk;
+
+const ogLocale: Record<Jezyk, string> = {
+  pl: "pl_PL",
+  en: "en_US",
+  de: "de_DE",
+  ru: "ru_RU",
+  fr: "fr_FR",
+  es: "es_ES",
+  cs: "cs_CZ",
+  it: "it_IT",
+};
+
+// Ścieżka bez przedrostka języka — do budowania hreflang dla KAŻDEGO języka
+// z tego samego miejsca (getRelativeLocaleUrl sam dokłada właściwy prefiks).
+const segmentyUrl = Astro.url.pathname.split("/").filter(Boolean);
+const sciezkaBezPrefiksu =
+  segmentyUrl[0] === jezyk && jezyk !== domyslnyJezyk
+    ? "/" + segmentyUrl.slice(1).join("/")
+    : Astro.url.pathname;
+const wszystkieJezyki = Object.keys(ui) as Jezyk[];
 
 interface Props {
   title: string;
@@ -42,7 +66,7 @@ const organizationSchema = {
 ---
 
 <!doctype html>
-<html lang="pl">
+<html lang={jezyk}>
   <head>
     <!--
       Google Consent Mode v2 — musi wykonać się PRZED jakimkolwiek skryptem
@@ -104,6 +128,10 @@ const organizationSchema = {
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="canonical" href={canonicalURL} />
     <link rel="alternate" type="application/rss+xml" title={`${site.nazwa} — Blog`} href="/rss.xml" />
+    {wszystkieJezyki.map((kod) => (
+      <link rel="alternate" hreflang={kod} href={new URL(getRelativeLocaleUrl(kod, sciezkaBezPrefiksu), Astro.site)} />
+    ))}
+    <link rel="alternate" hreflang="x-default" href={new URL(getRelativeLocaleUrl(domyslnyJezyk, sciezkaBezPrefiksu), Astro.site)} />
 
     {blokujIndeksowanie && <meta name="robots" content="noindex, nofollow" />}
 
@@ -116,7 +144,7 @@ const organizationSchema = {
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={resolvedOgImage} />
-    <meta property="og:locale" content="pl_PL" />
+    <meta property="og:locale" content={ogLocale[jezyk]} />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -131,7 +159,7 @@ const organizationSchema = {
     <slot name="head" />
   </head>
   <body>
-    <a href="#content" class="skip-link">Przejdź do treści</a>
+    <a href="#content" class="skip-link">{ui[jezyk].common.przejdzDoTresci}</a>
 
     <slot />
 

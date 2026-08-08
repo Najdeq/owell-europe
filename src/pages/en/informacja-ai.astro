@@ -1,0 +1,74 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Prose from "../../components/ui/Prose.astro";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("en", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "AI Act notice", path: l("/informacja-ai") },
+];
+---
+
+<Base
+  title="AI Act notice — Owell"
+  description="Information about the use of artificial intelligence to prepare product visuals, in line with the EU AI Act."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title">AI Act notice</h1>
+
+        <Prose>
+          <p>
+            The product visuals on this website were prepared using artificial intelligence technology. They were
+            created based on real product photos and packaging designs.
+          </p>
+
+          <p>
+            We publish this notice in connection with the obligations arising from Article 50 of Regulation (EU)
+            2024/1689 of the European Parliament and of the Council laying down harmonised rules on artificial
+            intelligence (the AI Act).
+          </p>
+
+          <h2>Why we disclose this</h2>
+          <ul>
+            <li><strong>Transparency</strong> — we respect your right to know where the visuals come from.</li>
+            <li><strong>Legal compliance</strong> — we meet the disclosure obligations of the EU AI Act.</li>
+            <li><strong>Accuracy</strong> — we make sure the digital visuals accurately reflect the real product.</li>
+          </ul>
+
+          <p>
+            If you have questions about the origin of a specific visual, get in touch — you'll find our contact
+            details on the <a href={l("/bezpieczenstwo-produktu")}>product safety</a> page.
+          </p>
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+</style>

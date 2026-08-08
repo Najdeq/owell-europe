@@ -1,0 +1,138 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Prose from "../../components/ui/Prose.astro";
+import { site } from "../../data/site.ts";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("en", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Privacy policy", path: l("/polityka-prywatnosci") },
+];
+---
+
+<Base
+  title="Privacy policy — Owell"
+  description="How personal data is processed on the Owell website: controller, purposes, legal bases, data recipients and data subject rights."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title">Privacy policy</h1>
+
+        <Prose>
+          <h2>Data controller</h2>
+          <p>
+            The controller of personal data processed in connection with the use of this website is{" "}
+            <strong>{site.firma.nazwaPelna}</strong>, {site.firma.adres}, VAT ID (NIP): {site.firma.nip}, company
+            registry number (REGON): {site.firma.regon}. For data protection matters, contact{" "}
+            <a href={`mailto:${site.kontakt.email}`}>{site.kontakt.email}</a>.
+          </p>
+
+          <h2>Purposes and legal bases for processing</h2>
+          <p>We process personal data for the following purposes:</p>
+          <ul>
+            <li>
+              <strong>Handling correspondence and enquiries</strong> (contact form, email) — legal basis: Article
+              6(1)(b) GDPR (steps prior to entering into a contract / responding to an enquiry) or Article 6(1)(f)
+              GDPR (legitimate interest in providing a response).
+            </li>
+            <li>
+              <strong>Handling complaints and service requests</strong> — legal basis: Article 6(1)(c) GDPR (legal
+              obligation arising from warranty and guarantee provisions) and Article 6(1)(b) GDPR.
+            </li>
+            <li>
+              <strong>Website visit statistics</strong> (Google Analytics) — only after consent given in the cookie
+              banner, legal basis: Article 6(1)(a) GDPR. Details in the{" "}
+              <a href={l("/cookies")}>cookie policy</a>.
+            </li>
+            <li>
+              <strong>Ensuring website security and proper operation</strong> (hosting server logs) — legal basis:
+              Article 6(1)(f) GDPR (legitimate interest of the controller).
+            </li>
+          </ul>
+          <p>We do not profile users or make automated decisions about them that produce legal effects.</p>
+
+          <h2>Data retention period</h2>
+          <ul>
+            <li>Correspondence and enquiry data — for 3 years from the end of the matter (statute of limitations for claims).</li>
+            <li>
+              Data related to a complaint or warranty claim — for as long as needed to resolve it, then for the
+              statute-of-limitations period for claims.
+            </li>
+            <li>Data arising from tax and accounting regulations — for the period required by those regulations.</li>
+            <li>Cookies — as set out in the <a href={l("/cookies")}>cookie policy</a>.</li>
+          </ul>
+
+          <h2>Data recipients</h2>
+          <p>Data may be shared with the following categories of recipients:</p>
+          <ul>
+            <li>
+              <strong>Cloudflare</strong> — hosting and CDN infrastructure provider for this website.
+            </li>
+            <li>
+              <strong>Google</strong> — provider of the Google Analytics tool, used only after consent to analytics
+              cookies has been given.
+            </li>
+            <li>
+              <strong>nazwa.pl</strong> — hosting and email service provider, through which we handle correspondence
+              and requests from customers.
+            </li>
+          </ul>
+          <p>
+            Some of the providers listed above may process data outside the European Economic Area. In such cases,
+            the transfer is based on standard contractual clauses approved by the European Commission or another
+            mechanism compliant with the GDPR.
+          </p>
+
+          <h2>Data subject rights</h2>
+          <p>You have the right to:</p>
+          <ul>
+            <li>access your data and receive a copy of it,</li>
+            <li>rectify (correct) your data,</li>
+            <li>erase your data,</li>
+            <li>restrict processing,</li>
+            <li>data portability,</li>
+            <li>object to processing based on Article 6(1)(f) GDPR,</li>
+            <li>withdraw consent at any time, without affecting the lawfulness of processing carried out before its withdrawal,</li>
+            <li>
+              lodge a complaint with the President of the Polish Personal Data Protection Office (UODO) if you
+              believe the processing violates GDPR provisions.
+            </li>
+          </ul>
+
+          <h2>Contact</h2>
+          <p>
+            For matters related to the processing of personal data, you can reach us at{" "}
+            <a href={`mailto:${site.kontakt.email}`}>{site.kontakt.email}</a>.
+          </p>
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+</style>

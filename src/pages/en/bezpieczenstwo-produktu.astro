@@ -1,0 +1,166 @@
+---
+import { getCollection } from "astro:content";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Prose from "../../components/ui/Prose.astro";
+import { site } from "../../data/site.ts";
+
+const produkty = (await getCollection("produkty", ({ data }) => data.opublikowany)).sort(
+  (a, b) => a.data.kolejnosc - b.data.kolejnosc
+);
+
+const l = (sciezka: string) => getRelativeLocaleUrl("en", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Product safety", path: l("/bezpieczenstwo-produktu") },
+];
+---
+
+<Base
+  title="Product safety — Owell"
+  description="Manufacturer data required by the GPSR Regulation (EU) 2023/988, how to report a product safety issue, and information about service actions."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title">Product safety</h1>
+
+        <Prose>
+          <p>
+            This page contains the information required by Regulation (EU) 2023/988 of the European Parliament and
+            of the Council on general product safety (GPSR).
+          </p>
+
+          <h2>Entity responsible for this website</h2>
+          <p>
+            <strong>{site.firma.nazwaPelna}</strong><br />
+            {site.firma.adres}<br />
+            VAT ID (NIP): {site.firma.nip} · Company registry number (REGON): {site.firma.regon}<br />
+            Email for product safety matters: <a href={`mailto:${site.kontakt.emailGpsr}`}>{site.kontakt.emailGpsr}</a>
+          </p>
+
+          <h2>Manufacturer data for individual products</h2>
+          <p>
+            In line with GPSR requirements, below we publish the manufacturer's identification data for every
+            product in our range. The "EU responsible person" column is filled in only when the manufacturer is
+            based outside the European Union.
+          </p>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Product</th>
+                  <th scope="col">Manufacturer</th>
+                  <th scope="col">Address</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">EU responsible person</th>
+                </tr>
+              </thead>
+              <tbody>
+                {produkty.map((p) => (
+                  <tr>
+                    <td data-label="Product">{p.data.nazwa} ({p.data.model})</td>
+                    <td data-label="Manufacturer">{p.data.gpsr.producent}</td>
+                    <td data-label="Address">{p.data.gpsr.adres}</td>
+                    <td data-label="Email">
+                      <a href={`mailto:${p.data.gpsr.emailProducenta}`}>{p.data.gpsr.emailProducenta}</a>
+                    </td>
+                    <td data-label="EU responsible person">{p.data.gpsr.osobaOdpowiedzialnaUE ?? "—"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <h2>How to report a safety issue</h2>
+          <p>
+            If you suspect that one of our products poses a risk to health or safety, write to{" "}
+            <a href={`mailto:${site.kontakt.emailGpsr}`}>{site.kontakt.emailGpsr}</a>. In your report, please
+            include:
+          </p>
+          <ul>
+            <li>the product name and model (e.g. from the label or the product card on this website),</li>
+            <li>a description of the issue you observed,</li>
+            <li>photos of the issue, if possible,</li>
+            <li>your contact details, so we can get back to you.</li>
+          </ul>
+          <p>
+            If a product poses a serious risk, the manufacturer and distributors are required to report this fact
+            to the relevant market surveillance authorities (in Poland, among others, UOKiK) via the EU Safety Gate
+            system.
+          </p>
+
+          <h2>Service actions and product recalls</h2>
+          <p>
+            As of the date of this notice (7 August 2026), Owell is not carrying out any service actions or
+            product recalls. If this changes, this information will be updated here promptly.
+          </p>
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .table-wrap {
+    margin-bottom: var(--sp-8);
+    overflow-x: auto;
+    border: 1px solid var(--hairline-soft);
+    border-radius: var(--radius);
+  }
+
+  table {
+    width: 100%;
+    min-width: 760px;
+    border-collapse: collapse;
+    font-size: var(--fs-small);
+  }
+
+  th {
+    padding: var(--sp-3) var(--sp-4);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+    text-align: left;
+    background-color: var(--bg-2);
+    white-space: nowrap;
+  }
+
+  td {
+    padding: var(--sp-3) var(--sp-4);
+    color: var(--text-2);
+    border-top: 1px solid var(--hairline-soft);
+    vertical-align: top;
+  }
+
+  td:first-child {
+    color: var(--text);
+    font-weight: 500;
+  }
+</style>

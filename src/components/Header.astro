@@ -1,25 +1,33 @@
 ---
 import { Image } from "astro:assets";
+import { getRelativeLocaleUrl } from "astro:i18n";
 import Container from "./ui/Container.astro";
 import Button from "./ui/Button.astro";
 import ThemeToggle from "./ui/ThemeToggle.astro";
+import LanguageSwitcher from "./ui/LanguageSwitcher.astro";
 import logoDark from "../assets/marka/logo-light.png";
 import logoLight from "../assets/marka/logo-transparent.png";
+import { domyslnyJezyk, type Jezyk } from "../i18n/ui.ts";
+import { useTranslations } from "../i18n/utils.ts";
+
+const jezyk = (Astro.currentLocale ?? domyslnyJezyk) as Jezyk;
+const t = useTranslations(jezyk);
+const l = (sciezka: string) => getRelativeLocaleUrl(jezyk, sciezka);
 
 const menu = [
-  { label: "Produkty", href: "/produkty" },
-  { label: "O nas", href: "/o-nas" },
-  { label: "Blog", href: "/blog" },
-  { label: "Wsparcie", href: "/wsparcie" },
-  { label: "Gdzie kupić", href: "/gdzie-kupic" },
-  { label: "Kontakt", href: "/kontakt" },
+  { label: t("nav.produkty"), href: l("/produkty") },
+  { label: t("nav.oNas"), href: l("/o-nas") },
+  { label: t("nav.blog"), href: l("/blog") },
+  { label: t("nav.wsparcie"), href: l("/wsparcie") },
+  { label: t("nav.gdzieKupic"), href: l("/gdzie-kupic") },
+  { label: t("nav.kontakt"), href: l("/kontakt") },
 ];
 ---
 
 <header class="header" data-header>
   <div class="postep" data-postep aria-hidden="true"></div>
   <Container class="header-inner">
-    <a href="/" class="logo" aria-label="Owell — strona główna">
+    <a href={l("/")} class="logo" aria-label={t("common.stronaGlowna")}>
       {/* Logo jest nad linią zagięcia na każdej podstronie — musi ładować się
           natychmiast, inaczej opóźnia LCP. Astro domyślnie daje loading="lazy". */}
       <Image
@@ -42,7 +50,7 @@ const menu = [
       />
     </a>
 
-    <nav class="nav-desktop" aria-label="Główna nawigacja">
+    <nav class="nav-desktop" aria-label={t("common.glownaNawigacja")}>
       <ul>
         {menu.map((item) => (
           <li>
@@ -53,19 +61,22 @@ const menu = [
     </nav>
 
     <div class="header-cta">
-      <Button href="/gdzie-kupic" variant="primary">Gdzie kupić</Button>
+      <Button href={l("/gdzie-kupic")} variant="primary">{t("nav.gdzieKupic")}</Button>
     </div>
 
     <div class="header-actions">
+      <LanguageSwitcher />
       <ThemeToggle />
 
       <button
         type="button"
         class="hamburger"
         data-menu-toggle
+        data-label-otworz={t("common.otworzMenu")}
+        data-label-zamknij={t("common.zamknijMenu")}
         aria-expanded="false"
         aria-controls="mobile-menu"
-        aria-label="Otwórz menu"
+        aria-label={t("common.otworzMenu")}
       >
         <span></span>
         <span></span>
@@ -76,7 +87,7 @@ const menu = [
 </header>
 
 <div id="mobile-menu" class="mobile-menu" data-mobile-menu hidden>
-  <nav aria-label="Menu mobilne">
+  <nav aria-label={t("common.menuMobilne")}>
     <ul>
       {menu.map((item) => (
         <li>
@@ -86,7 +97,7 @@ const menu = [
     </ul>
   </nav>
   <div class="mobile-cta">
-    <Button href="/gdzie-kupic" variant="primary">Gdzie kupić</Button>
+    <Button href={l("/gdzie-kupic")} variant="primary">{t("nav.gdzieKupic")}</Button>
   </div>
 </div>
 
@@ -358,7 +369,7 @@ const menu = [
     const openMenu = () => {
       menu.hidden = false;
       toggle.setAttribute("aria-expanded", "true");
-      toggle.setAttribute("aria-label", "Zamknij menu");
+      toggle.setAttribute("aria-label", toggle.dataset.labelZamknij ?? "Zamknij menu");
       document.body.style.overflow = "hidden";
       const first = menu.querySelector<HTMLElement>(focusableSelector);
       first?.focus();
@@ -367,7 +378,7 @@ const menu = [
     const closeMenu = ({ returnFocus = true } = {}) => {
       menu.hidden = true;
       toggle.setAttribute("aria-expanded", "false");
-      toggle.setAttribute("aria-label", "Otwórz menu");
+      toggle.setAttribute("aria-label", toggle.dataset.labelOtworz ?? "Otwórz menu");
       document.body.style.overflow = "";
       if (returnFocus) toggle.focus();
     };

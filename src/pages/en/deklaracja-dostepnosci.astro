@@ -1,0 +1,97 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Prose from "../../components/ui/Prose.astro";
+import { site } from "../../data/site.ts";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("en", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Accessibility statement", path: l("/deklaracja-dostepnosci") },
+];
+---
+
+<Base
+  title="Accessibility statement — Owell"
+  description="Accessibility statement for the Owell website: declared WCAG 2.2 AA conformance level, assessment method and known limitations."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title">Accessibility statement</h1>
+
+        <Prose>
+          <p>
+            {site.firma.nazwaPelna} strives to make the Owell website accessible to as wide a range of users as
+            possible, including people with disabilities, in line with the Polish Act of 4 April 2019 on the
+            Digital Accessibility of Websites and Mobile Applications of Public Entities and the European
+            Accessibility Act (EAA).
+          </p>
+
+          <h2>Conformance status</h2>
+          <p>
+            The website is <strong>partially conformant</strong> with the{" "}
+            <strong>WCAG 2.2 level AA</strong> standard. We aim for full conformance and treat accessibility as a
+            design requirement, not an afterthought.
+          </p>
+
+          <h2>Date of preparation and assessment method</h2>
+          <p>This statement was prepared on 7 August 2026.</p>
+          <p>
+            Conformance was assessed by <strong>self-evaluation</strong> — an assessment carried out internally by
+            the team responsible for the website, without an external auditor.
+          </p>
+
+          <h2>Known limitations</h2>
+          <p>We want to be upfront about areas that are not yet fully ready as of the date of this statement:</p>
+          <ul>
+            <li>Some pages listed in the menu and footer are currently under construction and may return a 404 error.</li>
+            <li>The digital accessibility of the PDF manuals attached to product pages has not yet been verified.</li>
+          </ul>
+          <p>Beyond those listed above, no other known accessibility limitations have been identified as of the date of this statement.</p>
+
+          <h2>Feedback and enforcement procedure</h2>
+          <p>
+            If you encounter an accessibility issue on the website — for example, an element that cannot be
+            operated by keyboard, a missing image description, or insufficient contrast — let us know. You have the
+            right to request that the website or a given element be made digitally accessible. If we do not
+            respond within the statutory deadline, or if a refusal to provide accessibility is unjustified, you
+            have the right to file a complaint with the supervising authority, and subsequently with the Polish
+            Commissioner for Human Rights (Rzecznik Praw Obywatelskich).
+          </p>
+
+          <h2>Contact</h2>
+          <p>
+            Report accessibility issues to <a href={`mailto:${site.kontakt.email}`}>{site.kontakt.email}</a>.
+            We will do our best to respond and fix the reported issue as quickly as possible.
+          </p>
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+</style>

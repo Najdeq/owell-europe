@@ -1,24 +1,31 @@
 ---
 import { Image } from "astro:assets";
+import { getRelativeLocaleUrl } from "astro:i18n";
 import Container from "./ui/Container.astro";
 import { site } from "../data/site.ts";
 import logoDark from "../assets/marka/logo-light.png";
 import logoLight from "../assets/marka/logo-transparent.png";
+import { domyslnyJezyk, type Jezyk } from "../i18n/ui.ts";
+import { useTranslations } from "../i18n/utils.ts";
+
+const jezyk = (Astro.currentLocale ?? domyslnyJezyk) as Jezyk;
+const t = useTranslations(jezyk);
+const l = (sciezka: string) => getRelativeLocaleUrl(jezyk, sciezka);
 
 const wsparcie = [
-  { label: "Instrukcje", href: "/instrukcje" },
-  { label: "Gwarancja", href: "/gwarancja" },
-  { label: "Rejestracja produktu", href: "/rejestracja-produktu" },
-  { label: "Reklamacje", href: "/reklamacje" },
-  { label: "FAQ", href: "/faq" },
+  { label: t("footer.instrukcje"), href: l("/instrukcje") },
+  { label: t("footer.gwarancja"), href: l("/gwarancja") },
+  { label: t("footer.rejestracjaProduktu"), href: l("/rejestracja-produktu") },
+  { label: t("footer.reklamacje"), href: l("/reklamacje") },
+  { label: t("footer.faq"), href: l("/faq") },
 ];
 
 const prawne = [
-  { label: "Polityka prywatności", href: "/polityka-prywatnosci" },
-  { label: "Cookies", href: "/cookies" },
-  { label: "Deklaracja dostępności", href: "/deklaracja-dostepnosci" },
-  { label: "Bezpieczeństwo produktu", href: "/bezpieczenstwo-produktu" },
-  { label: "Informacja AI Act", href: "/informacja-ai" },
+  { label: t("footer.politykaPrywatnosci"), href: l("/polityka-prywatnosci") },
+  { label: t("footer.cookies"), href: l("/cookies") },
+  { label: t("footer.deklaracjaDostepnosci"), href: l("/deklaracja-dostepnosci") },
+  { label: t("footer.bezpieczenstwoProduktu"), href: l("/bezpieczenstwo-produktu") },
+  { label: t("footer.informacjaAi"), href: l("/informacja-ai") },
 ];
 
 ---
@@ -27,16 +34,16 @@ const prawne = [
   <Container>
     <div class="columns">
       <div class="col col-marka">
-        <a href="/" class="logo" aria-label="Owell — strona główna">
+        <a href={l("/")} class="logo" aria-label={t("common.stronaGlowna")}>
           <Image src={logoDark} alt="Owell" class="logo-mark logo-mark-dark" width={138} height={40} />
           <Image src={logoLight} alt="Owell" class="logo-mark logo-mark-light" width={138} height={40} />
         </a>
-        <p class="tagline">{site.tagline}</p>
+        <p class="tagline">{t("common.tagline")}</p>
 
         {/* Dopóki sklep nie wystartował (site.sklep === null), zamiast martwego
             linku prowadzimy na /gdzie-kupic, gdzie stoi uczciwe wyjaśnienie. */}
         <a
-          href={site.sklep ?? "/gdzie-kupic"}
+          href={site.sklep ?? l("/gdzie-kupic")}
           {...(site.sklep
             ? {
                 target: "_blank",
@@ -60,23 +67,23 @@ const prawne = [
             <path d="M4 8.5h16v10.5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8.5Z" stroke-linecap="round" stroke-linejoin="round" />
             <path d="M9 12a3 3 0 0 0 6 0" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
-          <span>{site.sklep ? "Sklep internetowy" : "Gdzie kupić"}</span>
+          <span>{site.sklep ? t("common.sklepInternetowy") : t("nav.gdzieKupic")}</span>
         </a>
       </div>
 
-      <nav class="col" aria-label="Kategorie produktów">
-        <p class="col-title">Produkty</p>
+      <nav class="col" aria-label={t("common.kategorieProduktow")}>
+        <p class="col-title">{t("footer.produkty")}</p>
         <ul>
           {site.kategorie.map((kategoria) => (
             <li>
-              <a href={`/produkty#${kategoria.slug}`}>{kategoria.nazwa}</a>
+              <a href={`${l("/produkty")}#${kategoria.slug}`}>{t(`kategorie.${kategoria.slug}`)}</a>
             </li>
           ))}
         </ul>
       </nav>
 
-      <nav class="col" aria-label="Wsparcie">
-        <p class="col-title">Wsparcie</p>
+      <nav class="col" aria-label={t("footer.wsparcie")}>
+        <p class="col-title">{t("footer.wsparcie")}</p>
         <ul>
           {wsparcie.map((item) => (
             <li>
@@ -87,7 +94,7 @@ const prawne = [
       </nav>
 
       <div class="col">
-        <p class="col-title">Kontakt</p>
+        <p class="col-title">{t("footer.kontakt")}</p>
         <ul>
           <li>
             <a href={`mailto:${site.kontakt.email}`}>{site.kontakt.email}</a>
@@ -104,7 +111,7 @@ const prawne = [
         {site.firma.nazwaPelna} · {site.firma.adres} · NIP: {site.firma.nip} · REGON: {site.firma.regon}
       </p>
 
-      <nav aria-label="Informacje prawne">
+      <nav aria-label={t("common.informacjePrawne")}>
         <ul class="prawne-list">
           {prawne.map((item) => (
             <li>

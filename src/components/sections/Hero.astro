@@ -1,10 +1,17 @@
 ---
 import { getCollection } from "astro:content";
+import { getRelativeLocaleUrl } from "astro:i18n";
 import Section from "../ui/Section.astro";
 import Button from "../ui/Button.astro";
 import Eyebrow from "../ui/Eyebrow.astro";
 import WyszukiwarkaModelu from "../WyszukiwarkaModelu.astro";
 import { site } from "../../data/site.ts";
+import { domyslnyJezyk, type Jezyk } from "../../i18n/ui.ts";
+import { useTranslations } from "../../i18n/utils.ts";
+
+const jezyk = (Astro.currentLocale ?? domyslnyJezyk) as Jezyk;
+const t = useTranslations(jezyk);
+const l = (sciezka: string) => getRelativeLocaleUrl(jezyk, sciezka);
 
 const produkty = await getCollection("produkty");
 const produktWideo = produkty.find((p) => p.id === "ow-3300");
@@ -13,32 +20,35 @@ const wideoAlt = produktWideo
   : "Produkt Owell";
 
 const fakty = [
-  { target: 40, prefix: "+", suffix: "", etykieta: "produktów w ofercie" },
-  { target: site.gwarancjaMiesiace, prefix: "", suffix: " mies.", etykieta: "gwarancji" },
-  { target: 35, prefix: "+", suffix: " lat", etykieta: "doświadczenia w branży" },
-  { target: 100, prefix: "", suffix: "%", etykieta: "produktów z kartą GPSR" },
+  { target: 40, prefix: "+", suffix: "", etykieta: t("hero.statProdukty") },
+  { target: site.gwarancjaMiesiace, prefix: "", suffix: ` ${t("hero.statGwarancjaJednostka")}`, etykieta: t("hero.statGwarancja") },
+  { target: 35, prefix: "+", suffix: ` ${t("hero.statDoswiadczenieJednostka")}`, etykieta: t("hero.statDoswiadczenie") },
+  { target: 100, prefix: "", suffix: "%", etykieta: t("hero.statGpsr") },
 ];
 ---
 
 <Section bg="base" class="hero">
   <div class="hero-inner">
     <div class="hero-content">
-      <Eyebrow data-reveal>Małe AGD · Projektowane w Europie</Eyebrow>
+      <Eyebrow data-reveal>{t("hero.eyebrow")}</Eyebrow>
       <h1 class="hero-title" data-reveal data-reveal-delay="80">
-        Tworzymy produkty, z których sami chcielibyśmy korzystać. Od projektu, przez kontrolę jakości, aż po serwis —
-        dbamy o każdy etap, aby zapewnić naszym klientom niezawodność i komfort użytkowania.
+        {t("hero.tytul")}
       </h1>
       <p class="hero-lead" data-reveal data-reveal-delay="160">
-        Małe AGD do kuchni, pielęgnacji i podróży — zaprojektowane do codziennego użytku, nie od święta. Każdy
-        produkt ma pełne dane producenta, kartę GPSR i {site.gwarancjaMiesiace} miesiące gwarancji, bez wyjątków.
+        {t("hero.lead").replace("{gwarancja}", String(site.gwarancjaMiesiace))}
       </p>
 
       <div class="hero-cta">
-        <Button href="/gdzie-kupic" variant="primary">Gdzie kupić</Button>
-        <Button href="/o-nas" variant="ghost">Poznaj nas</Button>
+        <Button href={l("/gdzie-kupic")} variant="primary">{t("hero.cta1")}</Button>
+        <Button href={l("/o-nas")} variant="ghost">{t("hero.cta2")}</Button>
       </div>
 
-      <WyszukiwarkaModelu class="hero-szukaj" />
+      <WyszukiwarkaModelu
+        class="hero-szukaj"
+        etykieta={t("hero.szukajLabel")}
+        placeholder={t("hero.szukajPlaceholder")}
+        pusto={t("hero.szukajPusto")}
+      />
 
       <dl class="hero-fakty" data-hero-fakty>
         {fakty.map((f) => (
