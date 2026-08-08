@@ -11,7 +11,7 @@ const produkty = defineCollection({
     // w innych serwisach. Walidacja pilnuje formatu, żeby literówka nie
     // przeszła do danych strukturalnych.
     ean: z.string().regex(/^\d{13}$/, "EAN musi mieć dokładnie 13 cyfr").optional(),
-    kategoria: z.enum(["kuchnia", "pielegnacja", "agd-turystyczne"]),
+    kategoria: z.enum(["kuchnia", "pielegnacja", "agd-turystyczne", "dom"]),
     tagline: z.string(),
     opis: z.string(),
     zdjecieGlowne: z.string(),

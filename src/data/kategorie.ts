@@ -87,14 +87,14 @@ export const kategorie: Kategoria[] = [
     nazwa: "Grzejnik elektryczny",
     grupa: "dom",
     opis: "Dogrzewanie pomieszczeń w chłodniejsze dni, bez instalacji i bez czekania.",
-    produkty: [],
+    produkty: ["ow-7832", "ow-7833", "ow-7834"],
   },
   {
     slug: "czyscik-parowy",
     nazwa: "Czyścik parowy",
     grupa: "dom",
     opis: "Czyszczenie powierzchni parą, bez chemii i szorowania.",
-    produkty: [],
+    produkty: ["ow-7101"],
   },
   {
     slug: "koce-i-poduszki-elektryczne",

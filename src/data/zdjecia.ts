@@ -8,6 +8,10 @@ import fotoOw4634 from "../assets/produkty/hero/ow-4634.jpg";
 import fotoOw4819 from "../assets/produkty/hero/ow-4819.jpg";
 import fotoOw8058 from "../assets/produkty/hero/ow-8058.jpg";
 import fotoOw8805 from "../assets/produkty/hero/ow-8805.jpg";
+import fotoOw7832 from "../assets/produkty/hero/ow-7832.jpg";
+import fotoOw7833 from "../assets/produkty/hero/ow-7833.jpg";
+import fotoOw7834 from "../assets/produkty/hero/ow-7834.jpg";
+import fotoOw7101 from "../assets/produkty/hero/ow-7101.jpg";
 
 /**
  * Zdjęcia produktów pod identyfikatorem z kolekcji. Trzymamy je w jednym
@@ -26,4 +30,8 @@ export const zdjecia: Record<string, ImageMetadata> = {
   "ow-4819": fotoOw4819,
   "ow-8058": fotoOw8058,
   "ow-8805": fotoOw8805,
+  "ow-7832": fotoOw7832,
+  "ow-7833": fotoOw7833,
+  "ow-7834": fotoOw7834,
+  "ow-7101": fotoOw7101,
 };
