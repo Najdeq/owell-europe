@@ -101,6 +101,6 @@ export const kategorie: Kategoria[] = [
     nazwa: "Koce i poduszki elektryczne",
     grupa: "dom",
     opis: "Ogrzewanie łóżka i ciała zimą, z regulacją temperatury.",
-    produkty: [],
+    produkty: ["ow-7449", "ow-7450"],
   },
 ];
