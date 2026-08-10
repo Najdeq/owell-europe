@@ -2,24 +2,52 @@
 import Container from "../ui/Container.astro";
 import Section from "../ui/Section.astro";
 import Eyebrow from "../ui/Eyebrow.astro";
+import { domyslnyJezyk, type Jezyk } from "../../i18n/ui.ts";
 
-const filary = [
-  {
-    tytul: "Design",
-    opis: "Formy projektujemy tak, by pasowały do kuchni za pięć lat, nie tylko dziś. Prosta bryła, spokojne proporcje, minimum ozdobników.",
-    icon: "design",
-  },
-  {
-    tytul: "Jakość",
-    opis: "Materiały i podzespoły dobieramy pod kątem codziennej eksploatacji, nie jednorazowego testu na pudełku. Każdy model ma kartę GPSR z pełnymi danymi producenta.",
-    icon: "jakosc",
-  },
-  {
-    tytul: "Serwis",
-    opis: "Instrukcje i kontakt serwisowy są dostępne po polsku, bez przekierowań między infoliniami. Zgłoszenie trafia bezpośrednio do nas, nie do automatu.",
-    icon: "serwis",
-  },
-];
+const jezyk = (Astro.currentLocale ?? domyslnyJezyk) as Jezyk;
+
+// Sekcja jest współdzielona między PL i EN (jak reszta homepage'u) — treść
+// gałęzi po języku, zamiast osobnych plików, bo to jedyne miejsce, gdzie
+// ten tekst żyje.
+const eyebrow = jezyk === "en" ? "Why Owell" : "Dlaczego Owell";
+const tytulSekcji = jezyk === "en" ? "Three pillars of every product" : "Trzy filary każdego produktu";
+
+const filary =
+  jezyk === "en"
+    ? [
+        {
+          tytul: "Design",
+          opis: "We design shapes to still suit a kitchen in five years, not just today. Simple forms, calm proportions, minimal ornamentation.",
+          icon: "design",
+        },
+        {
+          tytul: "Quality",
+          opis: "We choose materials and components for daily use, not a one-off test on the box. Every model has a GPSR card with full manufacturer data.",
+          icon: "jakosc",
+        },
+        {
+          tytul: "Service",
+          opis: "Manuals and service contact are available with no redirects between call centres. Your request goes straight to us, not to a bot.",
+          icon: "serwis",
+        },
+      ]
+    : [
+        {
+          tytul: "Design",
+          opis: "Formy projektujemy tak, by pasowały do kuchni za pięć lat, nie tylko dziś. Prosta bryła, spokojne proporcje, minimum ozdobników.",
+          icon: "design",
+        },
+        {
+          tytul: "Jakość",
+          opis: "Materiały i podzespoły dobieramy pod kątem codziennej eksploatacji, nie jednorazowego testu na pudełku. Każdy model ma kartę GPSR z pełnymi danymi producenta.",
+          icon: "jakosc",
+        },
+        {
+          tytul: "Serwis",
+          opis: "Instrukcje i kontakt serwisowy są dostępne po polsku, bez przekierowań między infoliniami. Zgłoszenie trafia bezpośrednio do nas, nie do automatu.",
+          icon: "serwis",
+        },
+      ];
 ---
 
 <style is:global>
@@ -34,8 +62,8 @@ const filary = [
 
 <Section bg="raised">
   <Container>
-    <Eyebrow data-reveal>Dlaczego Owell</Eyebrow>
-    <h2 class="section-title" data-reveal data-reveal-delay="80">Trzy filary każdego produktu</h2>
+    <Eyebrow data-reveal>{eyebrow}</Eyebrow>
+    <h2 class="section-title" data-reveal data-reveal-delay="80">{tytulSekcji}</h2>
 
     <div class="grid">
       {filary.map((f, i) => (

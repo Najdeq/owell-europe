@@ -1,7 +1,10 @@
 ---
 import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
+import { getRelativeLocaleUrl } from "astro:i18n";
 import { zdjecia } from "../data/zdjecia.ts";
+import { domyslnyJezyk, type Jezyk } from "../i18n/ui.ts";
+import { useTranslations } from "../i18n/utils.ts";
 
 interface Props {
   produkty: string[];
@@ -9,19 +12,27 @@ interface Props {
 
 const { produkty: identyfikatory } = Astro.props;
 
+const jezyk = (Astro.currentLocale ?? domyslnyJezyk) as Jezyk;
+const t = useTranslations(jezyk);
+const l = (sciezka: string) => getRelativeLocaleUrl(jezyk, sciezka);
+
 const wszystkieProdukty = await getCollection("produkty");
+const tlumaczenia =
+  jezyk === "en" ? new Map((await getCollection("produkty-en")).map((x) => [x.id, x.data])) : new Map();
+
 const powiazane = identyfikatory
   .map((id) => wszystkieProdukty.find((p) => p.id === id && p.data.opublikowany))
-  .filter((p): p is NonNullable<typeof p> => Boolean(p));
+  .filter((p): p is NonNullable<typeof p> => Boolean(p))
+  .map((p) => ({ ...p, tagline: tlumaczenia.get(p.id)?.tagline ?? p.data.tagline }));
 ---
 
 {powiazane.length > 0 && (
-  <aside class="powiazane" aria-label="Powiązane produkty">
-    <p class="powiazane-etykieta">Produkty z tego wpisu</p>
+  <aside class="powiazane" aria-label={t("common.produktyZTegoWpisu")}>
+    <p class="powiazane-etykieta">{t("common.produktyZTegoWpisu")}</p>
 
     <div class="powiazane-lista">
       {powiazane.map((p) => (
-        <a href={`/produkty/${p.id}`} class="karta">
+        <a href={l(`/produkty/${p.id}`)} class="karta">
           <div class="karta-foto">
             {zdjecia[p.id] ? (
               <Image src={zdjecia[p.id]} alt={p.data.nazwa} width={320} height={320} class="foto-img" />
@@ -32,8 +43,8 @@ const powiazane = identyfikatory
           <div class="karta-tresc">
             <span class="karta-model">{p.data.model}</span>
             <h3 class="karta-nazwa">{p.data.nazwa}</h3>
-            <p class="karta-tagline">{p.data.tagline}</p>
-            <span class="karta-link">Zobacz produkt →</span>
+            <p class="karta-tagline">{p.tagline}</p>
+            <span class="karta-link">{t("common.zobaczProdukt")}</span>
           </div>
         </a>
       ))}

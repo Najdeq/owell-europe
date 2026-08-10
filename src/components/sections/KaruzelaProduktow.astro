@@ -1,12 +1,16 @@
 ---
 import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
+import { getRelativeLocaleUrl } from "astro:i18n";
 import Section from "../ui/Section.astro";
 import Eyebrow from "../ui/Eyebrow.astro";
-import { site } from "../../data/site.ts";
 import { zdjecia } from "../../data/zdjecia.ts";
+import { domyslnyJezyk, type Jezyk } from "../../i18n/ui.ts";
+import { useTranslations } from "../../i18n/utils.ts";
 
-const kategorieNazwy = Object.fromEntries(site.kategorie.map((k) => [k.slug, k.nazwa]));
+const jezyk = (Astro.currentLocale ?? domyslnyJezyk) as Jezyk;
+const t = useTranslations(jezyk);
+const l = (sciezka: string) => getRelativeLocaleUrl(jezyk, sciezka);
 
 const produkty = (await getCollection("produkty"))
   .filter((p) => p.data.opublikowany)
@@ -15,14 +19,14 @@ const produkty = (await getCollection("produkty"))
 
 {produkty.length > 0 && (
   <Section bg="base" class="karuzela-sekcja">
-    <Eyebrow data-reveal class="karuzela-eyebrow">Cały katalog</Eyebrow>
-    <h2 class="karuzela-tytul" data-reveal data-reveal-delay="80">Owell w jednym spojrzeniu</h2>
+    <Eyebrow data-reveal class="karuzela-eyebrow">{t("common.calyKatalog")}</Eyebrow>
+    <h2 class="karuzela-tytul" data-reveal data-reveal-delay="80">{t("common.owellWJednym")}</h2>
 
     <div class="marquee" data-marquee>
       <div class="marquee-track" data-track>
         {[...produkty, ...produkty].map((p, i) => (
           <a
-            href={`/produkty/${p.id}`}
+            href={l(`/produkty/${p.id}`)}
             class="karta"
             aria-hidden={i >= produkty.length ? "true" : undefined}
             tabindex={i >= produkty.length ? "-1" : undefined}
@@ -40,7 +44,7 @@ const produkty = (await getCollection("produkty"))
                 />
               )}
             </div>
-            <p class="karta-kategoria">{kategorieNazwy[p.data.kategoria]}</p>
+            <p class="karta-kategoria">{t(`kategorie.${p.data.kategoria}`)}</p>
             <p class="karta-nazwa">{p.data.nazwa}</p>
           </a>
         ))}

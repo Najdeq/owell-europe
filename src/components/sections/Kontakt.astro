@@ -1,24 +1,48 @@
 ---
+import { getRelativeLocaleUrl } from "astro:i18n";
 import Container from "../ui/Container.astro";
 import Section from "../ui/Section.astro";
 import Button from "../ui/Button.astro";
 import Eyebrow from "../ui/Eyebrow.astro";
 import { site } from "../../data/site.ts";
+import { domyslnyJezyk, type Jezyk } from "../../i18n/ui.ts";
+
+const jezyk = (Astro.currentLocale ?? domyslnyJezyk) as Jezyk;
+const l = (sciezka: string) => getRelativeLocaleUrl(jezyk, sciezka);
+
+const tresc =
+  jezyk === "en"
+    ? {
+        eyebrow: "Contact",
+        tytul: "Have a question?",
+        ogolne: "General enquiries",
+        serwis: "Service and complaints",
+        formularz: "Contact form",
+        napisz: "Write to us",
+      }
+    : {
+        eyebrow: "Kontakt",
+        tytul: "Masz pytanie?",
+        ogolne: "Zapytania ogólne",
+        serwis: "Serwis i reklamacje",
+        formularz: "Formularz kontaktowy",
+        napisz: "Napisz do nas",
+      };
 ---
 
 <Section bg="raised">
   <Container>
-    <Eyebrow data-reveal>Kontakt</Eyebrow>
-    <h2 class="section-title" data-reveal data-reveal-delay="80">Masz pytanie?</h2>
+    <Eyebrow data-reveal>{tresc.eyebrow}</Eyebrow>
+    <h2 class="section-title" data-reveal data-reveal-delay="80">{tresc.tytul}</h2>
 
     <div class="grid">
       <div class="kontakt-item">
-        <p class="kontakt-etykieta">Zapytania ogólne</p>
+        <p class="kontakt-etykieta">{tresc.ogolne}</p>
         <a href={`mailto:${site.kontakt.email}`} class="kontakt-email">{site.kontakt.email}</a>
       </div>
 
       <div class="kontakt-item">
-        <p class="kontakt-etykieta">Serwis i reklamacje</p>
+        <p class="kontakt-etykieta">{tresc.serwis}</p>
         <a href={`mailto:${site.kontakt.emailSerwis}`} class="kontakt-email">{site.kontakt.emailSerwis}</a>
       </div>
 
@@ -35,8 +59,8 @@ import { site } from "../../data/site.ts";
       </div>
 
       <div class="kontakt-item">
-        <p class="kontakt-etykieta">Formularz kontaktowy</p>
-        <Button href="/kontakt" variant="ghost">Napisz do nas</Button>
+        <p class="kontakt-etykieta">{tresc.formularz}</p>
+        <Button href={l("/kontakt")} variant="ghost">{tresc.napisz}</Button>
       </div>
     </div>
   </Container>

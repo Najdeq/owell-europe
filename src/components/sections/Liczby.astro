@@ -3,39 +3,76 @@ import Container from "../ui/Container.astro";
 import Section from "../ui/Section.astro";
 import Eyebrow from "../ui/Eyebrow.astro";
 import { site } from "../../data/site.ts";
+import { domyslnyJezyk, type Jezyk } from "../../i18n/ui.ts";
+
+const jezyk = (Astro.currentLocale ?? domyslnyJezyk) as Jezyk;
 
 // Liczby pochodzą z site.ts (dane przekazane przez właściciela). Prezentowane
 // wprost jako dorobek marki Owell — patrz komentarz przy `site.grupa`.
 // Nie dodawaj tu liczb sprzedaży ani ocen bez źródła.
-const liczby = [
-  {
-    target: site.grupa.lataHistorii,
-    unit: "plain",
-    suffix: "+",
-    podpis: "lat historii",
-  },
-  {
-    target: site.grupa.liczbaKrajow,
-    unit: "plain",
-    suffix: "+",
-    podpis: "krajów na świecie",
-    opis: "Tyle rynków obejmuje nasza międzynarodowa dystrybucja.",
-  },
-  {
-    target: site.grupa.liczbaProduktow,
-    unit: "plain",
-    suffix: "+",
-    podpis: "produktów w portfolio",
-    opis: "Stale rozbudowywana oferta małego AGD.",
-  },
-  {
-    target: 1991,
-    unit: "plain",
-    suffix: "",
-    podpis: "Od tego wszystko się zaczęło",
-    opis: "Ponad trzy dekady doświadczenia w tworzeniu produktów użytkowych.",
-  },
-];
+const liczby =
+  jezyk === "en"
+    ? [
+        { target: site.grupa.lataHistorii, unit: "plain", suffix: "+", podpis: "years of history" },
+        {
+          target: site.grupa.liczbaKrajow,
+          unit: "plain",
+          suffix: "+",
+          podpis: "countries worldwide",
+          opis: "That's how many markets our international distribution covers.",
+        },
+        {
+          target: site.grupa.liczbaProduktow,
+          unit: "plain",
+          suffix: "+",
+          podpis: "products in the portfolio",
+          opis: "A constantly growing range of small appliances.",
+        },
+        {
+          target: 1991,
+          unit: "plain",
+          suffix: "",
+          podpis: "That's where it all began",
+          opis: "Over three decades of experience making everyday products.",
+        },
+      ]
+    : [
+        { target: site.grupa.lataHistorii, unit: "plain", suffix: "+", podpis: "lat historii" },
+        {
+          target: site.grupa.liczbaKrajow,
+          unit: "plain",
+          suffix: "+",
+          podpis: "krajów na świecie",
+          opis: "Tyle rynków obejmuje nasza międzynarodowa dystrybucja.",
+        },
+        {
+          target: site.grupa.liczbaProduktow,
+          unit: "plain",
+          suffix: "+",
+          podpis: "produktów w portfolio",
+          opis: "Stale rozbudowywana oferta małego AGD.",
+        },
+        {
+          target: 1991,
+          unit: "plain",
+          suffix: "",
+          podpis: "Od tego wszystko się zaczęło",
+          opis: "Ponad trzy dekady doświadczenia w tworzeniu produktów użytkowych.",
+        },
+      ];
+
+const tresc =
+  jezyk === "en"
+    ? {
+        eyebrow: "Numbers, not promises",
+        tytul: "The foundation the brand stands on",
+        lead: "The scale and experience behind every Owell product — no exaggeration.",
+      }
+    : {
+        eyebrow: "Liczby, nie obietnice",
+        tytul: "Zaplecze, na którym stoi marka",
+        lead: "Skala i doświadczenie, które stoją za każdym produktem Owell — bez podkoloryzowania.",
+      };
 
 function format(value: number, unit: string, decimals = 0, suffix = "") {
   if (unit === "tys") {
@@ -47,10 +84,10 @@ function format(value: number, unit: string, decimals = 0, suffix = "") {
 
 <Section bg="base">
   <Container>
-    <Eyebrow data-reveal>Liczby, nie obietnice</Eyebrow>
-    <h2 class="section-title" data-reveal data-reveal-delay="80">Zaplecze, na którym stoi marka</h2>
+    <Eyebrow data-reveal>{tresc.eyebrow}</Eyebrow>
+    <h2 class="section-title" data-reveal data-reveal-delay="80">{tresc.tytul}</h2>
     <p class="section-lead" data-reveal data-reveal-delay="160">
-      Skala i doświadczenie, które stoją za każdym produktem Owell — bez podkoloryzowania.
+      {tresc.lead}
     </p>
 
     <div class="grid" data-liczby>

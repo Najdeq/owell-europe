@@ -1,46 +1,73 @@
 ---
+import { getRelativeLocaleUrl } from "astro:i18n";
 import Container from "../ui/Container.astro";
 import Section from "../ui/Section.astro";
 import Eyebrow from "../ui/Eyebrow.astro";
 import { site } from "../../data/site.ts";
+import { domyslnyJezyk, type Jezyk } from "../../i18n/ui.ts";
+
+const jezyk = (Astro.currentLocale ?? domyslnyJezyk) as Jezyk;
+const l = (sciezka: string) => getRelativeLocaleUrl(jezyk, sciezka);
 
 const czasReakcji = "24h";
 
-const punkty = [
-  `Gwarancja obejmuje wady materiałowe i produkcyjne przez cały okres ${site.gwarancjaMiesiace} miesięcy od zakupu.`,
-  "Zgłoszenie przyjmujemy mailowo, bezpośrednio — bez infolinii i bez przekierowań.",
-  "Zamówienia złożone do 18:30 wysyłamy tego samego dnia, z gwarancją dostawy InPostem.",
-];
+const tresc =
+  jezyk === "en"
+    ? {
+        eyebrow: "Warranty and service",
+        jednostka: "months of warranty",
+        opis: `Every Owell product comes with a ${site.gwarancjaMiesiace}-month warranty. Service requests are handled directly, with no redirects between call centres.`,
+        punkty: [
+          `The warranty covers material and manufacturing defects for the full ${site.gwarancjaMiesiace} months from purchase.`,
+          "We handle requests by email, directly — no call centre and no redirects.",
+          "Orders placed before 6:30 PM ship the same day, with guaranteed InPost delivery.",
+        ],
+        detalPodpis: "Service response time",
+        linkInstrukcje: "Manuals →",
+        linkGwarancja: "Warranty card →",
+      }
+    : {
+        eyebrow: "Gwarancja i serwis",
+        jednostka: "miesięcy gwarancji",
+        opis: `Każdy produkt Owell objęty jest ${site.gwarancjaMiesiace}-miesięczną gwarancją. Zgłoszenia serwisowe obsługujemy po polsku, bez przekierowań między infoliniami.`,
+        punkty: [
+          `Gwarancja obejmuje wady materiałowe i produkcyjne przez cały okres ${site.gwarancjaMiesiace} miesięcy od zakupu.`,
+          "Zgłoszenie przyjmujemy mailowo, bezpośrednio — bez infolinii i bez przekierowań.",
+          "Zamówienia złożone do 18:30 wysyłamy tego samego dnia, z gwarancją dostawy InPostem.",
+        ],
+        detalPodpis: "Czas reakcji serwisu",
+        linkInstrukcje: "Instrukcje obsługi →",
+        linkGwarancja: "Karta gwarancyjna →",
+      };
 ---
 
 <Section bg="raised">
   <Container>
     <div class="panel">
       <div class="panel-glowne">
-        <Eyebrow data-reveal>Gwarancja i serwis</Eyebrow>
+        <Eyebrow data-reveal>{tresc.eyebrow}</Eyebrow>
         <p class="liczba" data-reveal data-reveal-delay="80">
           {site.gwarancjaMiesiace}
-          <span class="jednostka">miesięcy gwarancji</span>
+          <span class="jednostka">{tresc.jednostka}</span>
         </p>
         <p class="opis">
-          Każdy produkt Owell objęty jest {site.gwarancjaMiesiace}-miesięczną gwarancją. Zgłoszenia serwisowe
-          obsługujemy po polsku, bez przekierowań między infoliniami.
+          {tresc.opis}
         </p>
 
         <ul class="punkty">
-          {punkty.map((p) => <li>{p}</li>)}
+          {tresc.punkty.map((p) => <li>{p}</li>)}
         </ul>
       </div>
 
       <div class="panel-detale">
         <div class="detal">
           <p class="detal-liczba">{czasReakcji}</p>
-          <p class="detal-podpis">Czas reakcji serwisu</p>
+          <p class="detal-podpis">{tresc.detalPodpis}</p>
         </div>
 
         <div class="linki">
-          <a href="/instrukcje" class="link">Instrukcje obsługi →</a>
-          <a href="/gwarancja" class="link">Karta gwarancyjna →</a>
+          <a href={l("/instrukcje")} class="link">{tresc.linkInstrukcje}</a>
+          <a href={l("/gwarancja")} class="link">{tresc.linkGwarancja}</a>
         </div>
       </div>
     </div>

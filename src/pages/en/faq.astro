@@ -1,0 +1,105 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Prose from "../../components/ui/Prose.astro";
+import { site } from "../../data/site.ts";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("en", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "FAQ", path: l("/faq") },
+];
+
+const pytania = [
+  {
+    pytanie: "Where can I buy Owell products?",
+    odpowiedz: `In our official store on Allegro — we sell there directly as the manufacturer, so the warranty and service come straight to us. We're also working on our own online store. You'll find current links on the "Where to buy" page.`,
+  },
+  {
+    pytanie: "How long is the warranty and what does it cover?",
+    odpowiedz: `${site.gwarancjaMiesiace} months from the date of purchase. The warranty covers material and manufacturing defects — it does not cover mechanical damage caused by the user.`,
+  },
+  {
+    pytanie: "How do I file a complaint?",
+    odpowiedz: `Write to ${site.kontakt.emailSerwis}. In your message, include the product model, order number and a description of the fault — photos or a short video speed up the process.`,
+  },
+  {
+    pytanie: "Where can I find the manual?",
+    odpowiedz: `The PDF manual is available on each product's page. If you can't find it there, write to us — we'll send it by email.`,
+  },
+  {
+    pytanie: "Are spare parts available?",
+    odpowiedz: `It depends on the model. Write to ${site.kontakt.emailSerwis} with the product name and a description of the part you need — we'll check availability individually.`,
+  },
+  {
+    pytanie: "How does service work?",
+    odpowiedz: `We handle requests by email, with no call centre. We reply within 24 business hours and see the case through to the end — without transferring you to other departments.`,
+  },
+  {
+    pytanie: "How does delivery work?",
+    odpowiedz: `Orders placed before 6:30 PM ship the same day, with guaranteed InPost delivery. You'll see the exact delivery time and cost in the store when placing your order — it depends on the shipping method chosen.`,
+  },
+  {
+    pytanie: "How can I contact you?",
+    odpowiedz: `For general matters: ${site.kontakt.email}. For service and complaints: ${site.kontakt.emailSerwis}.`,
+  },
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: pytania.map((p) => ({
+    "@type": "Question",
+    name: p.pytanie,
+    acceptedAnswer: { "@type": "Answer", text: p.odpowiedz },
+  })),
+};
+---
+
+<Base
+  title="FAQ — Owell"
+  description="Answers to frequently asked questions: where to buy, how the warranty works, how to file a complaint and reach our service team."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title" data-reveal>Frequently asked questions</h1>
+
+        <Prose>
+          {pytania.map((p) => (
+            <>
+              <h2>{p.pytanie}</h2>
+              <p>{p.odpowiedz}</p>
+            </>
+          ))}
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+</style>

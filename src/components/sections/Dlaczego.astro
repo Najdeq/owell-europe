@@ -4,41 +4,81 @@ import Container from "../ui/Container.astro";
 import Section from "../ui/Section.astro";
 import Eyebrow from "../ui/Eyebrow.astro";
 import { site } from "../../data/site.ts";
+import { domyslnyJezyk, type Jezyk } from "../../i18n/ui.ts";
 import detalCzajnik from "../../assets/marka/detal-czajnik.jpg";
 
+const jezyk = (Astro.currentLocale ?? domyslnyJezyk) as Jezyk;
+
 // Liczby przekazane przez właściciela marki.
-const argumenty = [
-  {
-    prefix: "",
-    liczba: String(site.gwarancjaMiesiace),
-    jednostka: "miesiące gwarancji",
-    opis: "Każdy produkt Owell objęty jest 24-miesięczną gwarancją. Zapewniamy również profesjonalny serwis pogwarancyjny oraz łatwy dostęp do części zamiennych.",
-  },
-  {
-    prefix: "Ponad",
-    liczba: "40",
-    jednostka: "starannie opracowanych modeli",
-    opis: "Nasze produkty powstają z myślą o codziennym komforcie użytkowania. Łączą funkcjonalność, nowoczesny design oraz zgodność z wymaganiami i normami obowiązującymi w Unii Europejskiej.",
-  },
-  {
-    prefix: "Doświadczenie budowane od",
-    liczba: "1991",
-    jednostka: "roku",
-    opis: "Za marką Owell stoi zespół z ponad 35-letnim doświadczeniem w branży małego AGD i produktów użytkowych. Wiedza zdobywana przez lata pozwala nam tworzyć produkty, którym zaufały miliony klientów.",
-  },
-  {
-    prefix: "Obecność w ponad",
-    liczba: "60",
-    jednostka: "krajach",
-    opis: "Produkty tworzone przez nasz zespół trafiają do klientów w 60 krajach na całym świecie. Stale rozwijamy naszą międzynarodową obecność.",
-  },
-  {
-    prefix: "",
-    liczba: "30 000",
-    jednostka: "m² centrum logistycznego",
-    opis: "Dysponujemy własnym zapleczem logistycznym o powierzchni 30 000 m². Dzięki temu zapewniamy wysoką dostępność produktów, sprawną realizację zamówień oraz profesjonalną obsługę.",
-  },
-];
+const argumenty =
+  jezyk === "en"
+    ? [
+        {
+          prefix: "",
+          liczba: String(site.gwarancjaMiesiace),
+          jednostka: "months of warranty",
+          opis: "Every Owell product comes with a 24-month warranty. We also provide professional post-warranty service and easy access to spare parts.",
+        },
+        {
+          prefix: "Over",
+          liczba: "40",
+          jednostka: "carefully developed models",
+          opis: "Our products are made with everyday comfort in mind. They combine functionality, modern design and compliance with EU requirements and standards.",
+        },
+        {
+          prefix: "Experience built since",
+          liczba: "1991",
+          jednostka: "",
+          opis: "Behind the Owell brand is a team with over 35 years of experience in small appliances and everyday products. That know-how lets us build products trusted by millions of customers.",
+        },
+        {
+          prefix: "Present in over",
+          liczba: "60",
+          jednostka: "countries",
+          opis: "Products made by our team reach customers in 60 countries around the world. We keep expanding our international presence.",
+        },
+        {
+          prefix: "",
+          liczba: "30,000",
+          jednostka: "m² logistics centre",
+          opis: "We operate our own logistics facility spanning 30,000 m². That gives us strong product availability, efficient order fulfilment and professional service.",
+        },
+      ]
+    : [
+        {
+          prefix: "",
+          liczba: String(site.gwarancjaMiesiace),
+          jednostka: "miesiące gwarancji",
+          opis: "Każdy produkt Owell objęty jest 24-miesięczną gwarancją. Zapewniamy również profesjonalny serwis pogwarancyjny oraz łatwy dostęp do części zamiennych.",
+        },
+        {
+          prefix: "Ponad",
+          liczba: "40",
+          jednostka: "starannie opracowanych modeli",
+          opis: "Nasze produkty powstają z myślą o codziennym komforcie użytkowania. Łączą funkcjonalność, nowoczesny design oraz zgodność z wymaganiami i normami obowiązującymi w Unii Europejskiej.",
+        },
+        {
+          prefix: "Doświadczenie budowane od",
+          liczba: "1991",
+          jednostka: "roku",
+          opis: "Za marką Owell stoi zespół z ponad 35-letnim doświadczeniem w branży małego AGD i produktów użytkowych. Wiedza zdobywana przez lata pozwala nam tworzyć produkty, którym zaufały miliony klientów.",
+        },
+        {
+          prefix: "Obecność w ponad",
+          liczba: "60",
+          jednostka: "krajach",
+          opis: "Produkty tworzone przez nasz zespół trafiają do klientów w 60 krajach na całym świecie. Stale rozwijamy naszą międzynarodową obecność.",
+        },
+        {
+          prefix: "",
+          liczba: "30 000",
+          jednostka: "m² centrum logistycznego",
+          opis: "Dysponujemy własnym zapleczem logistycznym o powierzchni 30 000 m². Dzięki temu zapewniamy wysoką dostępność produktów, sprawną realizację zamówień oraz profesjonalną obsługę.",
+        },
+      ];
+
+const eyebrow = jezyk === "en" ? "Proof, not promises" : "Dowody, nie deklaracje";
+const tytulSekcji = jezyk === "en" ? "Why Owell" : "Dlaczego Owell";
 ---
 
 <Section bg="raised">
@@ -53,8 +93,8 @@ const argumenty = [
     </div>
 
     <div class="dlaczego-content">
-      <Eyebrow data-reveal>Dowody, nie deklaracje</Eyebrow>
-      <h2 class="section-title" data-reveal data-reveal-delay="80">Dlaczego Owell</h2>
+      <Eyebrow data-reveal>{eyebrow}</Eyebrow>
+      <h2 class="section-title" data-reveal data-reveal-delay="80">{tytulSekcji}</h2>
 
       <dl class="argumenty">
         {argumenty.map((a) => (

@@ -4,6 +4,32 @@ import Section from "../ui/Section.astro";
 import Eyebrow from "../ui/Eyebrow.astro";
 import { site } from "../../data/site.ts";
 import mapa from "../../data/mapa-swiata.json";
+import { domyslnyJezyk, type Jezyk } from "../../i18n/ui.ts";
+
+const jezyk = (Astro.currentLocale ?? domyslnyJezyk) as Jezyk;
+
+const tresc =
+  jezyk === "en"
+    ? {
+        eyebrow: "Reach",
+        tytul: "Our products travel across Europe",
+        leadPrefix: "Owell is",
+        leadYears: "years of production, over",
+        leadModels: "models, over",
+        leadMarkets: "markets. The same factory, the same quality control, the same service team.",
+        mapLabel: "Map of Europe with the countries where Owell sells highlighted",
+        podpisMarkets: "markets Owell",
+      }
+    : {
+        eyebrow: "Zasięg",
+        tytul: "Nasze produkty jeżdżą po całej Europie",
+        leadPrefix: "Owell to",
+        leadYears: "lat produkcji, ponad",
+        leadModels: "modeli, ponad",
+        leadMarkets: "rynków. Ta sama fabryka, ta sama kontrola jakości, ci sami ludzie od serwisu.",
+        mapLabel: "Mapa Europy z zaznaczonymi krajami, w których sprzedaje Owell",
+        podpisMarkets: "rynków Owell",
+      };
 
 // Bez listy rynków nie renderujemy nic — pusta mapa świata wyglądałaby jak
 // błąd, a wypełnianie jej „na oko" byłoby zmyślaniem danych o firmie.
@@ -97,13 +123,13 @@ const trasy = rynki
 {rynki.length > 0 && (
   <Section bg="raised">
     <Container>
-      <Eyebrow data-reveal>Zasięg</Eyebrow>
+      <Eyebrow data-reveal>{tresc.eyebrow}</Eyebrow>
       <h2 class="section-title" data-reveal data-reveal-delay="80">
-        Nasze produkty jeżdżą po całej Europie
+        {tresc.tytul}
       </h2>
       <p class="section-lead" data-reveal data-reveal-delay="160">
-        Owell to {site.grupa.lataHistorii} lat produkcji, ponad {site.grupa.liczbaProduktow} modeli, ponad{" "}
-        {site.grupa.liczbaKrajow} rynków. Ta sama fabryka, ta sama kontrola jakości, ci sami ludzie od serwisu.
+        {tresc.leadPrefix} {site.grupa.lataHistorii} {tresc.leadYears} {site.grupa.liczbaProduktow}{" "}
+        {tresc.leadModels} {site.grupa.liczbaKrajow} {tresc.leadMarkets}
       </p>
 
       <figure class="mapa-blok" data-reveal data-reveal-delay="240">
@@ -111,7 +137,7 @@ const trasy = rynki
           class="mapa"
           viewBox={kadr}
           role="img"
-          aria-label="Mapa Europy z zaznaczonymi krajami, w których sprzedaje Owell"
+          aria-label={tresc.mapLabel}
         >
           <defs>
             <marker
@@ -162,7 +188,7 @@ const trasy = rynki
 
         <figcaption class="podpis">
           <span class="podpis-liczba">{site.grupa.liczbaKrajow}+</span>
-          <span class="podpis-tekst">rynków Owell</span>
+          <span class="podpis-tekst">{tresc.podpisMarkets}</span>
         </figcaption>
       </figure>
 

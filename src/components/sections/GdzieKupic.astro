@@ -1,18 +1,39 @@
 ---
+import { getRelativeLocaleUrl } from "astro:i18n";
 import Container from "../ui/Container.astro";
 import Section from "../ui/Section.astro";
 import Eyebrow from "../ui/Eyebrow.astro";
 import { site } from "../../data/site.ts";
+import { domyslnyJezyk, type Jezyk } from "../../i18n/ui.ts";
+
+const jezyk = (Astro.currentLocale ?? domyslnyJezyk) as Jezyk;
+const l = (sciezka: string) => getRelativeLocaleUrl(jezyk, sciezka);
+
+const tresc =
+  jezyk === "en"
+    ? {
+        eyebrow: "Where to buy",
+        tytul: "All products in one place",
+        lead: "You buy directly from the manufacturer in our official Allegro store — with full warranty and service run by us, not a middleman.",
+        ctaAllegro: "See our listings on Allegro →",
+        ctaFallback: "Where to buy →",
+      }
+    : {
+        eyebrow: "Gdzie kupić",
+        tytul: "Wszystkie produkty w jednym miejscu",
+        lead: "Kupujesz bezpośrednio od producenta w naszym oficjalnym sklepie na Allegro — z pełną gwarancją i serwisem prowadzonym przez nas, nie przez pośrednika.",
+        ctaAllegro: "Zobacz nasze oferty na Allegro →",
+        ctaFallback: "Gdzie kupić →",
+      };
 ---
 
 <Section bg="base" id="gdzie-kupic">
   <Container>
     <div class="panel">
-      <Eyebrow data-reveal>Gdzie kupić</Eyebrow>
-      <h2 class="section-title" data-reveal data-reveal-delay="80">Wszystkie produkty w jednym miejscu</h2>
+      <Eyebrow data-reveal>{tresc.eyebrow}</Eyebrow>
+      <h2 class="section-title" data-reveal data-reveal-delay="80">{tresc.tytul}</h2>
       <p class="lead">
-        Kupujesz bezpośrednio od producenta w naszym oficjalnym sklepie na Allegro — z pełną gwarancją i serwisem
-        prowadzonym przez nas, nie przez pośrednika.
+        {tresc.lead}
       </p>
 
       {site.allegro ? (
@@ -25,11 +46,11 @@ import { site } from "../../data/site.ts";
           data-lokalizacja="sekcja"
           class="cta"
         >
-          Zobacz nasze oferty na Allegro →
+          {tresc.ctaAllegro}
         </a>
       ) : (
-        <a href="/gdzie-kupic" class="cta">
-          Gdzie kupić →
+        <a href={l("/gdzie-kupic")} class="cta">
+          {tresc.ctaFallback}
         </a>
       )}
     </div>

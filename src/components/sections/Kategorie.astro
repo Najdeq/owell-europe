@@ -1,21 +1,28 @@
 ---
+import { getRelativeLocaleUrl } from "astro:i18n";
 import Container from "../ui/Container.astro";
 import Section from "../ui/Section.astro";
 import Eyebrow from "../ui/Eyebrow.astro";
 import { site } from "../../data/site.ts";
+import { domyslnyJezyk, type Jezyk } from "../../i18n/ui.ts";
+import { useTranslations } from "../../i18n/utils.ts";
+
+const jezyk = (Astro.currentLocale ?? domyslnyJezyk) as Jezyk;
+const t = useTranslations(jezyk);
+const l = (sciezka: string) => getRelativeLocaleUrl(jezyk, sciezka);
 ---
 
 <Section bg="base">
   <Container>
-    <Eyebrow data-reveal>Katalog</Eyebrow>
-    <h2 class="section-title" data-reveal data-reveal-delay="80">Kategorie produktów</h2>
+    <Eyebrow data-reveal>{t("common.katalog")}</Eyebrow>
+    <h2 class="section-title" data-reveal data-reveal-delay="80">{t("common.kategorieProduktow")}</h2>
 
     <div class="grid" data-kafelki>
       {site.kategorie.map((kategoria) => (
-        <a href={`/produkty#${kategoria.slug}`} class="kafel">
-          <h3 class="kafel-tytul">{kategoria.nazwa}</h3>
-          <p class="kafel-opis">{kategoria.opis}</p>
-          <span class="kafel-link">Zobacz produkty →</span>
+        <a href={`${l("/produkty")}#${kategoria.slug}`} class="kafel">
+          <h3 class="kafel-tytul">{t(`kategorie.${kategoria.slug}`)}</h3>
+          <p class="kafel-opis">{t(`grupyOpis.${kategoria.slug}`)}</p>
+          <span class="kafel-link">{t("common.zobaczProdukty")}</span>
         </a>
       ))}
     </div>

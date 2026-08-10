@@ -1,0 +1,170 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import WyszukiwarkaModelu from "../../components/WyszukiwarkaModelu.astro";
+import { useTranslations } from "../../i18n/utils.ts";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("en", sciezka);
+const t = useTranslations("en");
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Support", path: l("/wsparcie") },
+];
+
+const linki = [
+  {
+    tytul: "Frequently asked questions",
+    opis: "Answers about buying, warranty, delivery and service.",
+    href: l("/faq"),
+  },
+  {
+    tytul: "Manuals",
+    opis: "PDF manuals for every product — in the store or by email from us.",
+    href: l("/instrukcje"),
+  },
+  {
+    tytul: "Warranty",
+    opis: "What the warranty covers and how to request a repair.",
+    href: l("/gwarancja"),
+  },
+  {
+    tytul: "Register your product",
+    opis: "Register your device and extend the warranty by a year. Free of charge.",
+    href: l("/rejestracja-produktu"),
+  },
+  {
+    tytul: "Complaints",
+    opis: "Step by step, how to file a product complaint.",
+    href: l("/reklamacje"),
+  },
+  {
+    tytul: "Contact",
+    opis: "Write to us for general or service matters.",
+    href: l("/kontakt"),
+  },
+];
+---
+
+<Base
+  title="Support — Owell"
+  description="Manuals, warranty, complaints and contact — everything you need after buying an Owell product."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title" data-reveal>Support</h1>
+        <p class="page-lead" data-reveal data-reveal-delay="80">Everything you might need after your purchase, in one place.</p>
+
+        <WyszukiwarkaModelu
+          class="szukaj-na-wsparciu"
+          etykieta={t("hero.szukajLabel")}
+          placeholder={t("hero.szukajPlaceholder")}
+          pusto={t("hero.szukajPusto")}
+        />
+
+        <div class="grid">
+          {linki.map((l2) => (
+            <a href={l2.href} class="karta">
+              <h2 class="karta-tytul">{l2.tytul}</h2>
+              <p class="karta-opis">{l2.opis}</p>
+              <span class="karta-link">View →</span>
+            </a>
+          ))}
+        </div>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .page-lead {
+    margin-top: var(--sp-4);
+    max-width: var(--maxw-prose);
+    font-size: var(--fs-lead);
+    color: var(--text-2);
+  }
+
+  :global(.szukaj-na-wsparciu) {
+    margin-top: var(--sp-8);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-6);
+    margin-top: var(--sp-12);
+  }
+
+  .karta {
+    display: flex;
+    flex-direction: column;
+    padding: var(--sp-6);
+    border: 1px solid var(--hairline-soft);
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    transition: border-color var(--dur) var(--ease);
+  }
+
+  .karta:hover {
+    border-color: var(--gold);
+  }
+
+  .karta-tytul {
+    font-family: var(--font-display);
+    font-size: var(--fs-lead);
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .karta-opis {
+    margin-top: var(--sp-2);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .karta-link {
+    margin-top: var(--sp-4);
+    font-size: var(--fs-small);
+    font-weight: 500;
+    color: var(--gold);
+  }
+
+  .karta:hover .karta-link {
+    color: var(--gold-bright);
+  }
+
+  @media (min-width: 640px) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1000px) {
+    .grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

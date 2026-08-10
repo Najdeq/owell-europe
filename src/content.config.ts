@@ -83,29 +83,42 @@ const produktyTlumaczenia = (jezyk: string) =>
 
 const produktyEn = produktyTlumaczenia("en");
 
-const blog = defineCollection({
-  loader: glob({ pattern: "**/*.md", base: "./src/content/blog" }),
-  schema: z.object({
-    tytul: z.string(),
-    // Krótki opis pod tytułem na liście wpisów i w meta description —
-    // osobno od treści, żeby nie ucinać pierwszego akapitu na siłę.
-    opis: z.string(),
-    data: z.coerce.date(),
-    // Ścieżka względem public/, np. "/blog/gpsr-co-to-jest.jpg". Osobne pole
-    // od `zdjecieGlowne` w kolekcji produktów, bo blog nie korzysta z
-    // astro:assets (wpisy dodaje się przez panel CMS, nie przez import w kodzie).
-    okladka: z.string().optional(),
-    autor: z.string().default("Owell"),
-    tagi: z.array(z.string()).default([]),
-    // Identyfikatory z kolekcji `produkty` (nazwy plików bez .md), np. "ow-8805".
-    // Wypełnia je redaktor wpisu — na tej podstawie pod treścią renderuje się
-    // karta produktu zamiast zwykłego linku tekstowego w treści.
-    produkty: z.array(z.string()).default([]),
-    // Domyślnie false — wpis dodany przez CMS nie trafia na żywo, dopóki
-    // ktoś świadomie nie przełączy go na opublikowany. Bez tego każdy zapis
-    // roboczy w panelu byłby od razu widoczny publicznie.
-    opublikowany: z.boolean().default(false),
-  }),
-});
+// Blog jako fabryka kolekcji (jak produktyTlumaczenia) — angielska wersja to
+// PEŁNE, osobne wpisy (własny tytuł, opis i treść markdown), nie nakładka
+// tłumaczeń na PL. Treść artykułu to nie kilka pól do podmiany, tylko cały
+// tekst, więc prościej trzymać kompletny odpowiednik niż warstwę tłumaczeń.
+const blogCollection = (base: string) =>
+  defineCollection({
+    loader: glob({ pattern: "**/*.md", base }),
+    schema: z.object({
+      tytul: z.string(),
+      // Krótki opis pod tytułem na liście wpisów i w meta description —
+      // osobno od treści, żeby nie ucinać pierwszego akapitu na siłę.
+      opis: z.string(),
+      data: z.coerce.date(),
+      // Ścieżka względem public/, np. "/blog/gpsr-co-to-jest.jpg". Osobne pole
+      // od `zdjecieGlowne` w kolekcji produktów, bo blog nie korzysta z
+      // astro:assets (wpisy dodaje się przez panel CMS, nie przez import w kodzie).
+      okladka: z.string().optional(),
+      autor: z.string().default("Owell"),
+      tagi: z.array(z.string()).default([]),
+      // Identyfikatory z kolekcji `produkty` (nazwy plików bez .md), np. "ow-8805".
+      // Wypełnia je redaktor wpisu — na tej podstawie pod treścią renderuje się
+      // karta produktu zamiast zwykłego linku tekstowego w treści.
+      produkty: z.array(z.string()).default([]),
+      // Domyślnie false — wpis dodany przez CMS nie trafia na żywo, dopóki
+      // ktoś świadomie nie przełączy go na opublikowany. Bez tego każdy zapis
+      // roboczy w panelu byłby od razu widoczny publicznie.
+      opublikowany: z.boolean().default(false),
+    }),
+  });
 
-export const collections = { produkty, "produkty-en": produktyEn, blog };
+const blog = blogCollection("./src/content/blog");
+const blogEn = blogCollection("./src/content/blog-en");
+
+export const collections = {
+  produkty,
+  "produkty-en": produktyEn,
+  blog,
+  "blog-en": blogEn,
+};
