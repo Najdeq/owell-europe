@@ -240,14 +240,21 @@ const produkty = (await getCollection("produkty"))
       przesuniete = 0;
       startX = e.clientX;
       startOffset = offset;
-      marqueeEl.dataset.dragging = "true";
-      marqueeEl.setPointerCapture(e.pointerId);
+      // Bez setPointerCapture tutaj — capture na pointerdown przekierowuje
+      // później wygenerowany event "click" na marqueeEl zamiast na <a>, przez
+      // co zwykłe kliknięcie w kartę nigdy nie nawigowało do produktu.
+      // Capture ustawiamy dopiero w pointermove, gdy ruch faktycznie
+      // przekroczy próg przeciągnięcia (patrz komentarz przy handlerze click).
     });
 
     marqueeEl.addEventListener("pointermove", (e) => {
       if (!dragging) return;
       const delta = e.clientX - startX;
       przesuniete = Math.max(przesuniete, Math.abs(delta));
+      if (przesuniete > 6 && marqueeEl.dataset.dragging !== "true") {
+        marqueeEl.dataset.dragging = "true";
+        marqueeEl.setPointerCapture(e.pointerId);
+      }
       offset = startOffset - delta;
       zawin();
       rysuj();
