@@ -1,0 +1,95 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Prose from "../../components/ui/Prose.astro";
+import { site } from "../../data/site.ts";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("cs", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Prohlášení o přístupnosti", path: l("/deklaracja-dostepnosci") },
+];
+---
+
+<Base
+  title="Prohlášení o přístupnosti — Owell"
+  description="Prohlášení o přístupnosti webu Owell: deklarovaná úroveň shody s WCAG 2.2 AA, metoda posouzení a známá omezení."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title">Prohlášení o přístupnosti</h1>
+
+        <Prose>
+          <p>
+            Společnost {site.firma.nazwaPelna} usiluje o to, aby byl web Owell přístupný co nejširšímu okruhu
+            uživatelů, včetně osob se zdravotním postižením, v souladu s polským zákonem ze dne 4. dubna 2019 o
+            digitální přístupnosti webových stránek a mobilních aplikací veřejných subjektů a s evropským aktem o
+            přístupnosti (European Accessibility Act, EAA).
+          </p>
+
+          <h2>Stav shody</h2>
+          <p>
+            Web je <strong>částečně v souladu</strong> se standardem <strong>WCAG 2.2 úroveň AA</strong>. Usilujeme
+            o plnou shodu a přístupnost považujeme za návrhový požadavek, nikoli za dodatečnou úpravu.
+          </p>
+
+          <h2>Datum vypracování a metoda posouzení</h2>
+          <p>Toto prohlášení bylo vypracováno dne 7. srpna 2026.</p>
+          <p>
+            Shoda byla posouzena formou <strong>vlastního hodnocení</strong> — posouzení provedeného interně týmem
+            odpovědným za web, bez externího auditora.
+          </p>
+
+          <h2>Známá omezení</h2>
+          <p>Chceme být otevření ohledně oblastí, které ke dni vydání tohoto prohlášení ještě nejsou zcela hotové:</p>
+          <ul>
+            <li>Některé stránky uvedené v menu a v patičce se aktuálně připravují a mohou vracet chybu 404.</li>
+            <li>Digitální přístupnost PDF návodů přiložených ke stránkám produktů zatím nebyla ověřena.</li>
+          </ul>
+          <p>Kromě výše uvedených nebyla ke dni vydání tohoto prohlášení zjištěna žádná další známá omezení přístupnosti.</p>
+
+          <h2>Zpětná vazba a postup vymáhání</h2>
+          <p>
+            Pokud na webu narazíte na problém s přístupností — například prvek, který nelze ovládat klávesnicí,
+            chybějící popis obrázku nebo nedostatečný kontrast — dejte nám vědět. Máte právo požádat o zpřístupnění
+            webu nebo daného prvku. Pokud nezareagujeme ve stanovené zákonné lhůtě, nebo pokud je odmítnutí
+            zpřístupnění neoprávněné, máte právo podat stížnost u nadřízeného orgánu a následně u polského
+            veřejného ochránce práv (Rzecznik Praw Obywatelskich).
+          </p>
+
+          <h2>Kontakt</h2>
+          <p>
+            Problémy s přístupností hlaste na <a href={`mailto:${site.kontakt.email}`}>{site.kontakt.email}</a>.
+            Uděláme vše pro to, abychom co nejrychleji odpověděli a nahlášený problém vyřešili.
+          </p>
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+</style>

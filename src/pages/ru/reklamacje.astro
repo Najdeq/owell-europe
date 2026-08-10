@@ -1,0 +1,112 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Prose from "../../components/ui/Prose.astro";
+import { site } from "../../data/site.ts";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("ru", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Претензии", path: l("/reklamacje") },
+];
+
+const kroki = [
+  "Напишите на наш сервисный адрес, указав модель продукта и номер заказа.",
+  "Опишите неисправность — фотографии или короткое видео ускоряют процесс.",
+  "Мы ответим в течение 24 рабочих часов с указанием дальнейших шагов (ремонт, замена или возврат средств).",
+];
+---
+
+<Base
+  title="Претензии — Owell"
+  description="Как подать претензию по продукту Owell — шаг за шагом, без колл-центра."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title" data-reveal>Претензии</h1>
+        <p class="page-lead" data-reveal data-reveal-delay="80">
+          Мы рассматриваем претензии по электронной почте, напрямую — без колл-центра и без переключения между отделами.
+        </p>
+
+        <ol class="kroki">
+          {kroki.map((krok, i) => (
+            <li>
+              <span class="krok-numer">{i + 1}</span>
+              <span class="krok-tekst">{krok}</span>
+            </li>
+          ))}
+        </ol>
+
+        <Prose>
+          <p>
+            Сервисный адрес: <a href={`mailto:${site.kontakt.emailSerwis}`}>{site.kontakt.emailSerwis}</a>. Мы
+            рассматриваем претензии в соответствии с условиями, описанными на странице{" "}
+            <a href={l("/gwarancja")}>гарантии</a>.
+          </p>
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .page-lead {
+    margin-top: var(--sp-4);
+    max-width: var(--maxw-prose);
+    font-size: var(--fs-lead);
+    color: var(--text-2);
+  }
+
+  .kroki {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-6);
+    max-width: var(--maxw-prose);
+    margin-top: var(--sp-10);
+    margin-bottom: var(--sp-10);
+    list-style: none;
+  }
+
+  .kroki li {
+    display: flex;
+    align-items: baseline;
+    gap: var(--sp-4);
+  }
+
+  .krok-numer {
+    flex: none;
+    font-family: var(--font-mono);
+    font-size: var(--fs-lead);
+    font-weight: 600;
+    color: var(--gold-bright);
+  }
+
+  .krok-tekst {
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+</style>

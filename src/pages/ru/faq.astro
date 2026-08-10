@@ -1,0 +1,105 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Prose from "../../components/ui/Prose.astro";
+import { site } from "../../data/site.ts";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("ru", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Частые вопросы", path: l("/faq") },
+];
+
+const pytania = [
+  {
+    pytanie: "Где можно купить продукцию Owell?",
+    odpowiedz: `В нашем официальном магазине на Allegro — мы продаём там напрямую как производитель, поэтому гарантия и сервис идут прямо к нам. Мы также работаем над собственным интернет-магазином. Актуальные ссылки вы найдёте на странице «Где купить».`,
+  },
+  {
+    pytanie: "Какой срок гарантии и что она покрывает?",
+    odpowiedz: `${site.gwarancjaMiesiace} месяцев с даты покупки. Гарантия покрывает дефекты материалов и изготовления — она не покрывает механические повреждения, причинённые пользователем.`,
+  },
+  {
+    pytanie: "Как оформить жалобу/претензию?",
+    odpowiedz: `Напишите на ${site.kontakt.emailSerwis}. В сообщении укажите модель продукта, номер заказа и описание неисправности — фотографии или короткое видео ускоряют процесс.`,
+  },
+  {
+    pytanie: "Где найти инструкцию?",
+    odpowiedz: `PDF-инструкция доступна на странице каждого продукта. Если вы не можете её там найти, напишите нам — мы отправим её по электронной почте.`,
+  },
+  {
+    pytanie: "Есть ли в наличии запасные части?",
+    odpowiedz: `Зависит от модели. Напишите на ${site.kontakt.emailSerwis}, указав название продукта и описание нужной детали — мы проверим наличие индивидуально.`,
+  },
+  {
+    pytanie: "Как работает сервисная поддержка?",
+    odpowiedz: `Мы обрабатываем заявки по электронной почте, без колл-центра. Мы отвечаем в течение 24 рабочих часов и доводим дело до конца — без переключения на другие отделы.`,
+  },
+  {
+    pytanie: "Как работает доставка?",
+    odpowiedz: `Заказы, оформленные до 18:30, отправляются в тот же день, с гарантированной доставкой InPost. Точное время и стоимость доставки вы увидите в магазине при оформлении заказа — это зависит от выбранного способа доставки.`,
+  },
+  {
+    pytanie: "Как с вами связаться?",
+    odpowiedz: `По общим вопросам: ${site.kontakt.email}. По сервису и претензиям: ${site.kontakt.emailSerwis}.`,
+  },
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: pytania.map((p) => ({
+    "@type": "Question",
+    name: p.pytanie,
+    acceptedAnswer: { "@type": "Answer", text: p.odpowiedz },
+  })),
+};
+---
+
+<Base
+  title="Частые вопросы — Owell"
+  description="Ответы на часто задаваемые вопросы: где купить, как работает гарантия, как подать претензию и связаться с нашим сервисом."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title" data-reveal>Часто задаваемые вопросы</h1>
+
+        <Prose>
+          {pytania.map((p) => (
+            <>
+              <h2>{p.pytanie}</h2>
+              <p>{p.odpowiedz}</p>
+            </>
+          ))}
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+</style>

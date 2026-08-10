@@ -1,0 +1,113 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Prose from "../../components/ui/Prose.astro";
+import { site } from "../../data/site.ts";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("es", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Reclamaciones", path: l("/reklamacje") },
+];
+
+const kroki = [
+  "Escribe a nuestra dirección de servicio técnico, indicando el modelo del producto y el número de pedido.",
+  "Describe el fallo; las fotos o un vídeo corto agilizan el proceso.",
+  "Respondemos en un plazo de 24 horas laborables con los siguientes pasos (reparación, sustitución o reembolso).",
+];
+---
+
+<Base
+  title="Reclamaciones — Owell"
+  description="Cómo presentar una reclamación sobre un producto Owell, paso a paso, sin centro de atención telefónica."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title" data-reveal>Reclamaciones</h1>
+        <p class="page-lead" data-reveal data-reveal-delay="80">
+          Gestionamos las reclamaciones por correo electrónico, directamente: sin centro de atención telefónica y
+          sin que te deriven entre departamentos.
+        </p>
+
+        <ol class="kroki">
+          {kroki.map((krok, i) => (
+            <li>
+              <span class="krok-numer">{i + 1}</span>
+              <span class="krok-tekst">{krok}</span>
+            </li>
+          ))}
+        </ol>
+
+        <Prose>
+          <p>
+            Dirección de servicio técnico: <a href={`mailto:${site.kontakt.emailSerwis}`}>{site.kontakt.emailSerwis}</a>.
+            Gestionamos las reclamaciones conforme a las condiciones descritas en la página de{" "}
+            <a href={l("/gwarancja")}>garantía</a>.
+          </p>
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .page-lead {
+    margin-top: var(--sp-4);
+    max-width: var(--maxw-prose);
+    font-size: var(--fs-lead);
+    color: var(--text-2);
+  }
+
+  .kroki {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-6);
+    max-width: var(--maxw-prose);
+    margin-top: var(--sp-10);
+    margin-bottom: var(--sp-10);
+    list-style: none;
+  }
+
+  .kroki li {
+    display: flex;
+    align-items: baseline;
+    gap: var(--sp-4);
+  }
+
+  .krok-numer {
+    flex: none;
+    font-family: var(--font-mono);
+    font-size: var(--fs-lead);
+    font-weight: 600;
+    color: var(--gold-bright);
+  }
+
+  .krok-tekst {
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+</style>

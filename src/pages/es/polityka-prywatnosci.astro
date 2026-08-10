@@ -1,0 +1,138 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Prose from "../../components/ui/Prose.astro";
+import { site } from "../../data/site.ts";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("es", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Política de privacidad", path: l("/polityka-prywatnosci") },
+];
+---
+
+<Base
+  title="Política de privacidad — Owell"
+  description="Cómo se tratan los datos personales en el sitio web de Owell: responsable del tratamiento, finalidades, bases legales, destinatarios de los datos y derechos de los interesados."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title">Política de privacidad</h1>
+
+        <Prose>
+          <h2>Responsable del tratamiento</h2>
+          <p>
+            El responsable del tratamiento de los datos personales relacionados con el uso de este sitio web es{" "}
+            <strong>{site.firma.nazwaPelna}</strong>, {site.firma.adres}, NIF (NIP): {site.firma.nip}, número de
+            registro de empresa (REGON): {site.firma.regon}. Para cuestiones de protección de datos, contacta con{" "}
+            <a href={`mailto:${site.kontakt.email}`}>{site.kontakt.email}</a>.
+          </p>
+
+          <h2>Finalidades y bases legales del tratamiento</h2>
+          <p>Tratamos los datos personales para las siguientes finalidades:</p>
+          <ul>
+            <li>
+              <strong>Gestión de correspondencia y consultas</strong> (formulario de contacto, correo electrónico):
+              base legal: artículo 6.1.b) del RGPD (medidas previas a la celebración de un contrato o respuesta a
+              una consulta) o artículo 6.1.f) del RGPD (interés legítimo en dar respuesta).
+            </li>
+            <li>
+              <strong>Gestión de reclamaciones y solicitudes de servicio</strong>: base legal: artículo 6.1.c) del
+              RGPD (obligación legal derivada de la normativa sobre garantías) y artículo 6.1.b) del RGPD.
+            </li>
+            <li>
+              <strong>Estadísticas de visitas al sitio web</strong> (Google Analytics): solo tras el consentimiento
+              dado en el banner de cookies, base legal: artículo 6.1.a) del RGPD. Más detalles en la{" "}
+              <a href={l("/cookies")}>política de cookies</a>.
+            </li>
+            <li>
+              <strong>Garantizar la seguridad y el correcto funcionamiento del sitio web</strong> (registros del
+              servidor de alojamiento): base legal: artículo 6.1.f) del RGPD (interés legítimo del responsable).
+            </li>
+          </ul>
+          <p>No elaboramos perfiles de los usuarios ni tomamos decisiones automatizadas que produzcan efectos jurídicos sobre ellos.</p>
+
+          <h2>Plazo de conservación de los datos</h2>
+          <ul>
+            <li>Datos de correspondencia y consultas: durante 3 años desde la finalización del asunto (plazo de prescripción de reclamaciones).</li>
+            <li>
+              Datos relacionados con una reclamación o solicitud de garantía: durante el tiempo necesario para
+              resolverla y, posteriormente, durante el plazo de prescripción de reclamaciones.
+            </li>
+            <li>Datos derivados de la normativa fiscal y contable: durante el periodo exigido por dicha normativa.</li>
+            <li>Cookies: según lo establecido en la <a href={l("/cookies")}>política de cookies</a>.</li>
+          </ul>
+
+          <h2>Destinatarios de los datos</h2>
+          <p>Los datos pueden compartirse con las siguientes categorías de destinatarios:</p>
+          <ul>
+            <li>
+              <strong>Cloudflare</strong>: proveedor de la infraestructura de alojamiento y CDN de este sitio web.
+            </li>
+            <li>
+              <strong>Google</strong>: proveedor de la herramienta Google Analytics, utilizada únicamente tras el
+              consentimiento a las cookies de analítica.
+            </li>
+            <li>
+              <strong>nazwa.pl</strong>: proveedor de alojamiento y correo electrónico, a través del cual gestionamos
+              la correspondencia y las solicitudes de los clientes.
+            </li>
+          </ul>
+          <p>
+            Algunos de los proveedores mencionados pueden tratar datos fuera del Espacio Económico Europeo. En esos
+            casos, la transferencia se basa en cláusulas contractuales tipo aprobadas por la Comisión Europea o en
+            otro mecanismo conforme al RGPD.
+          </p>
+
+          <h2>Derechos de los interesados</h2>
+          <p>Tienes derecho a:</p>
+          <ul>
+            <li>acceder a tus datos y obtener una copia de ellos,</li>
+            <li>rectificar (corregir) tus datos,</li>
+            <li>suprimir tus datos,</li>
+            <li>limitar el tratamiento,</li>
+            <li>la portabilidad de los datos,</li>
+            <li>oponerte al tratamiento basado en el artículo 6.1.f) del RGPD,</li>
+            <li>retirar el consentimiento en cualquier momento, sin afectar a la licitud del tratamiento realizado antes de su retirada,</li>
+            <li>
+              presentar una reclamación ante el Presidente de la Oficina Polaca de Protección de Datos Personales
+              (UODO) si consideras que el tratamiento vulnera las disposiciones del RGPD.
+            </li>
+          </ul>
+
+          <h2>Contacto</h2>
+          <p>
+            Para asuntos relacionados con el tratamiento de datos personales, puedes contactar con nosotros en{" "}
+            <a href={`mailto:${site.kontakt.email}`}>{site.kontakt.email}</a>.
+          </p>
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+</style>

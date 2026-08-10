@@ -10,24 +10,75 @@ import { domyslnyJezyk, type Jezyk } from "../../i18n/ui.ts";
 const jezyk = (Astro.currentLocale ?? domyslnyJezyk) as Jezyk;
 const l = (sciezka: string) => getRelativeLocaleUrl(jezyk, sciezka);
 
-const tresc =
-  jezyk === "en"
-    ? {
-        eyebrow: "Contact",
-        tytul: "Have a question?",
-        ogolne: "General enquiries",
-        serwis: "Service and complaints",
-        formularz: "Contact form",
-        napisz: "Write to us",
-      }
-    : {
-        eyebrow: "Kontakt",
-        tytul: "Masz pytanie?",
-        ogolne: "Zapytania ogólne",
-        serwis: "Serwis i reklamacje",
-        formularz: "Formularz kontaktowy",
-        napisz: "Napisz do nas",
-      };
+type Tresc = { eyebrow: string; tytul: string; ogolne: string; serwis: string; formularz: string; napisz: string };
+
+const trescPoJezyku: Partial<Record<Jezyk, Tresc>> = {
+  en: {
+    eyebrow: "Contact",
+    tytul: "Have a question?",
+    ogolne: "General enquiries",
+    serwis: "Service and complaints",
+    formularz: "Contact form",
+    napisz: "Write to us",
+  },
+  de: {
+    eyebrow: "Kontakt",
+    tytul: "Haben Sie eine Frage?",
+    ogolne: "Allgemeine Anfragen",
+    serwis: "Service und Reklamationen",
+    formularz: "Kontaktformular",
+    napisz: "Schreiben Sie uns",
+  },
+  ru: {
+    eyebrow: "Контакты",
+    tytul: "Есть вопрос?",
+    ogolne: "Общие вопросы",
+    serwis: "Сервис и рекламации",
+    formularz: "Форма обратной связи",
+    napisz: "Написать нам",
+  },
+  fr: {
+    eyebrow: "Contact",
+    tytul: "Une question ?",
+    ogolne: "Demandes générales",
+    serwis: "Service et réclamations",
+    formularz: "Formulaire de contact",
+    napisz: "Écrivez-nous",
+  },
+  es: {
+    eyebrow: "Contacto",
+    tytul: "¿Tienes alguna pregunta?",
+    ogolne: "Consultas generales",
+    serwis: "Servicio y reclamaciones",
+    formularz: "Formulario de contacto",
+    napisz: "Escríbenos",
+  },
+  cs: {
+    eyebrow: "Kontakt",
+    tytul: "Máte dotaz?",
+    ogolne: "Obecné dotazy",
+    serwis: "Servis a reklamace",
+    formularz: "Kontaktní formulář",
+    napisz: "Napište nám",
+  },
+  it: {
+    eyebrow: "Contatti",
+    tytul: "Hai una domanda?",
+    ogolne: "Richieste generali",
+    serwis: "Assistenza e reclami",
+    formularz: "Modulo di contatto",
+    napisz: "Scrivici",
+  },
+};
+
+const tresc = trescPoJezyku[jezyk] ?? {
+  eyebrow: "Kontakt",
+  tytul: "Masz pytanie?",
+  ogolne: "Zapytania ogólne",
+  serwis: "Serwis i reklamacje",
+  formularz: "Formularz kontaktowy",
+  napisz: "Napisz do nas",
+};
 ---
 
 <Section bg="raised">

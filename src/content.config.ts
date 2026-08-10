@@ -82,6 +82,12 @@ const produktyTlumaczenia = (jezyk: string) =>
   });
 
 const produktyEn = produktyTlumaczenia("en");
+const produktyDe = produktyTlumaczenia("de");
+const produktyRu = produktyTlumaczenia("ru");
+const produktyFr = produktyTlumaczenia("fr");
+const produktyEs = produktyTlumaczenia("es");
+const produktyCs = produktyTlumaczenia("cs");
+const produktyIt = produktyTlumaczenia("it");
 
 // Blog jako fabryka kolekcji (jak produktyTlumaczenia) — angielska wersja to
 // PEŁNE, osobne wpisy (własny tytuł, opis i treść markdown), nie nakładka
@@ -115,10 +121,28 @@ const blogCollection = (base: string) =>
 
 const blog = blogCollection("./src/content/blog");
 const blogEn = blogCollection("./src/content/blog-en");
+const blogDe = blogCollection("./src/content/blog-de");
+const blogRu = blogCollection("./src/content/blog-ru");
+const blogFr = blogCollection("./src/content/blog-fr");
+const blogEs = blogCollection("./src/content/blog-es");
+const blogCs = blogCollection("./src/content/blog-cs");
+const blogIt = blogCollection("./src/content/blog-it");
 
 export const collections = {
   produkty,
   "produkty-en": produktyEn,
+  "produkty-de": produktyDe,
+  "produkty-ru": produktyRu,
+  "produkty-fr": produktyFr,
+  "produkty-es": produktyEs,
+  "produkty-cs": produktyCs,
+  "produkty-it": produktyIt,
   blog,
   "blog-en": blogEn,
+  "blog-de": blogDe,
+  "blog-ru": blogRu,
+  "blog-fr": blogFr,
+  "blog-es": blogEs,
+  "blog-cs": blogCs,
+  "blog-it": blogIt,
 };

@@ -1,0 +1,176 @@
+---
+import { getCollection, render } from "astro:content";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../../layouts/Base.astro";
+import Header from "../../../components/Header.astro";
+import Footer from "../../../components/Footer.astro";
+import BreadcrumbSchema from "../../../components/BreadcrumbSchema.astro";
+import Container from "../../../components/ui/Container.astro";
+import Section from "../../../components/ui/Section.astro";
+import Prose from "../../../components/ui/Prose.astro";
+import PowiazaneProdukty from "../../../components/PowiazaneProdukty.astro";
+import { site } from "../../../data/site.ts";
+
+export async function getStaticPaths() {
+  const wpisy = await getCollection("blog-ru", (w) => w.data.opublikowany);
+  return wpisy.map((wpis) => ({ params: { slug: wpis.id }, props: { wpis } }));
+}
+
+const { wpis } = Astro.props;
+const { Content } = await render(wpis);
+
+const l = (sciezka: string) => getRelativeLocaleUrl("ru", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Блог", path: l("/blog") },
+  { name: wpis.data.tytul, path: l(`/blog/${wpis.id}`) },
+];
+
+const formatData = (d: Date) =>
+  d.toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" });
+
+const okladkaUrl = wpis.data.okladka
+  ? new URL(wpis.data.okladka, Astro.site).toString()
+  : undefined;
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  headline: wpis.data.tytul,
+  description: wpis.data.opis,
+  datePublished: wpis.data.data.toISOString(),
+  author: { "@type": "Organization", name: wpis.data.autor },
+  publisher: {
+    "@type": "Organization",
+    name: site.nazwa,
+    logo: { "@type": "ImageObject", url: new URL("/logo.png", Astro.site).toString() },
+  },
+  ...(okladkaUrl ? { image: okladkaUrl } : {}),
+  mainEntityOfPage: new URL(`/ru/blog/${wpis.id}`, Astro.site).toString(),
+};
+---
+
+<Base title={`${wpis.data.tytul} — Owell`} description={wpis.data.opis} ogImage={wpis.data.okladka}>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <nav class="okruszki" aria-label="Breadcrumb">
+          <a href={l("/blog")}>Блог</a>
+        </nav>
+
+        <time class="data" datetime={wpis.data.data.toISOString()} data-reveal>
+          {formatData(wpis.data.data)}
+        </time>
+        <h1 class="tytul" data-reveal data-reveal-delay="80">{wpis.data.tytul}</h1>
+        <p class="lead" data-reveal data-reveal-delay="160">{wpis.data.opis}</p>
+
+        {wpis.data.okladka && (
+          <img src={wpis.data.okladka} alt="" class="okladka" width="1200" height="675" />
+        )}
+
+        <Prose>
+          <Content />
+        </Prose>
+
+        {wpis.data.tagi.length > 0 && (
+          <ul class="tagi">
+            {wpis.data.tagi.map((t: string) => (
+              <li>{t}</li>
+            ))}
+          </ul>
+        )}
+
+        <PowiazaneProdukty produkty={wpis.data.produkty} />
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .okruszki {
+    margin-top: var(--sp-4);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+  }
+
+  .okruszki a {
+    color: var(--steel);
+    text-decoration: none;
+  }
+
+  .okruszki a:hover {
+    color: var(--gold-bright);
+  }
+
+  .data {
+    display: block;
+    margin-top: var(--sp-6);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+  }
+
+  .tytul {
+    margin-top: var(--sp-3);
+    max-width: var(--maxw-prose);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .lead {
+    margin-top: var(--sp-4);
+    max-width: var(--maxw-prose);
+    font-size: var(--fs-lead);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .okladka {
+    width: 100%;
+    height: auto;
+    margin-top: var(--sp-8);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--hairline-soft);
+  }
+
+  :global(.prose) {
+    margin-top: var(--sp-8);
+  }
+
+  .tagi {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-3);
+    margin-top: var(--sp-10);
+    padding-top: var(--sp-6);
+    border-top: 1px solid var(--hairline-soft);
+    list-style: none;
+  }
+
+  .tagi li {
+    padding: var(--sp-1) var(--sp-3);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+    background-color: var(--bg-1);
+    border-radius: var(--radius);
+  }
+</style>

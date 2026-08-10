@@ -1,0 +1,74 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Prose from "../../components/ui/Prose.astro";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("de", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "KI-Verordnung — Hinweis", path: l("/informacja-ai") },
+];
+---
+
+<Base
+  title="KI-Verordnung — Hinweis — Owell"
+  description="Informationen zur Verwendung künstlicher Intelligenz bei der Erstellung von Produktvisualisierungen, im Einklang mit dem EU-KI-Gesetz (AI Act)."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title">KI-Verordnung — Hinweis</h1>
+
+        <Prose>
+          <p>
+            Die Produktvisualisierungen auf dieser Website wurden mithilfe künstlicher Intelligenz erstellt. Sie
+            basieren auf echten Produktfotos und Verpackungsdesigns.
+          </p>
+
+          <p>
+            Wir veröffentlichen diesen Hinweis in Zusammenhang mit den Pflichten aus Artikel 50 der Verordnung (EU)
+            2024/1689 des Europäischen Parlaments und des Rates zur Festlegung harmonisierter Vorschriften für
+            künstliche Intelligenz (KI-Verordnung, AI Act).
+          </p>
+
+          <h2>Warum wir dies offenlegen</h2>
+          <ul>
+            <li><strong>Transparenz</strong> — wir respektieren Ihr Recht zu wissen, woher die Visualisierungen stammen.</li>
+            <li><strong>Rechtskonformität</strong> — wir erfüllen die Offenlegungspflichten des EU-KI-Gesetzes.</li>
+            <li><strong>Genauigkeit</strong> — wir stellen sicher, dass die digitalen Visualisierungen das reale Produkt korrekt wiedergeben.</li>
+          </ul>
+
+          <p>
+            Wenn Sie Fragen zur Herkunft einer bestimmten Visualisierung haben, kontaktieren Sie uns — unsere
+            Kontaktdaten finden Sie auf der Seite <a href={l("/bezpieczenstwo-produktu")}>Produktsicherheit</a>.
+          </p>
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+</style>

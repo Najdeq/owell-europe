@@ -1,0 +1,586 @@
+---
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import WyszukiwarkaModelu from "../../components/WyszukiwarkaModelu.astro";
+import { site } from "../../data/site.ts";
+import { useTranslations } from "../../i18n/utils.ts";
+
+import { kategorie as kategorieDane } from "../../data/kategorie.ts";
+import { zdjecia } from "../../data/zdjecia.ts";
+
+const t = useTranslations("cs");
+const l = (sciezka: string) => getRelativeLocaleUrl("cs", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Produkty", path: l("/produkty") },
+];
+
+const wszystkieProdukty = await getCollection("produkty");
+
+const kategorie = kategorieDane.map((k) => {
+  const wiodacyId = k.produkty[0];
+  const wiodacy = wiodacyId ? wszystkieProdukty.find((p) => p.id === wiodacyId) : undefined;
+  const opisy = t.raw<{ nazwa: string; opis: string }>(`podkategorie.${k.slug}`);
+  return {
+    ...k,
+    nazwa: opisy?.nazwa ?? k.nazwa,
+    opis: opisy?.opis ?? k.opis,
+    wiodacy,
+    foto: wiodacyId ? zdjecia[wiodacyId] : undefined,
+    ileModeli: k.produkty.length,
+  };
+});
+
+const grupy = site.kategorie.map((g) => ({
+  ...g,
+  nazwa: t(`kategorie.${g.slug}`),
+  opis: t(`grupyOpis.${g.slug}`),
+  kategorie: kategorie.filter((k) => k.grupa === g.slug),
+}));
+---
+
+<Base
+  title="Produkty — Owell"
+  description="Kategorie produktů Owell: drobné spotřebiče pro kuchyň, úpravu zevnějšku, domácnost a cestování. Vyberte kategorii a zobrazte dostupné modely."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title" data-reveal>Produkty</h1>
+        <p class="page-lead" data-reveal data-reveal-delay="80">
+          Vyberte kategorii a zobrazte dostupné modely. Ke každému z nich patří kompletní technické údaje, návod
+          a karta výrobce.
+        </p>
+
+        <WyszukiwarkaModelu
+          class="szukaj-na-produktach"
+          etykieta={t("hero.szukajLabel")}
+          placeholder={t("hero.szukajPlaceholder")}
+          pusto={t("hero.szukajPusto")}
+        />
+
+        {grupy.map((g) => (
+          <section id={g.slug} class="grupa">
+            <div class="grupa-header">
+              <h2 class="grupa-tytul">{g.nazwa}</h2>
+              <p class="grupa-opis">{g.opis}</p>
+            </div>
+
+            <div class="grid">
+              {g.kategorie.map((k) => {
+                const Tag = k.ileModeli > 0 ? "a" : "article";
+                return (
+                <Tag
+                  class:list={["karta", { "karta--puste": k.ileModeli === 0 }]}
+                  {...(k.ileModeli > 0 ? { href: l(`/produkty/kategoria/${k.slug}`) } : {})}
+                >
+                  <div class="karta-flip">
+                    <div class="karta-face karta-face--przod">
+                      <div class="karta-foto">
+                        {k.foto ? (
+                          <Image src={k.foto} alt={k.nazwa} width={640} height={640} class="foto-img" />
+                        ) : (
+                          <div class="foto-placeholder foto-placeholder--puste">
+                            <span class="foto-placeholder-label">{t("common.wkrotce")}</span>
+                          </div>
+                        )}
+                      </div>
+
+                      <div class="karta-info">
+                        <h3 class="karta-nazwa">{k.nazwa}</h3>
+                        <p class="karta-tagline">{k.opis}</p>
+                        {k.ileModeli === 0 && <p class="karta-status">{t("common.wkrotce")}.</p>}
+                      </div>
+                    </div>
+
+                    {k.ileModeli > 0 && (
+                      <div class="karta-face karta-face--tyl">
+                        <h3 class="karta-tyl-nazwa">{k.nazwa}</h3>
+                        <p class="karta-tyl-opis">{k.opis}</p>
+                        <span class="karta-tyl-ile">
+                          {k.ileModeli === 1
+                            ? t("common.modelLiczbaJeden")
+                            : t("common.modelLiczbaWiele").replace("{n}", String(k.ileModeli))}
+                        </span>
+                        <span class="karta-tyl-link">{t("common.wybierzModel")}</span>
+                      </div>
+                    )}
+                  </div>
+                </Tag>
+                );
+              })}
+            </div>
+          </section>
+        ))}
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .page-lead {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    max-width: var(--maxw-prose);
+    font-size: var(--fs-lead);
+    color: var(--text-2);
+  }
+
+  :global(.szukaj-na-produktach) {
+    margin-bottom: var(--sp-12);
+  }
+
+  .grupa {
+    /* Kotwice (/produkty#kuchnia itd. z homepage i stopki) nie mogą chować
+       nagłówka pod sticky headerem po doskoku. */
+    scroll-margin-top: calc(var(--header-h, 65px) + var(--sp-4));
+  }
+
+  .grupa + .grupa {
+    margin-top: var(--sp-16);
+    padding-top: var(--sp-12);
+    border-top: 1px solid var(--hairline-soft);
+  }
+
+  .grupa-tytul {
+    font-family: var(--font-display);
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .grupa-opis {
+    margin-top: var(--sp-2);
+    max-width: var(--maxw-prose);
+    font-size: var(--fs-body);
+    color: var(--text-2);
+  }
+
+  .grid {
+    margin-top: var(--sp-8);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-6);
+  }
+
+  .karta {
+    display: block;
+    position: relative;
+    aspect-ratio: 1 / 1;
+    border-radius: var(--radius-lg);
+    perspective: 1800px;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .karta--puste {
+    cursor: default;
+  }
+
+  .karta-tyl-link {
+    flex: none;
+    margin-top: var(--sp-3);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--gold);
+  }
+
+  .karta:not(.karta--puste):hover {
+    z-index: 10;
+  }
+
+  .karta-flip {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    will-change: transform;
+    transition: transform 700ms var(--ease);
+  }
+
+  /* Lekkie powiększenie razem z obrotem — ten sam tekst zajmuje więcej
+     miejsca na ekranie, łatwiej się czyta bez zmiany layoutu siatki. */
+  .karta:not(.karta--puste):hover .karta-flip {
+    transform: rotateY(180deg) scale(1.12);
+  }
+
+  .karta-face {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--hairline-soft);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    /* translateZ(0) wymusza osobną warstwę kompozytowania GPU dla każdej
+       ścianki — bez tego część przeglądarek "prześwietla" ukrytą stronę
+       mimo backface-visibility, dając rozjechany, podwójny tekst.
+       To wystarcza i NIE wolno dokładać tu przełącznika opacity z opóźnieniem:
+       --ease jest krzywą ease-out, więc obrót mija 90° już po ~175 ms z 700 ms.
+       Skok opacity ustawiony na sztywno w połowie czasu wypadał wtedy grubo po
+       tym, jak tył zwrócił się do widza — i przez ~175 ms nie było widać nic. */
+    transform: translateZ(0);
+    transition: border-color var(--dur) var(--ease);
+  }
+
+  .karta-face--tyl {
+    transform: rotateY(180deg) translateZ(0);
+  }
+
+  .karta:hover .karta-face {
+    border-color: var(--gold);
+  }
+
+  .karta-face--przod {
+    background-color: var(--photo-bg);
+  }
+
+  .karta-foto {
+    position: absolute;
+    inset: 0;
+  }
+
+  .foto-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .foto-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  .foto-placeholder--puste {
+    background-color: var(--bg-1);
+  }
+
+  .foto-placeholder-label {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+  }
+
+  .karta--puste .karta-foto {
+    opacity: 0.6;
+  }
+
+  .karta-info {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: var(--sp-5);
+    padding-top: var(--sp-10);
+    /* Pełna krycie aż do końca tekstu — .karta-info owija się tylko wokół
+       tytułu/taglinu (auto height), więc dawny gradient przygasał do
+       przezroczystości zanim doszedł do glifów, przez co prześwitywał wzór
+       zdjęcia (np. wyświetlacz czajnika) i tekst wyglądał na "rozjechany". */
+    background: linear-gradient(
+      to top,
+      var(--bg-0) 0%,
+      var(--bg-0) 70%,
+      transparent 100%
+    );
+  }
+
+  .karta-nazwa {
+    font-family: var(--font-display);
+    font-size: var(--fs-lead);
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .karta-tagline {
+    margin-top: var(--sp-1);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .karta-status {
+    margin-top: var(--sp-1);
+    font-size: var(--fs-small);
+    font-style: italic;
+    color: var(--text-muted);
+  }
+
+  /* Obrót o 180° na starcie (żeby po obrocie rodzica .karta-flip tekst
+     czytał się normalnie) ustawiony wyżej razem z translateZ(0). */
+  .karta-face--tyl {
+    gap: var(--sp-2);
+    padding: var(--sp-6);
+    background-color: var(--bg-1);
+  }
+
+  .karta-tyl-nazwa {
+    flex: none;
+    font-family: var(--font-display);
+    font-size: var(--fs-lead);
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  /* Tył trzyma krótki opis kategorii, nie akapit z karty produktu — mieści
+     się w całości, więc nie ma już przewijania wewnątrz karty. */
+  .karta-tyl-opis {
+    flex: none;
+    margin-top: var(--sp-2);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .karta-tyl-ile {
+    flex: none;
+    margin-top: var(--sp-4);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+  }
+
+  .karta-tyl-link {
+    flex: none;
+    margin-top: var(--sp-3);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--gold);
+  }
+
+  .karta:not(.karta--puste):hover {
+    z-index: 10;
+  }
+
+  .karta-flip {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    will-change: transform;
+    transition: transform 700ms var(--ease);
+  }
+
+  /* Lekkie powiększenie razem z obrotem — ten sam tekst zajmuje więcej
+     miejsca na ekranie, łatwiej się czyta bez zmiany layoutu siatki. */
+  .karta:not(.karta--puste):hover .karta-flip {
+    transform: rotateY(180deg) scale(1.12);
+  }
+
+  .karta-face {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--hairline-soft);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    /* translateZ(0) wymusza osobną warstwę kompozytowania GPU dla każdej
+       ścianki — bez tego część przeglądarek "prześwietla" ukrytą stronę
+       mimo backface-visibility, dając rozjechany, podwójny tekst.
+       To wystarcza i NIE wolno dokładać tu przełącznika opacity z opóźnieniem:
+       --ease jest krzywą ease-out, więc obrót mija 90° już po ~175 ms z 700 ms.
+       Skok opacity ustawiony na sztywno w połowie czasu wypadał wtedy grubo po
+       tym, jak tył zwrócił się do widza — i przez ~175 ms nie było widać nic. */
+    transform: translateZ(0);
+    transition: border-color var(--dur) var(--ease);
+  }
+
+  .karta-face--tyl {
+    transform: rotateY(180deg) translateZ(0);
+  }
+
+  .karta:hover .karta-face {
+    border-color: var(--gold);
+  }
+
+  .karta-face--przod {
+    background-color: var(--photo-bg);
+  }
+
+  .karta-foto {
+    position: absolute;
+    inset: 0;
+  }
+
+  .foto-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .foto-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  .foto-placeholder--puste {
+    background-color: var(--bg-1);
+  }
+
+  .foto-placeholder-label {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+  }
+
+  .karta--puste .karta-foto {
+    opacity: 0.6;
+  }
+
+  .karta-info {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: var(--sp-5);
+    padding-top: var(--sp-10);
+    /* Pełna krycie aż do końca tekstu — .karta-info owija się tylko wokół
+       tytułu/taglinu (auto height), więc dawny gradient przygasał do
+       przezroczystości zanim doszedł do glifów, przez co prześwitywał wzór
+       zdjęcia (np. wyświetlacz czajnika) i tekst wyglądał na "rozjechany". */
+    background: linear-gradient(
+      to top,
+      var(--bg-0) 0%,
+      var(--bg-0) 70%,
+      transparent 100%
+    );
+  }
+
+  .karta-nazwa {
+    font-family: var(--font-display);
+    font-size: var(--fs-lead);
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .karta-tagline {
+    margin-top: var(--sp-1);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .karta-status {
+    margin-top: var(--sp-1);
+    font-size: var(--fs-small);
+    font-style: italic;
+    color: var(--text-muted);
+  }
+
+  /* Obrót o 180° na starcie (żeby po obrocie rodzica .karta-flip tekst
+     czytał się normalnie) ustawiony wyżej razem z translateZ(0). */
+  .karta-face--tyl {
+    gap: var(--sp-2);
+    padding: var(--sp-6);
+    background-color: var(--bg-1);
+  }
+
+  .karta-tyl-model {
+    flex: none;
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--gold);
+  }
+
+  .karta-tyl-nazwa {
+    flex: none;
+    font-family: var(--font-display);
+    font-size: var(--fs-lead);
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  /* Opis pełnego akapitu bywa dłuższy niż miejsce na karcie — zamiast
+     obcinać tekst, robimy go przewijalnym scrollem myszy/gestem. */
+  .karta-tyl-opis {
+    flex: 1 1 auto;
+    min-height: 0;
+    margin-top: var(--sp-2);
+    padding-right: var(--sp-3);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: var(--gold) transparent;
+  }
+
+  .karta-tyl-opis::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .karta-tyl-opis::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .karta-tyl-opis::-webkit-scrollbar-thumb {
+    background-color: var(--gold);
+    border-radius: var(--radius-sm);
+  }
+
+  @media (min-width: 640px) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1000px) {
+    .grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .karta-flip {
+      transition: none !important;
+    }
+
+    .karta-face {
+      transition: border-color var(--dur) var(--ease) !important;
+    }
+  }
+</style>

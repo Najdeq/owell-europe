@@ -1,0 +1,149 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import { site } from "../../data/site.ts";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("fr", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Contact", path: l("/kontakt") },
+];
+
+const kanaly = [
+  {
+    etykieta: "Questions générales",
+    tekst: site.kontakt.email,
+    href: `mailto:${site.kontakt.email}`,
+    opis: "Questions sur les produits, notre gamme et les partenariats.",
+  },
+  {
+    etykieta: "Service et réclamations",
+    tekst: site.kontakt.emailSerwis,
+    href: `mailto:${site.kontakt.emailSerwis}`,
+    opis: "Demandes de garantie, réclamations, questions sur les réparations.",
+  },
+  {
+    etykieta: "WhatsApp",
+    tekst: site.kontakt.whatsapp,
+    href: `https://wa.me/${site.kontakt.whatsappWa}`,
+    external: true,
+    opis: "Contact rapide par chat — nous répondons pendant les heures ouvrées.",
+  },
+];
+---
+
+<Base
+  title="Contact — Owell"
+  description="Écrivez-nous pour toute question générale ou de service. Nous répondons par e-mail, sans centre d'appels."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title" data-reveal>Contact</h1>
+        <p class="page-lead" data-reveal data-reveal-delay="80">
+          Nous n'avons pas de centre d'appels — tout est traité par e-mail. Nous répondons aux demandes de service
+          sous 24 heures ouvrées.
+        </p>
+
+        <div class="grid">
+          {kanaly.map((k) => (
+            <div class="kanal">
+              <p class="kanal-etykieta">{k.etykieta}</p>
+              <a
+                href={k.href}
+                class="kanal-email"
+                {...(k.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+              >
+                {k.tekst}
+              </a>
+              <p class="kanal-opis">{k.opis}</p>
+            </div>
+          ))}
+        </div>
+
+        <p class="dane-firmowe">
+          {site.firma.nazwaPelna} · {site.firma.adres} · NIP: {site.firma.nip}
+        </p>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .page-lead {
+    margin-top: var(--sp-4);
+    max-width: var(--maxw-prose);
+    font-size: var(--fs-lead);
+    color: var(--text-2);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-8);
+    margin-top: var(--sp-12);
+    max-width: var(--maxw-prose);
+  }
+
+  .kanal-etykieta {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+  }
+
+  .kanal-email {
+    display: inline-block;
+    margin-top: var(--sp-3);
+    font-size: var(--fs-lead);
+    color: var(--gold);
+    text-decoration: none;
+  }
+
+  .kanal-email:hover {
+    color: var(--gold-bright);
+  }
+
+  .kanal-opis {
+    margin-top: var(--sp-2);
+    font-size: var(--fs-small);
+    color: var(--text-2);
+  }
+
+  .dane-firmowe {
+    margin-top: var(--sp-12);
+    padding-top: var(--sp-6);
+    font-size: var(--fs-micro);
+    color: var(--text-muted);
+    border-top: 1px solid var(--hairline-soft);
+  }
+
+  @media (min-width: 640px) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

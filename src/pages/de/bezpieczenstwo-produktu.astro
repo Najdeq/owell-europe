@@ -1,0 +1,165 @@
+---
+import { getCollection } from "astro:content";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Prose from "../../components/ui/Prose.astro";
+import { site } from "../../data/site.ts";
+
+const produkty = (await getCollection("produkty", ({ data }) => data.opublikowany)).sort(
+  (a, b) => a.data.kolejnosc - b.data.kolejnosc
+);
+
+const l = (sciezka: string) => getRelativeLocaleUrl("de", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Produktsicherheit", path: l("/bezpieczenstwo-produktu") },
+];
+---
+
+<Base
+  title="Produktsicherheit — Owell"
+  description="Herstellerangaben gemäß der GPSR-Verordnung (EU) 2023/988, wie man ein Produktsicherheitsproblem meldet, und Informationen zu Servicemaßnahmen."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title">Produktsicherheit</h1>
+
+        <Prose>
+          <p>
+            Diese Seite enthält die nach der Verordnung (EU) 2023/988 des Europäischen Parlaments und des Rates über
+            die allgemeine Produktsicherheit (GPSR) erforderlichen Informationen.
+          </p>
+
+          <h2>Für diese Website verantwortliche Stelle</h2>
+          <p>
+            <strong>{site.firma.nazwaPelna}</strong><br />
+            {site.firma.adres}<br />
+            USt-IdNr. (NIP): {site.firma.nip} · Handelsregisternummer (REGON): {site.firma.regon}<br />
+            E-Mail für Produktsicherheitsfragen: <a href={`mailto:${site.kontakt.emailGpsr}`}>{site.kontakt.emailGpsr}</a>
+          </p>
+
+          <h2>Herstellerangaben zu einzelnen Produkten</h2>
+          <p>
+            Gemäß den GPSR-Anforderungen veröffentlichen wir nachstehend die Identifikationsdaten des Herstellers für
+            jedes Produkt unseres Sortiments. Die Spalte „Verantwortliche Person in der EU" wird nur ausgefüllt, wenn
+            der Hersteller seinen Sitz außerhalb der Europäischen Union hat.
+          </p>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Produkt</th>
+                  <th scope="col">Hersteller</th>
+                  <th scope="col">Adresse</th>
+                  <th scope="col">E-Mail</th>
+                  <th scope="col">Verantwortliche Person in der EU</th>
+                </tr>
+              </thead>
+              <tbody>
+                {produkty.map((p) => (
+                  <tr>
+                    <td data-label="Produkt">{p.data.nazwa} ({p.data.model})</td>
+                    <td data-label="Hersteller">{p.data.gpsr.producent}</td>
+                    <td data-label="Adresse">{p.data.gpsr.adres}</td>
+                    <td data-label="E-Mail">
+                      <a href={`mailto:${p.data.gpsr.emailProducenta}`}>{p.data.gpsr.emailProducenta}</a>
+                    </td>
+                    <td data-label="Verantwortliche Person in der EU">{p.data.gpsr.osobaOdpowiedzialnaUE ?? "—"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <h2>Wie man ein Sicherheitsproblem meldet</h2>
+          <p>
+            Wenn Sie vermuten, dass eines unserer Produkte ein Risiko für Gesundheit oder Sicherheit darstellt,
+            schreiben Sie an <a href={`mailto:${site.kontakt.emailGpsr}`}>{site.kontakt.emailGpsr}</a>. Bitte geben
+            Sie in Ihrer Meldung Folgendes an:
+          </p>
+          <ul>
+            <li>den Produktnamen und das Modell (z. B. vom Typenschild oder der Produktseite dieser Website),</li>
+            <li>eine Beschreibung des festgestellten Problems,</li>
+            <li>Fotos des Problems, sofern möglich,</li>
+            <li>Ihre Kontaktdaten, damit wir uns bei Ihnen melden können.</li>
+          </ul>
+          <p>
+            Stellt ein Produkt ein ernstes Risiko dar, sind Hersteller und Händler verpflichtet, dies den zuständigen
+            Marktüberwachungsbehörden (in Polen u. a. UOKiK) über das EU-Meldesystem Safety Gate zu melden.
+          </p>
+
+          <h2>Servicemaßnahmen und Produktrückrufe</h2>
+          <p>
+            Zum Datum dieses Hinweises (7. August 2026) führt Owell keine Servicemaßnahmen oder Produktrückrufe
+            durch. Sollte sich dies ändern, wird diese Information hier umgehend aktualisiert.
+          </p>
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .table-wrap {
+    margin-bottom: var(--sp-8);
+    overflow-x: auto;
+    border: 1px solid var(--hairline-soft);
+    border-radius: var(--radius);
+  }
+
+  table {
+    width: 100%;
+    min-width: 760px;
+    border-collapse: collapse;
+    font-size: var(--fs-small);
+  }
+
+  th {
+    padding: var(--sp-3) var(--sp-4);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+    text-align: left;
+    background-color: var(--bg-2);
+    white-space: nowrap;
+  }
+
+  td {
+    padding: var(--sp-3) var(--sp-4);
+    color: var(--text-2);
+    border-top: 1px solid var(--hairline-soft);
+    vertical-align: top;
+  }
+
+  td:first-child {
+    color: var(--text);
+    font-weight: 500;
+  }
+</style>

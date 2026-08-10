@@ -1,0 +1,74 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Prose from "../../components/ui/Prose.astro";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("es", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Aviso sobre el Reglamento de IA", path: l("/informacja-ai") },
+];
+---
+
+<Base
+  title="Aviso sobre el Reglamento de IA — Owell"
+  description="Información sobre el uso de inteligencia artificial para preparar las imágenes de producto, de conformidad con el Reglamento de IA de la UE."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title">Aviso sobre el Reglamento de IA</h1>
+
+        <Prose>
+          <p>
+            Las imágenes de producto de este sitio web se prepararon utilizando tecnología de inteligencia
+            artificial. Se crearon a partir de fotografías reales del producto y del diseño del embalaje.
+          </p>
+
+          <p>
+            Publicamos este aviso en relación con las obligaciones derivadas del artículo 50 del Reglamento (UE)
+            2024/1689 del Parlamento Europeo y del Consejo por el que se establecen normas armonizadas en materia
+            de inteligencia artificial (el Reglamento de IA).
+          </p>
+
+          <h2>Por qué lo comunicamos</h2>
+          <ul>
+            <li><strong>Transparencia</strong>: respetamos tu derecho a saber de dónde proceden las imágenes.</li>
+            <li><strong>Cumplimiento legal</strong>: cumplimos las obligaciones de divulgación del Reglamento de IA de la UE.</li>
+            <li><strong>Precisión</strong>: nos aseguramos de que las imágenes digitales reflejen fielmente el producto real.</li>
+          </ul>
+
+          <p>
+            Si tienes preguntas sobre el origen de una imagen concreta, ponte en contacto con nosotros; encontrarás
+            nuestros datos de contacto en la página de <a href={l("/bezpieczenstwo-produktu")}>seguridad del producto</a>.
+          </p>
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+</style>

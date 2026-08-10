@@ -1,0 +1,209 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Prose from "../../components/ui/Prose.astro";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("ru", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Cookies", path: l("/cookies") },
+];
+
+const kategorie = [
+  {
+    nazwa: "Необходимые",
+    opis: "Требуются для корректной работы сайта и запоминания выбора согласия. Их нельзя отключить.",
+    cookies: [
+      {
+        nazwa: "owell-consent (localStorage)",
+        dostawca: "Owell (собственный)",
+        cel: "Запоминает ваше решение о согласии на аналитические и маркетинговые cookie.",
+        czas: "Без срока действия — до ручной очистки или изменения настроек.",
+      },
+    ],
+  },
+  {
+    nazwa: "Аналитические",
+    opis: "Помогают понять, как посетители используют сайт. Загружаются только после согласия (Consent Mode v2).",
+    cookies: [
+      {
+        nazwa: "_ga",
+        dostawca: "Google (Google Analytics 4)",
+        cel: "Различает уникальных пользователей.",
+        czas: "13 месяцев",
+      },
+      {
+        nazwa: "_ga_&lt;identifier&gt;",
+        dostawca: "Google (Google Analytics 4)",
+        cel: "Поддерживает состояние сессии и собирает статистику посещений.",
+        czas: "13 месяцев",
+      },
+    ],
+  },
+  {
+    nazwa: "Маркетинговые",
+    opis: "В настоящее время мы не используем маркетинговые cookie. Этот раздел будет обновлён, если это изменится.",
+    cookies: [],
+  },
+];
+---
+
+<Base
+  title="Политика использования cookie — Owell"
+  description="Какие cookie мы используем на сайте Owell, для чего и как долго они хранятся."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title">Политика использования cookie</h1>
+
+        <Prose>
+          <p>
+            Этот сайт использует файлы cookie. Необходимые cookie загружаются всегда; остальные категории — только
+            после того, как вы дадите согласие в баннере, показанном при первом посещении. Вы можете изменить своё
+            согласие в любой момент.
+          </p>
+
+          <button type="button" class="zmien-ustawienia" data-open-consent-settings>
+            Изменить настройки cookie
+          </button>
+
+          {kategorie.map((kategoria) => (
+            <>
+              <h2>{kategoria.nazwa}</h2>
+              <p>{kategoria.opis}</p>
+
+              {kategoria.cookies.length > 0 && (
+                <div class="table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th scope="col">Название</th>
+                        <th scope="col">Поставщик</th>
+                        <th scope="col">Назначение</th>
+                        <th scope="col">Срок хранения</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {kategoria.cookies.map((cookie) => (
+                        <tr>
+                          <td data-label="Название" set:html={cookie.nazwa} />
+                          <td data-label="Поставщик">{cookie.dostawca}</td>
+                          <td data-label="Назначение">{cookie.cel}</td>
+                          <td data-label="Срок хранения">{cookie.czas}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </>
+          ))}
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .zmien-ustawienia {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--sp-3) var(--sp-6);
+    margin-block: var(--sp-2) var(--sp-8);
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    font-weight: 500;
+    color: var(--text);
+    background-color: transparent;
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition:
+      border-color var(--dur) var(--ease),
+      color var(--dur) var(--ease);
+  }
+
+  .zmien-ustawienia:hover {
+    border-color: var(--gold);
+    color: var(--gold-bright);
+  }
+
+  .table-wrap {
+    margin-bottom: var(--sp-8);
+    overflow-x: auto;
+    border: 1px solid var(--hairline-soft);
+    border-radius: var(--radius);
+  }
+
+  table {
+    width: 100%;
+    min-width: 640px;
+    border-collapse: collapse;
+    font-size: var(--fs-small);
+  }
+
+  th {
+    padding: var(--sp-3) var(--sp-4);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+    text-align: left;
+    background-color: var(--bg-2);
+    white-space: nowrap;
+  }
+
+  td {
+    padding: var(--sp-3) var(--sp-4);
+    color: var(--text-2);
+    border-top: 1px solid var(--hairline-soft);
+    vertical-align: top;
+  }
+
+  td:first-child {
+    font-family: var(--font-mono);
+    color: var(--text);
+    white-space: nowrap;
+  }
+</style>
+
+<script>
+  const button = document.querySelector<HTMLButtonElement>(
+    "[data-open-consent-settings]"
+  );
+
+  button?.addEventListener("click", () => {
+    const openConsentSettings = (
+      window as unknown as { openConsentSettings?: () => void }
+    ).openConsentSettings;
+
+    if (typeof openConsentSettings === "function") {
+      openConsentSettings();
+    }
+  });
+</script>

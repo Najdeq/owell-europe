@@ -1,0 +1,86 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Prose from "../../components/ui/Prose.astro";
+import { site } from "../../data/site.ts";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("it", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Garanzia", path: l("/gwarancja") },
+];
+---
+
+<Base
+  title="Garanzia — Owell"
+  description={`Ogni prodotto Owell è coperto da una garanzia di ${site.gwarancjaMiesiace} mesi. Scopri cosa copre e come richiedere una riparazione.`}
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title" data-reveal>Scheda di garanzia</h1>
+
+        <Prose>
+          <h2>Durata della garanzia</h2>
+          <p>
+            Ogni prodotto Owell è coperto da una garanzia di {site.gwarancjaMiesiace} mesi, a partire dalla data di
+            acquisto confermata da una prova d'acquisto (scontrino o fattura di un negozio online).
+          </p>
+
+          <h2>Cosa copre la garanzia</h2>
+          <p>
+            I difetti di materiale e di fabbricazione emersi in condizioni d'uso normali, conformi al manuale
+            d'uso incluso con il prodotto.
+          </p>
+
+          <h2>Cosa non copre la garanzia</h2>
+          <ul>
+            <li>Danni meccanici causati dall'utilizzatore.</li>
+            <li>Normale usura delle parti di consumo (ad es. lame, batterie).</li>
+            <li>Guasti derivanti da un uso non conforme al manuale d'uso.</li>
+          </ul>
+
+          <h2>Estensione della garanzia</h2>
+          <p>
+            Dopo la registrazione del prodotto, estendiamo la garanzia da {site.gwarancjaMiesiace} a{" "}
+            {site.gwarancjaMiesiace + site.gwarancjaPlus.dodatkoweMiesiace} mesi — gratuitamente. La richiesta
+            deve essere inviata entro {site.gwarancjaPlus.terminDni} giorni dall'acquisto. I dettagli e le modalità
+            di registrazione sono descritti nella pagina <a href={l("/rejestracja-produktu")}>registrazione del prodotto</a>.
+          </p>
+
+          <h2>Come richiedere una riparazione</h2>
+          <p>
+            Scrivi a <a href={`mailto:${site.kontakt.emailSerwis}`}>{site.kontakt.emailSerwis}</a>, indicando il
+            modello del prodotto, il numero d'ordine e una descrizione del guasto. Foto o un breve video velocizzano
+            il processo. Gestiamo le richieste via email, senza call center.
+          </p>
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+</style>

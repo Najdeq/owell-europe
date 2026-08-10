@@ -1,0 +1,232 @@
+---
+import { getCollection } from "astro:content";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import WyszukiwarkaModelu from "../../components/WyszukiwarkaModelu.astro";
+import { site } from "../../data/site.ts";
+import instrukcjeSpis from "../../data/instrukcje.json";
+import { useTranslations } from "../../i18n/utils.ts";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("cs", sciezka);
+const t = useTranslations("cs");
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Návody", path: l("/instrukcje") },
+];
+
+const produkty = await getCollection("produkty");
+
+const instrukcje = produkty
+  .filter((p) => p.data.opublikowany)
+  .map((p) => {
+    const wpis = instrukcjeSpis[p.id as keyof typeof instrukcjeSpis];
+    if (!wpis) return null;
+    return {
+      id: p.id,
+      model: p.data.model,
+      nazwa: p.data.nazwa,
+      tagline: p.data.tagline,
+      plik: wpis.url,
+      waga: `${wpis.mb.toFixed(1)} MB`,
+    };
+  })
+  .filter((x) => x !== null)
+  .sort((a, b) => a!.model.localeCompare(b!.model));
+---
+
+<Base
+  title="Návody — Owell"
+  description="Stáhněte si PDF návod pro váš model Owell. Všechny návody na jednom místě."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title" data-reveal>Návody</h1>
+        <p class="page-lead" data-reveal data-reveal-delay="80">
+          PDF návod pro každý model z naší nabídky. Číslo modelu najdete na typovém štítku zařízení nebo na
+          krabici.
+        </p>
+
+        <WyszukiwarkaModelu
+          class="szukaj-na-instrukcjach"
+          etykieta={t("hero.szukajLabel")}
+          placeholder={t("hero.szukajPlaceholder")}
+          pusto={t("hero.szukajPusto")}
+        />
+
+        {instrukcje.length > 0 ? (
+          <ul class="lista">
+            {instrukcje.map((i) => (
+              <li class="pozycja">
+                <div class="pozycja-opis">
+                  <span class="pozycja-model">{i!.model}</span>
+                  <a href={l(`/produkty/${i!.id}`)} class="pozycja-nazwa">{i!.nazwa}</a>
+                  <span class="pozycja-tagline">{i!.tagline}</span>
+                </div>
+
+                <a href={i!.plik} class="pozycja-pobierz" download>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <path d="M12 4v11m0 0 4-4m-4 4-4-4" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M4 17v2a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-2" stroke-linecap="round" />
+                  </svg>
+                  <span>PDF <span class="pozycja-waga">{i!.waga}</span></span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p class="brak">
+            Připravujeme návody ke stažení. Napište na{" "}
+            <a href={`mailto:${site.kontakt.emailSerwis}`}>{site.kontakt.emailSerwis}</a> s uvedením modelu —
+            soubor vám zašleme e-mailem.
+          </p>
+        )}
+
+        <p class="uwaga">
+          Nenašli jste návod pro váš model? Napište na{" "}
+          <a href={`mailto:${site.kontakt.emailSerwis}`}>{site.kontakt.emailSerwis}</a> — odpovídáme do 24
+          pracovních hodin.
+        </p>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .page-lead {
+    margin-top: var(--sp-4);
+    max-width: var(--maxw-prose);
+    font-size: var(--fs-lead);
+    color: var(--text-2);
+  }
+
+  :global(.szukaj-na-instrukcjach) {
+    margin-top: var(--sp-8);
+    margin-bottom: var(--sp-12);
+  }
+
+  .lista {
+    list-style: none;
+  }
+
+  .pozycja {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-4);
+    padding-block: var(--sp-6);
+    border-top: 1px solid var(--hairline-soft);
+  }
+
+  .pozycja:last-child {
+    border-bottom: 1px solid var(--hairline-soft);
+  }
+
+  .pozycja-opis {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-1);
+  }
+
+  .pozycja-model {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    letter-spacing: var(--tracking-mono);
+    color: var(--gold);
+  }
+
+  .pozycja-nazwa {
+    font-family: var(--font-display);
+    font-size: var(--fs-lead);
+    font-weight: 600;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .pozycja-nazwa:hover {
+    color: var(--gold-bright);
+  }
+
+  .pozycja-tagline {
+    max-width: 46ch;
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .pozycja-pobierz {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    flex-shrink: 0;
+    padding: var(--sp-3) var(--sp-5);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--text);
+    text-decoration: none;
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    transition:
+      border-color var(--dur) var(--ease),
+      color var(--dur) var(--ease);
+  }
+
+  .pozycja-pobierz:hover {
+    border-color: var(--gold);
+    color: var(--gold-bright);
+  }
+
+  .pozycja-pobierz svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+  .pozycja-waga {
+    color: var(--steel);
+  }
+
+  .brak,
+  .uwaga {
+    max-width: var(--maxw-prose);
+    margin-top: var(--sp-8);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--text-muted);
+  }
+
+  .brak a,
+  .uwaga a {
+    color: var(--gold);
+  }
+
+  .brak a:hover,
+  .uwaga a:hover {
+    color: var(--gold-bright);
+  }
+</style>

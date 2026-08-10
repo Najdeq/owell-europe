@@ -1,0 +1,224 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Button from "../../components/ui/Button.astro";
+import { site } from "../../data/site.ts";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("es", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Dónde comprar", path: l("/gdzie-kupic") },
+];
+
+const punkty = [
+  `${site.gwarancjaMiesiace} meses de garantía en todos los productos, sin excepciones.`,
+  "Los pedidos realizados antes de las 18:30 se envían el mismo día, con entrega garantizada por InPost.",
+  "Ficha GPSR completa y datos del fabricante en cada modelo.",
+];
+---
+
+<Base
+  title="Dónde comprar — Owell"
+  description="Los productos Owell están disponibles en nuestra tienda oficial de Allegro. Garantía completa y servicio técnico directamente del fabricante."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title" data-reveal>Dónde comprar</h1>
+        <p class="page-lead" data-reveal data-reveal-delay="80">
+          Los productos Owell están disponibles en nuestra tienda oficial de Allegro. Vendemos allí directamente
+          como fabricante, por lo que la garantía y el servicio técnico pasan directamente por nosotros, sin
+          intermediarios ni que te deriven entre distintos centros de atención.
+        </p>
+
+        <div class="kanaly">
+          <article class="kanal kanal--glowny">
+            <p class="kanal-etykieta">Tienda oficial</p>
+            <p class="kanal-tytul">Allegro</p>
+            <p class="kanal-opis">
+              Gama completa, entrega con InPost y {site.gwarancjaMiesiace} meses de garantía del fabricante.
+            </p>
+            {site.allegro ? (
+              <Button
+                href={site.allegro}
+                variant="primary"
+                external
+                data-marketplace="allegro"
+                data-platforma="Allegro"
+                data-lokalizacja="strona-gdzie-kupic"
+              >
+                Ver nuestros anuncios
+              </Button>
+            ) : (
+              <p class="kanal-brak">[PENDIENTE DE COMPLETAR: enlace a la tienda Owell en Allegro]</p>
+            )}
+          </article>
+
+          <article class="kanal">
+            <p class="kanal-etykieta">Próximamente</p>
+            <p class="kanal-tytul">Tienda owelleurope.com</p>
+            <p class="kanal-opis">
+              Estamos trabajando en nuestra propia tienda. Hasta que se lance, atendemos directamente las
+              preguntas sobre productos y disponibilidad.
+            </p>
+            <div class="kanal-cta">
+              <Button
+                href={`https://wa.me/${site.kontakt.whatsappWa}`}
+                variant="ghost"
+                external
+                data-marketplace="whatsapp"
+                data-platforma="WhatsApp"
+                data-lokalizacja="strona-gdzie-kupic"
+              >
+                Escríbenos por WhatsApp
+              </Button>
+            </div>
+          </article>
+        </div>
+
+        <ul class="punkty">
+          {punkty.map((p) => (
+            <li>{p}</li>
+          ))}
+        </ul>
+
+        <p class="uwaga">
+          Cuando compras en nuestra tienda de Allegro, compras directamente al fabricante: la misma garantía, el
+          mismo servicio técnico y los mismos datos de la empresa registrada que encontrarás en esta página. Si
+          tienes dudas, escríbenos antes de comprar.
+        </p>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .page-lead {
+    margin-top: var(--sp-4);
+    max-width: var(--maxw-prose);
+    font-size: var(--fs-lead);
+    color: var(--text-2);
+  }
+
+  .cta {
+    margin-top: var(--sp-8);
+  }
+
+  .kanaly {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-6);
+    margin-top: var(--sp-8);
+  }
+
+  .kanal {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: var(--sp-8);
+    background-color: var(--bg-1);
+    border: 1px solid var(--hairline-soft);
+    border-radius: var(--radius-lg);
+  }
+
+  .kanal--glowny {
+    border-color: var(--gold);
+  }
+
+  .kanal-etykieta {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+  }
+
+  .kanal-tytul {
+    margin-top: var(--sp-2);
+    font-family: var(--font-display);
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .kanal-opis {
+    margin-top: var(--sp-3);
+    margin-bottom: var(--sp-6);
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .kanal-brak {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    color: var(--text-muted);
+  }
+
+  @media (min-width: 720px) {
+    .kanaly {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .punkty {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+    max-width: var(--maxw-prose);
+    margin-top: var(--sp-8);
+    padding-left: var(--sp-4);
+    list-style: none;
+  }
+
+  .punkty li {
+    position: relative;
+    padding-left: var(--sp-4);
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .punkty li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.65em;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background-color: var(--gold);
+  }
+
+  .uwaga {
+    margin-top: var(--sp-10);
+    padding-top: var(--sp-6);
+    max-width: var(--maxw-prose);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--text-muted);
+    border-top: 1px solid var(--hairline-soft);
+  }
+</style>

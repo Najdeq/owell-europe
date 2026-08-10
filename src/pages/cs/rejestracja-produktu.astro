@@ -1,0 +1,296 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Button from "../../components/ui/Button.astro";
+import Eyebrow from "../../components/ui/Eyebrow.astro";
+import { site } from "../../data/site.ts";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("cs", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Registrace produktu", path: l("/rejestracja-produktu") },
+];
+
+const razem = site.gwarancjaMiesiace + site.gwarancjaPlus.dodatkoweMiesiace;
+
+const kroki = [
+  {
+    tytul: "Najděte číslo modelu",
+    opis: `Najdete jej na typovém štítku zařízení a na krabici — začíná na „OW", například OW 3300.`,
+  },
+  {
+    tytul: "Připravte si doklad o koupi",
+    opis: "Účtenku nebo potvrzení objednávky. Stačí fotografie pořízená mobilem.",
+  },
+  {
+    tytul: "Zašlete nám jej",
+    opis: `Napište nám na WhatsApp nebo e-mailem do ${site.gwarancjaPlus.terminDni} dnů od zakoupení. Registraci potvrdíme a od té chvíle běží záruka po dobu ${razem} měsíců.`,
+  },
+];
+
+const wiadomosc = encodeURIComponent(
+  "Dobrý den, rád(a) bych zaregistroval(a) svůj produkt Owell a prodloužil(a) záruku.\n\n" +
+    "Model: \n" +
+    "Datum zakoupení: \n" +
+    "Zakoupeno od: \n\n" +
+    "(doklad o koupi přiložen)"
+);
+---
+
+<Base
+  title={`Registrace produktu — ${razem} měsíců záruky — Owell`}
+  description={`Zaregistrujte svůj produkt Owell do ${site.gwarancjaPlus.terminDni} dnů od zakoupení a prodlužte záruku z ${site.gwarancjaMiesiace} na ${razem} měsíců. Zdarma.`}
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <Eyebrow data-reveal>Registrace produktu</Eyebrow>
+        <h1 class="page-title" data-reveal data-reveal-delay="80">
+          Zaregistrujte svůj produkt a získejte rok záruky navíc
+        </h1>
+        <p class="page-lead" data-reveal data-reveal-delay="160">
+          Standardně poskytujeme {site.gwarancjaMiesiace} měsíců. Zaregistrujte své zařízení do{" "}
+          {site.gwarancjaPlus.terminDni} dnů od zakoupení a prodloužíme ji na {razem} měsíců. Zdarma a bez
+          drobného písmenka.
+        </p>
+
+        <div class="licznik" data-reveal data-reveal-delay="240">
+          <div class="licznik-czlon">
+            <span class="licznik-liczba">{site.gwarancjaMiesiace}</span>
+            <span class="licznik-opis">měsíců standardně</span>
+          </div>
+          <span class="licznik-znak" aria-hidden="true">+</span>
+          <div class="licznik-czlon">
+            <span class="licznik-liczba">{site.gwarancjaPlus.dodatkoweMiesiace}</span>
+            <span class="licznik-opis">za registraci</span>
+          </div>
+          <span class="licznik-znak" aria-hidden="true">=</span>
+          <div class="licznik-czlon licznik-czlon--suma">
+            <span class="licznik-liczba">{razem}</span>
+            <span class="licznik-opis">měsíců krytí</span>
+          </div>
+        </div>
+
+        <ol class="kroki">
+          {kroki.map((k, i) => (
+            <li class="krok">
+              <span class="krok-numer">{String(i + 1).padStart(2, "0")}</span>
+              <div>
+                <h2 class="krok-tytul">{k.tytul}</h2>
+                <p class="krok-opis">{k.opis}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+
+        <div class="cta">
+          <Button
+            href={`https://wa.me/${site.kontakt.whatsappWa}?text=${wiadomosc}`}
+            variant="primary"
+            external
+            data-marketplace="whatsapp"
+            data-platforma="WhatsApp"
+            data-lokalizacja="rejestracja-produktu"
+          >
+            Registrovat na WhatsApp
+          </Button>
+          <Button href={`mailto:${site.kontakt.emailSerwis}?subject=Registrace produktu Owell`} variant="ghost">
+            Registrovat e-mailem
+          </Button>
+        </div>
+
+        <div class="warunki">
+          <h2 class="warunki-tytul">Podmínky</h2>
+          <ul>
+            <li>
+              Registrace je zdarma a nepovinná. Bez ní platí standardní {site.gwarancjaMiesiace}měsíční záruka.
+            </li>
+            <li>
+              Žádost je třeba odeslat do {site.gwarancjaPlus.terminDni} dnů od data zakoupení uvedeného na
+              dokladu o koupi.
+            </li>
+            <li>
+              Prodloužení pokrývá stejné vady jako standardní záruka — materiálové a výrobní. Nevztahuje se na
+              mechanická poškození ani opotřebení spotřebních dílů, jako jsou čepele nebo baterie.
+            </li>
+            <li>
+              Registrace neomezuje vaše zákonná práva vyplývající ze záruky ani z ochrany spotřebitele.
+            </li>
+            <li>
+              Údaje z vaší registrace používáme pouze k vyřízení záruky — podrobnosti v{" "}
+              <a href={l("/polityka-prywatnosci")}>zásadách ochrany osobních údajů</a>.
+            </li>
+          </ul>
+        </div>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-3);
+    max-width: var(--maxw-prose);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .page-lead {
+    margin-top: var(--sp-4);
+    max-width: var(--maxw-prose);
+    font-size: var(--fs-lead);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .licznik {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--sp-6);
+    margin-top: var(--sp-12);
+    padding: var(--sp-8);
+    background-color: var(--bg-1);
+    border: 1px solid var(--gold);
+    border-radius: var(--radius-lg);
+  }
+
+  .licznik-czlon {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-1);
+  }
+
+  .licznik-liczba {
+    font-family: var(--font-mono);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: 1;
+    color: var(--text-2);
+  }
+
+  .licznik-czlon--suma .licznik-liczba {
+    color: var(--gold-bright);
+  }
+
+  .licznik-opis {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+  }
+
+  .licznik-znak {
+    font-family: var(--font-mono);
+    font-size: var(--fs-h3);
+    color: var(--steel);
+  }
+
+  .kroki {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-8);
+    margin-top: var(--sp-12);
+    list-style: none;
+  }
+
+  .krok {
+    display: flex;
+    align-items: baseline;
+    gap: var(--sp-4);
+  }
+
+  .krok-numer {
+    flex: none;
+    font-family: var(--font-mono);
+    font-size: var(--fs-lead);
+    font-weight: 600;
+    color: var(--gold);
+  }
+
+  .krok-tytul {
+    font-family: var(--font-display);
+    font-size: var(--fs-lead);
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .krok-opis {
+    margin-top: var(--sp-2);
+    max-width: 46ch;
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-4);
+    margin-top: var(--sp-12);
+  }
+
+  .warunki {
+    max-width: var(--maxw-prose);
+    margin-top: var(--sp-16);
+    padding-top: var(--sp-8);
+    border-top: 1px solid var(--hairline-soft);
+  }
+
+  .warunki-tytul {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+  }
+
+  .warunki ul {
+    margin-top: var(--sp-4);
+    padding-left: var(--sp-5);
+  }
+
+  .warunki li {
+    margin-bottom: var(--sp-3);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .warunki a {
+    color: var(--gold);
+  }
+
+  .warunki a:hover {
+    color: var(--gold-bright);
+  }
+
+  @media (min-width: 720px) {
+    .kroki {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--sp-8);
+    }
+
+    .krok {
+      flex-direction: column;
+      gap: var(--sp-3);
+    }
+  }
+</style>

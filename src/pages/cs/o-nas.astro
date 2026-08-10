@@ -1,0 +1,209 @@
+---
+import { Image } from "astro:assets";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import { site } from "../../data/site.ts";
+import lifestyleCzajnik from "../../assets/marka/lifestyle-czajnik.png";
+import lifestyleBlender from "../../assets/marka/lifestyle-blender.png";
+import lifestyleStrzyzarka from "../../assets/marka/lifestyle-strzyzarka.png";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("cs", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "O nás", path: l("/o-nas") },
+];
+
+const zdjecia = [
+  { src: lifestyleCzajnik, alt: "Konvice Owell OW 1360 při každodenním používání v kuchyni" },
+  { src: lifestyleBlender, alt: "Tyčový mixér Owell OW 4634 při přípravě smoothie" },
+  { src: lifestyleStrzyzarka, alt: "Zastřihovač Owell OW 2859 při úpravě psa" },
+];
+
+const cyklSekund = 5;
+const totalDuration = zdjecia.length * cyklSekund;
+const segmentPct = 100 / zdjecia.length;
+const fadeInPct = Math.min(2, segmentPct * 0.15);
+const holdEndPct = segmentPct - fadeInPct;
+
+const visualKeyframes = `
+  @keyframes o-nas-carousel {
+    0% { opacity: 0; }
+    ${fadeInPct.toFixed(3)}% { opacity: 1; }
+    ${holdEndPct.toFixed(3)}% { opacity: 1; }
+    ${segmentPct.toFixed(3)}% { opacity: 0; }
+    100% { opacity: 0; }
+  }
+`;
+---
+
+<Base
+  title="O nás — Owell"
+  description="Owell navrhuje drobné spotřebiče pro každodenní používání. Zjistěte, odkud pocházíme, čemu věříme a jak pracujeme."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title" data-reveal>O nás</h1>
+
+        <div class="visual" style={`--visual-cykl: ${totalDuration}s`}>
+          {zdjecia.map((zdjecie, i) => (
+            <Image
+              src={zdjecie.src}
+              alt={zdjecie.alt}
+              width={1600}
+              height={893}
+              class="visual-img"
+              style={`animation-delay: ${i * cyklSekund}s`}
+            />
+          ))}
+
+          <div class="visual-overlay">
+            <div class="visual-text">
+              <p>
+                Owell přináší více než {site.grupa.lataHistorii} let zkušeností ve výrobě drobných spotřebičů a na
+                polském trhu působí od roku {site.grupa.odRokuWPolsce}. Vyrobili jsme už přes{" "}
+                {site.grupa.liczbaProduktow} modelů prodávaných ve více než {site.grupa.liczbaKrajow} zemích. Každý
+                produkt Owell prochází přísnou kontrolou kvality a je doplněn kompletní dokumentací o shodě s
+                evropskými bezpečnostními požadavky (GPSR) — podrobnosti a údaje o výrobci najdete na stránce{" "}
+                <a href={l("/bezpieczenstwo-produktu")}>bezpečnost produktu</a>.
+              </p>
+
+              <p>
+                Věříme, že domácí spotřebiče nemusí na sebe křičet, aby byly dobré. Raději máme jedno promyšlené
+                řešení než deset funkcí, které použijete jen jednou. Proto si u každého produktu klademe stejné
+                otázky: skutečně usnadňuje každodenní život, vydrží běžné používání, a pokud se něco pokazí, lze to
+                nahlásit bez přehazování mezi call centry.
+              </p>
+
+              <p>
+                Prodáváme online, bez sítě kamenných obchodů — dnes prostřednictvím našeho oficiálního obchodu na
+                Allegro, kde vystupujeme přímo jako výrobce. Objednávky zadané do 18:30 expedujeme týž den, s
+                garantovaným doručením přes InPost. Ke každému produktu přikládáme kartu GPSR s úplnými údaji o
+                výrobci a {site.gwarancjaMiesiace}měsíční záruku — bez výjimek a bez drobného písmenka.
+              </p>
+            </div>
+          </div>
+        </div>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style set:html={visualKeyframes} is:global></style>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .visual {
+    position: relative;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--hairline);
+    overflow: hidden;
+  }
+
+  .visual-img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .visual-img:not(:first-of-type) {
+    display: none;
+  }
+
+  .visual-overlay {
+    padding: var(--sp-8);
+    background-color: var(--bg-0);
+  }
+
+  .visual-text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .visual-text a {
+    color: var(--gold);
+    text-underline-offset: 0.2em;
+  }
+
+  .visual-text a:hover {
+    color: var(--gold-bright);
+  }
+
+  @media (min-width: 960px) {
+    .visual {
+      min-height: 26rem;
+    }
+
+    .visual-img,
+    .visual-img:not(:first-of-type) {
+      display: block;
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      animation: o-nas-carousel var(--visual-cykl) ease-in-out infinite;
+    }
+
+    .visual-overlay {
+      position: relative;
+      display: flex;
+      align-items: center;
+      min-height: 100%;
+      padding: var(--sp-16);
+      background: linear-gradient(
+        to right,
+        var(--bg-0) 0%,
+        var(--bg-0) 42%,
+        transparent 78%
+      );
+      transition: opacity 900ms var(--ease);
+    }
+
+    .visual-text {
+      max-width: 30rem;
+    }
+
+    .visual:hover .visual-overlay {
+      opacity: 0;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .visual-img {
+        animation: none !important;
+        opacity: 0;
+      }
+
+      .visual-img:first-of-type {
+        opacity: 1;
+      }
+    }
+  }
+</style>

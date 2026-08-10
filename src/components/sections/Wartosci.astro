@@ -9,45 +9,167 @@ const jezyk = (Astro.currentLocale ?? domyslnyJezyk) as Jezyk;
 // Sekcja jest współdzielona między PL i EN (jak reszta homepage'u) — treść
 // gałęzi po języku, zamiast osobnych plików, bo to jedyne miejsce, gdzie
 // ten tekst żyje.
-const eyebrow = jezyk === "en" ? "Why Owell" : "Dlaczego Owell";
-const tytulSekcji = jezyk === "en" ? "Three pillars of every product" : "Trzy filary każdego produktu";
+type Filar = { tytul: string; opis: string; icon: string };
 
-const filary =
-  jezyk === "en"
-    ? [
-        {
-          tytul: "Design",
-          opis: "We design shapes to still suit a kitchen in five years, not just today. Simple forms, calm proportions, minimal ornamentation.",
-          icon: "design",
-        },
-        {
-          tytul: "Quality",
-          opis: "We choose materials and components for daily use, not a one-off test on the box. Every model has a GPSR card with full manufacturer data.",
-          icon: "jakosc",
-        },
-        {
-          tytul: "Service",
-          opis: "Manuals and service contact are available with no redirects between call centres. Your request goes straight to us, not to a bot.",
-          icon: "serwis",
-        },
-      ]
-    : [
-        {
-          tytul: "Design",
-          opis: "Formy projektujemy tak, by pasowały do kuchni za pięć lat, nie tylko dziś. Prosta bryła, spokojne proporcje, minimum ozdobników.",
-          icon: "design",
-        },
-        {
-          tytul: "Jakość",
-          opis: "Materiały i podzespoły dobieramy pod kątem codziennej eksploatacji, nie jednorazowego testu na pudełku. Każdy model ma kartę GPSR z pełnymi danymi producenta.",
-          icon: "jakosc",
-        },
-        {
-          tytul: "Serwis",
-          opis: "Instrukcje i kontakt serwisowy są dostępne po polsku, bez przekierowań między infoliniami. Zgłoszenie trafia bezpośrednio do nas, nie do automatu.",
-          icon: "serwis",
-        },
-      ];
+const eyebrowPoJezyku: Partial<Record<Jezyk, string>> = { en: "Why Owell", de: "Warum Owell", ru: "Почему Owell", fr: "Pourquoi Owell", es: "Por qué Owell", cs: "Proč Owell", it: "Perché Owell" };
+const tytulPoJezyku: Partial<Record<Jezyk, string>> = {
+  en: "Three pillars of every product",
+  de: "Drei Säulen jedes Produkts",
+  ru: "Три принципа каждого продукта",
+  fr: "Trois piliers pour chaque produit",
+  es: "Tres pilares de cada producto",
+  cs: "Tři pilíře každého produktu",
+  it: "Tre pilastri di ogni prodotto",
+};
+const eyebrow = eyebrowPoJezyku[jezyk] ?? "Dlaczego Owell";
+const tytulSekcji = tytulPoJezyku[jezyk] ?? "Trzy filary każdego produktu";
+
+const filaryEn: Filar[] = [
+  {
+    tytul: "Design",
+    opis: "We design shapes to still suit a kitchen in five years, not just today. Simple forms, calm proportions, minimal ornamentation.",
+    icon: "design",
+  },
+  {
+    tytul: "Quality",
+    opis: "We choose materials and components for daily use, not a one-off test on the box. Every model has a GPSR card with full manufacturer data.",
+    icon: "jakosc",
+  },
+  {
+    tytul: "Service",
+    opis: "Manuals and service contact are available with no redirects between call centres. Your request goes straight to us, not to a bot.",
+    icon: "serwis",
+  },
+];
+
+const filaryDe: Filar[] = [
+  {
+    tytul: "Design",
+    opis: "Wir gestalten Formen so, dass sie auch in fünf Jahren noch in die Küche passen, nicht nur heute. Einfache Formen, ruhige Proportionen, minimale Verzierungen.",
+    icon: "design",
+  },
+  {
+    tytul: "Qualität",
+    opis: "Wir wählen Materialien und Komponenten für den täglichen Gebrauch, nicht für einen einmaligen Test auf der Verpackung. Jedes Modell hat eine GPSR-Karte mit vollständigen Herstellerangaben.",
+    icon: "jakosc",
+  },
+  {
+    tytul: "Service",
+    opis: "Bedienungsanleitungen und Servicekontakt sind ohne Weiterleitungen zwischen Callcentern verfügbar. Ihre Anfrage geht direkt an uns, nicht an einen Bot.",
+    icon: "serwis",
+  },
+];
+
+const filaryPl: Filar[] = [
+  {
+    tytul: "Design",
+    opis: "Formy projektujemy tak, by pasowały do kuchni za pięć lat, nie tylko dziś. Prosta bryła, spokojne proporcje, minimum ozdobników.",
+    icon: "design",
+  },
+  {
+    tytul: "Jakość",
+    opis: "Materiały i podzespoły dobieramy pod kątem codziennej eksploatacji, nie jednorazowego testu na pudełku. Każdy model ma kartę GPSR z pełnymi danymi producenta.",
+    icon: "jakosc",
+  },
+  {
+    tytul: "Serwis",
+    opis: "Instrukcje i kontakt serwisowy są dostępne po polsku, bez przekierowań między infoliniami. Zgłoszenie trafia bezpośrednio do nas, nie do automatu.",
+    icon: "serwis",
+  },
+];
+
+const filaryRu: Filar[] = [
+  {
+    tytul: "Дизайн",
+    opis: "Мы проектируем формы так, чтобы они подходили кухне и через пять лет, а не только сегодня. Простые формы, спокойные пропорции, минимум декора.",
+    icon: "design",
+  },
+  {
+    tytul: "Качество",
+    opis: "Материалы и компоненты подбираем для ежедневной эксплуатации, а не разового теста на коробке. Каждая модель имеет карту GPSR с полными данными производителя.",
+    icon: "jakosc",
+  },
+  {
+    tytul: "Сервис",
+    opis: "Инструкции и сервисный контакт доступны без переадресаций между колл-центрами. Обращение поступает напрямую к нам, а не боту.",
+    icon: "serwis",
+  },
+];
+
+const filaryFr: Filar[] = [
+  {
+    tytul: "Design",
+    opis: "Nous concevons des formes qui conviendront encore à une cuisine dans cinq ans, pas seulement aujourd'hui. Des lignes simples, des proportions équilibrées, un minimum d'ornements.",
+    icon: "design",
+  },
+  {
+    tytul: "Qualité",
+    opis: "Nous choisissons matériaux et composants pour un usage quotidien, pas pour un test ponctuel sur l'emballage. Chaque modèle dispose d'une fiche GPSR avec les coordonnées complètes du fabricant.",
+    icon: "jakosc",
+  },
+  {
+    tytul: "Service",
+    opis: "Notices et contact du service sont disponibles sans redirections entre centres d'appel. Votre demande nous parvient directement, pas à un robot.",
+    icon: "serwis",
+  },
+];
+
+const filaryEs: Filar[] = [
+  {
+    tytul: "Diseño",
+    opis: "Diseñamos formas que sigan encajando en una cocina dentro de cinco años, no solo hoy. Formas simples, proporciones equilibradas, ornamentación mínima.",
+    icon: "design",
+  },
+  {
+    tytul: "Calidad",
+    opis: "Elegimos materiales y componentes para el uso diario, no para una prueba puntual en la caja. Cada modelo tiene una ficha GPSR con los datos completos del fabricante.",
+    icon: "jakosc",
+  },
+  {
+    tytul: "Servicio",
+    opis: "Los manuales y el contacto de servicio están disponibles sin redirecciones entre centralitas. Tu solicitud llega directamente a nosotros, no a un robot.",
+    icon: "serwis",
+  },
+];
+
+const filaryCs: Filar[] = [
+  {
+    tytul: "Design",
+    opis: "Tvary navrhujeme tak, aby se hodily do kuchyně i za pět let, ne jen dnes. Jednoduché tvary, klidné proporce, minimum ozdob.",
+    icon: "design",
+  },
+  {
+    tytul: "Kvalita",
+    opis: "Materiály a součástky vybíráme s ohledem na každodenní používání, ne jednorázový test na krabici. Každý model má kartu GPSR s kompletními údaji o výrobci.",
+    icon: "jakosc",
+  },
+  {
+    tytul: "Servis",
+    opis: "Návody a servisní kontakt jsou dostupné bez přesměrování mezi call centry. Váš požadavek jde přímo k nám, ne k robotovi.",
+    icon: "serwis",
+  },
+];
+
+const filaryIt: Filar[] = [
+  {
+    tytul: "Design",
+    opis: "Progettiamo forme che si adattino alla cucina anche tra cinque anni, non solo oggi. Linee semplici, proporzioni equilibrate, il minimo di decorazioni.",
+    icon: "design",
+  },
+  {
+    tytul: "Qualità",
+    opis: "Scegliamo materiali e componenti pensando all'uso quotidiano, non a un test occasionale sulla confezione. Ogni modello ha una scheda GPSR con i dati completi del produttore.",
+    icon: "jakosc",
+  },
+  {
+    tytul: "Assistenza",
+    opis: "Manuali e contatto assistenza sono disponibili senza reindirizzamenti tra call center. La tua richiesta arriva direttamente a noi, non a un bot.",
+    icon: "serwis",
+  },
+];
+
+const filaryPoJezyku: Partial<Record<Jezyk, Filar[]>> = { en: filaryEn, de: filaryDe, ru: filaryRu, fr: filaryFr, es: filaryEs, cs: filaryCs, it: filaryIt };
+const filary = filaryPoJezyku[jezyk] ?? filaryPl;
 ---
 
 <style is:global>

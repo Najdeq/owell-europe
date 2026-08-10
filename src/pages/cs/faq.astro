@@ -1,0 +1,105 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Prose from "../../components/ui/Prose.astro";
+import { site } from "../../data/site.ts";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("cs", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Časté dotazy", path: l("/faq") },
+];
+
+const pytania = [
+  {
+    pytanie: "Kde mohu koupit produkty Owell?",
+    odpowiedz: `V našem oficiálním obchodě na Allegro — prodáváme tam přímo jako výrobce, takže záruka i servis jdou přímo přes nás. Pracujeme také na vlastním internetovém obchodě. Aktuální odkazy najdete na stránce „Kde koupit".`,
+  },
+  {
+    pytanie: "Jak dlouhá je záruka a co pokrývá?",
+    odpowiedz: `${site.gwarancjaMiesiace} měsíců od data zakoupení. Záruka se vztahuje na materiálové a výrobní vady — nevztahuje se na mechanická poškození způsobená uživatelem.`,
+  },
+  {
+    pytanie: "Jak podat reklamaci?",
+    odpowiedz: `Napište na ${site.kontakt.emailSerwis}. Do zprávy uveďte model produktu, číslo objednávky a popis závady — fotografie nebo krátké video celý proces urychlí.`,
+  },
+  {
+    pytanie: "Kde najdu návod k použití?",
+    odpowiedz: `PDF návod je k dispozici na stránce každého produktu. Pokud jej tam nenajdete, napište nám — zašleme vám jej e-mailem.`,
+  },
+  {
+    pytanie: "Jsou dostupné náhradní díly?",
+    odpowiedz: `Záleží na modelu. Napište na ${site.kontakt.emailSerwis} s názvem produktu a popisem dílu, který potřebujete — dostupnost ověříme individuálně.`,
+  },
+  {
+    pytanie: "Jak funguje servis?",
+    odpowiedz: `Požadavky vyřizujeme e-mailem, bez call centra. Odpovídáme do 24 pracovních hodin a případ dotáhneme do konce — bez přehazování na jiná oddělení.`,
+  },
+  {
+    pytanie: "Jak funguje doručení?",
+    odpowiedz: `Objednávky zadané do 18:30 expedujeme týž den, s garantovaným doručením přes InPost. Přesný čas a cenu doručení uvidíte v obchodě při zadávání objednávky — závisí na zvoleném způsobu dopravy.`,
+  },
+  {
+    pytanie: "Jak vás mohu kontaktovat?",
+    odpowiedz: `Pro obecné záležitosti: ${site.kontakt.email}. Pro servis a reklamace: ${site.kontakt.emailSerwis}.`,
+  },
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: pytania.map((p) => ({
+    "@type": "Question",
+    name: p.pytanie,
+    acceptedAnswer: { "@type": "Answer", text: p.odpowiedz },
+  })),
+};
+---
+
+<Base
+  title="Časté dotazy — Owell"
+  description="Odpovědi na časté dotazy: kde nakoupit, jak funguje záruka, jak podat reklamaci a jak kontaktovat náš servisní tým."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title" data-reveal>Časté dotazy</h1>
+
+        <Prose>
+          {pytania.map((p) => (
+            <>
+              <h2>{p.pytanie}</h2>
+              <p>{p.odpowiedz}</p>
+            </>
+          ))}
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+</style>

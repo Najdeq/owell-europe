@@ -1,0 +1,152 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Prose from "../../components/ui/Prose.astro";
+import { site } from "../../data/site.ts";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("de", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Datenschutzerklärung", path: l("/polityka-prywatnosci") },
+];
+---
+
+<Base
+  title="Datenschutzerklärung — Owell"
+  description="Wie personenbezogene Daten auf der Owell-Website verarbeitet werden: Verantwortlicher, Zwecke, Rechtsgrundlagen, Datenempfänger und Rechte der betroffenen Personen."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title">Datenschutzerklärung</h1>
+
+        <Prose>
+          <h2>Verantwortlicher</h2>
+          <p>
+            Verantwortlicher für die im Zusammenhang mit der Nutzung dieser Website verarbeiteten personenbezogenen
+            Daten ist <strong>{site.firma.nazwaPelna}</strong>, {site.firma.adres}, USt-IdNr. (NIP): {site.firma.nip},
+            Handelsregisternummer (REGON): {site.firma.regon}. In Datenschutzangelegenheiten erreichen Sie uns unter{" "}
+            <a href={`mailto:${site.kontakt.email}`}>{site.kontakt.email}</a>.
+          </p>
+
+          <h2>Zwecke und Rechtsgrundlagen der Verarbeitung</h2>
+          <p>Wir verarbeiten personenbezogene Daten zu folgenden Zwecken:</p>
+          <ul>
+            <li>
+              <strong>Bearbeitung von Korrespondenz und Anfragen</strong> (Kontaktformular, E-Mail) — Rechtsgrundlage:
+              Art. 6 Abs. 1 lit. b DSGVO (Maßnahmen vor Vertragsschluss / Beantwortung einer Anfrage) oder Art. 6
+              Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Beantwortung).
+            </li>
+            <li>
+              <strong>Bearbeitung von Reklamationen und Serviceanfragen</strong> — Rechtsgrundlage: Art. 6 Abs. 1
+              lit. c DSGVO (rechtliche Verpflichtung aus Gewährleistungs- und Garantiebestimmungen) und Art. 6 Abs. 1
+              lit. b DSGVO.
+            </li>
+            <li>
+              <strong>Statistiken zu Websitebesuchen</strong> (Google Analytics) — nur nach Einwilligung im
+              Cookie-Banner, Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO. Details in der{" "}
+              <a href={l("/cookies")}>Cookie-Richtlinie</a>.
+            </li>
+            <li>
+              <strong>Gewährleistung der Sicherheit und des ordnungsgemäßen Betriebs der Website</strong>
+              (Server-Logs des Hostings) — Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse des
+              Verantwortlichen).
+            </li>
+          </ul>
+          <p>
+            Wir profilieren Nutzer nicht und treffen keine automatisierten Entscheidungen, die rechtliche Wirkung
+            gegenüber ihnen entfalten.
+          </p>
+
+          <h2>Speicherdauer</h2>
+          <ul>
+            <li>
+              Korrespondenz- und Anfragedaten — 3 Jahre ab Abschluss der Angelegenheit (Verjährungsfrist für
+              Ansprüche).
+            </li>
+            <li>
+              Daten im Zusammenhang mit einer Reklamation oder Garantieforderung — solange dies zu deren Erledigung
+              erforderlich ist, danach für die Verjährungsfrist für Ansprüche.
+            </li>
+            <li>
+              Daten, die sich aus steuer- und buchhaltungsrechtlichen Vorschriften ergeben — für den in diesen
+              Vorschriften vorgesehenen Zeitraum.
+            </li>
+            <li>Cookies — wie in der <a href={l("/cookies")}>Cookie-Richtlinie</a> beschrieben.</li>
+          </ul>
+
+          <h2>Datenempfänger</h2>
+          <p>Daten können an folgende Kategorien von Empfängern weitergegeben werden:</p>
+          <ul>
+            <li>
+              <strong>Cloudflare</strong> — Anbieter der Hosting- und CDN-Infrastruktur für diese Website.
+            </li>
+            <li>
+              <strong>Google</strong> — Anbieter des Tools Google Analytics, das nur nach Einwilligung in
+              Analyse-Cookies genutzt wird.
+            </li>
+            <li>
+              <strong>nazwa.pl</strong> — Anbieter von Hosting- und E-Mail-Diensten, über den wir Korrespondenz und
+              Anfragen von Kunden bearbeiten.
+            </li>
+          </ul>
+          <p>
+            Einige der oben genannten Anbieter können Daten außerhalb des Europäischen Wirtschaftsraums verarbeiten.
+            In solchen Fällen erfolgt die Übermittlung auf Grundlage von durch die Europäische Kommission
+            genehmigten Standardvertragsklauseln oder eines anderen mit der DSGVO vereinbaren Mechanismus.
+          </p>
+
+          <h2>Rechte der betroffenen Personen</h2>
+          <p>Sie haben das Recht:</p>
+          <ul>
+            <li>auf Auskunft über Ihre Daten und Erhalt einer Kopie,</li>
+            <li>auf Berichtigung Ihrer Daten,</li>
+            <li>auf Löschung Ihrer Daten,</li>
+            <li>auf Einschränkung der Verarbeitung,</li>
+            <li>auf Datenübertragbarkeit,</li>
+            <li>auf Widerspruch gegen die Verarbeitung auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO,</li>
+            <li>
+              Ihre Einwilligung jederzeit zu widerrufen, ohne dass die Rechtmäßigkeit der bis zum Widerruf
+              erfolgten Verarbeitung berührt wird,
+            </li>
+            <li>
+              eine Beschwerde beim Präsidenten des polnischen Amtes für den Schutz personenbezogener Daten (UODO)
+              einzureichen, wenn Sie der Ansicht sind, dass die Verarbeitung gegen die DSGVO verstößt.
+            </li>
+          </ul>
+
+          <h2>Kontakt</h2>
+          <p>
+            In Angelegenheiten im Zusammenhang mit der Verarbeitung personenbezogener Daten erreichen Sie uns unter{" "}
+            <a href={`mailto:${site.kontakt.email}`}>{site.kontakt.email}</a>.
+          </p>
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+</style>

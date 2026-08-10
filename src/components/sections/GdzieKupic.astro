@@ -9,22 +9,67 @@ import { domyslnyJezyk, type Jezyk } from "../../i18n/ui.ts";
 const jezyk = (Astro.currentLocale ?? domyslnyJezyk) as Jezyk;
 const l = (sciezka: string) => getRelativeLocaleUrl(jezyk, sciezka);
 
-const tresc =
-  jezyk === "en"
-    ? {
-        eyebrow: "Where to buy",
-        tytul: "All products in one place",
-        lead: "You buy directly from the manufacturer in our official Allegro store — with full warranty and service run by us, not a middleman.",
-        ctaAllegro: "See our listings on Allegro →",
-        ctaFallback: "Where to buy →",
-      }
-    : {
-        eyebrow: "Gdzie kupić",
-        tytul: "Wszystkie produkty w jednym miejscu",
-        lead: "Kupujesz bezpośrednio od producenta w naszym oficjalnym sklepie na Allegro — z pełną gwarancją i serwisem prowadzonym przez nas, nie przez pośrednika.",
-        ctaAllegro: "Zobacz nasze oferty na Allegro →",
-        ctaFallback: "Gdzie kupić →",
-      };
+type Tresc = { eyebrow: string; tytul: string; lead: string; ctaAllegro: string; ctaFallback: string };
+
+const trescPoJezyku: Partial<Record<Jezyk, Tresc>> = {
+  en: {
+    eyebrow: "Where to buy",
+    tytul: "All products in one place",
+    lead: "You buy directly from the manufacturer in our official Allegro store — with full warranty and service run by us, not a middleman.",
+    ctaAllegro: "See our listings on Allegro →",
+    ctaFallback: "Where to buy →",
+  },
+  de: {
+    eyebrow: "Wo kaufen",
+    tytul: "Alle Produkte an einem Ort",
+    lead: "Sie kaufen direkt beim Hersteller in unserem offiziellen Allegro-Shop — mit voller Garantie und Service, den wir selbst betreiben, nicht ein Vermittler.",
+    ctaAllegro: "Unsere Angebote auf Allegro ansehen →",
+    ctaFallback: "Wo kaufen →",
+  },
+  ru: {
+    eyebrow: "Где купить",
+    tytul: "Все товары в одном месте",
+    lead: "Вы покупаете напрямую у производителя в нашем официальном магазине на Allegro — с полной гарантией и сервисом, который ведём мы сами, а не посредник.",
+    ctaAllegro: "Смотреть наши товары на Allegro →",
+    ctaFallback: "Где купить →",
+  },
+  fr: {
+    eyebrow: "Où acheter",
+    tytul: "Tous les produits au même endroit",
+    lead: "Vous achetez directement auprès du fabricant dans notre boutique officielle Allegro — avec une garantie et un service assurés par nous, sans intermédiaire.",
+    ctaAllegro: "Voir nos annonces sur Allegro →",
+    ctaFallback: "Où acheter →",
+  },
+  es: {
+    eyebrow: "Dónde comprar",
+    tytul: "Todos los productos en un solo lugar",
+    lead: "Compras directamente al fabricante en nuestra tienda oficial de Allegro — con garantía y servicio gestionados por nosotros, sin intermediarios.",
+    ctaAllegro: "Ver nuestros anuncios en Allegro →",
+    ctaFallback: "Dónde comprar →",
+  },
+  cs: {
+    eyebrow: "Kde koupit",
+    tytul: "Všechny produkty na jednom místě",
+    lead: "Nakupujete přímo od výrobce v našem oficiálním obchodě na Allegro — s plnou zárukou a servisem, který zajišťujeme my, ne prostředník.",
+    ctaAllegro: "Zobrazit naši nabídku na Allegro →",
+    ctaFallback: "Kde koupit →",
+  },
+  it: {
+    eyebrow: "Dove acquistare",
+    tytul: "Tutti i prodotti in un unico posto",
+    lead: "Acquisti direttamente dal produttore nel nostro negozio ufficiale su Allegro — con garanzia e assistenza gestite da noi, senza intermediari.",
+    ctaAllegro: "Vedi le nostre offerte su Allegro →",
+    ctaFallback: "Dove acquistare →",
+  },
+};
+
+const tresc = trescPoJezyku[jezyk] ?? {
+  eyebrow: "Gdzie kupić",
+  tytul: "Wszystkie produkty w jednym miejscu",
+  lead: "Kupujesz bezpośrednio od producenta w naszym oficjalnym sklepie na Allegro — z pełną gwarancją i serwisem prowadzonym przez nas, nie przez pośrednika.",
+  ctaAllegro: "Zobacz nasze oferty na Allegro →",
+  ctaFallback: "Gdzie kupić →",
+};
 ---
 
 <Section bg="base" id="gdzie-kupic">

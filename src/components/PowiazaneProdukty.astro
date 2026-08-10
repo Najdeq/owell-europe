@@ -16,9 +16,13 @@ const jezyk = (Astro.currentLocale ?? domyslnyJezyk) as Jezyk;
 const t = useTranslations(jezyk);
 const l = (sciezka: string) => getRelativeLocaleUrl(jezyk, sciezka);
 
+const kolekcjeTlumaczen = { en: "produkty-en", de: "produkty-de", ru: "produkty-ru", fr: "produkty-fr", es: "produkty-es", cs: "produkty-cs", it: "produkty-it" } as const;
+const nazwaKolekcji = kolekcjeTlumaczen[jezyk as keyof typeof kolekcjeTlumaczen];
+
 const wszystkieProdukty = await getCollection("produkty");
-const tlumaczenia =
-  jezyk === "en" ? new Map((await getCollection("produkty-en")).map((x) => [x.id, x.data])) : new Map();
+const tlumaczenia = nazwaKolekcji
+  ? new Map((await getCollection(nazwaKolekcji)).map((x) => [x.id, x.data]))
+  : new Map();
 
 const powiazane = identyfikatory
   .map((id) => wszystkieProdukty.find((p) => p.id === id && p.data.opublikowany))

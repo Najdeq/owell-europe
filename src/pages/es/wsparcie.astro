@@ -1,0 +1,170 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import WyszukiwarkaModelu from "../../components/WyszukiwarkaModelu.astro";
+import { useTranslations } from "../../i18n/utils.ts";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("es", sciezka);
+const t = useTranslations("es");
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Soporte", path: l("/wsparcie") },
+];
+
+const linki = [
+  {
+    tytul: "Preguntas frecuentes",
+    opis: "Respuestas sobre la compra, la garantía, el envío y el servicio técnico.",
+    href: l("/faq"),
+  },
+  {
+    tytul: "Manuales",
+    opis: "Manuales en PDF de cada producto, en la tienda o solicitándolos por correo electrónico.",
+    href: l("/instrukcje"),
+  },
+  {
+    tytul: "Garantía",
+    opis: "Qué cubre la garantía y cómo solicitar una reparación.",
+    href: l("/gwarancja"),
+  },
+  {
+    tytul: "Registra tu producto",
+    opis: "Registra tu dispositivo y amplía la garantía un año más. Totalmente gratis.",
+    href: l("/rejestracja-produktu"),
+  },
+  {
+    tytul: "Reclamaciones",
+    opis: "Paso a paso, cómo presentar una reclamación de producto.",
+    href: l("/reklamacje"),
+  },
+  {
+    tytul: "Contacto",
+    opis: "Escríbenos para consultas generales o de servicio técnico.",
+    href: l("/kontakt"),
+  },
+];
+---
+
+<Base
+  title="Soporte — Owell"
+  description="Manuales, garantía, reclamaciones y contacto: todo lo que necesitas después de comprar un producto Owell."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title" data-reveal>Soporte</h1>
+        <p class="page-lead" data-reveal data-reveal-delay="80">Todo lo que puedas necesitar después de tu compra, en un solo lugar.</p>
+
+        <WyszukiwarkaModelu
+          class="szukaj-na-wsparciu"
+          etykieta={t("hero.szukajLabel")}
+          placeholder={t("hero.szukajPlaceholder")}
+          pusto={t("hero.szukajPusto")}
+        />
+
+        <div class="grid">
+          {linki.map((l2) => (
+            <a href={l2.href} class="karta">
+              <h2 class="karta-tytul">{l2.tytul}</h2>
+              <p class="karta-opis">{l2.opis}</p>
+              <span class="karta-link">Ver →</span>
+            </a>
+          ))}
+        </div>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .page-lead {
+    margin-top: var(--sp-4);
+    max-width: var(--maxw-prose);
+    font-size: var(--fs-lead);
+    color: var(--text-2);
+  }
+
+  :global(.szukaj-na-wsparciu) {
+    margin-top: var(--sp-8);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-6);
+    margin-top: var(--sp-12);
+  }
+
+  .karta {
+    display: flex;
+    flex-direction: column;
+    padding: var(--sp-6);
+    border: 1px solid var(--hairline-soft);
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    transition: border-color var(--dur) var(--ease);
+  }
+
+  .karta:hover {
+    border-color: var(--gold);
+  }
+
+  .karta-tytul {
+    font-family: var(--font-display);
+    font-size: var(--fs-lead);
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .karta-opis {
+    margin-top: var(--sp-2);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .karta-link {
+    margin-top: var(--sp-4);
+    font-size: var(--fs-small);
+    font-weight: 500;
+    color: var(--gold);
+  }
+
+  .karta:hover .karta-link {
+    color: var(--gold-bright);
+  }
+
+  @media (min-width: 640px) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1000px) {
+    .grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

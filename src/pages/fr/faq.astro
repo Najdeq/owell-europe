@@ -1,0 +1,105 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Prose from "../../components/ui/Prose.astro";
+import { site } from "../../data/site.ts";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("fr", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "FAQ", path: l("/faq") },
+];
+
+const pytania = [
+  {
+    pytanie: "Où puis-je acheter des produits Owell ?",
+    odpowiedz: `Dans notre boutique officielle sur Allegro — nous y vendons directement en tant que fabricant, la garantie et le service passent donc directement par nous. Nous travaillons également sur notre propre boutique en ligne. Vous trouverez les liens actuels sur la page « Où acheter ».`,
+  },
+  {
+    pytanie: "Quelle est la durée de la garantie et que couvre-t-elle ?",
+    odpowiedz: `${site.gwarancjaMiesiace} mois à compter de la date d'achat. La garantie couvre les défauts de matériaux et de fabrication — elle ne couvre pas les dommages mécaniques causés par l'utilisateur.`,
+  },
+  {
+    pytanie: "Comment déposer une réclamation ?",
+    odpowiedz: `Écrivez à ${site.kontakt.emailSerwis}. Dans votre message, indiquez le modèle du produit, le numéro de commande et une description du défaut — des photos ou une courte vidéo accélèrent le traitement.`,
+  },
+  {
+    pytanie: "Où puis-je trouver le mode d'emploi ?",
+    odpowiedz: `Le mode d'emploi au format PDF est disponible sur la page de chaque produit. Si vous ne le trouvez pas, écrivez-nous — nous vous l'enverrons par e-mail.`,
+  },
+  {
+    pytanie: "Des pièces détachées sont-elles disponibles ?",
+    odpowiedz: `Cela dépend du modèle. Écrivez à ${site.kontakt.emailSerwis} en indiquant le nom du produit et une description de la pièce dont vous avez besoin — nous vérifierons la disponibilité au cas par cas.`,
+  },
+  {
+    pytanie: "Comment fonctionne le service après-vente ?",
+    odpowiedz: `Nous traitons les demandes par e-mail, sans centre d'appels. Nous répondons sous 24 heures ouvrées et suivons chaque dossier jusqu'à sa résolution — sans vous transférer vers d'autres services.`,
+  },
+  {
+    pytanie: "Comment fonctionne la livraison ?",
+    odpowiedz: `Les commandes passées avant 18h30 sont expédiées le jour même, avec une livraison InPost garantie. Le délai et le coût exacts de livraison s'affichent dans la boutique lors de la commande — ils dépendent du mode d'expédition choisi.`,
+  },
+  {
+    pytanie: "Comment vous contacter ?",
+    odpowiedz: `Pour les questions générales : ${site.kontakt.email}. Pour le service et les réclamations : ${site.kontakt.emailSerwis}.`,
+  },
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: pytania.map((p) => ({
+    "@type": "Question",
+    name: p.pytanie,
+    acceptedAnswer: { "@type": "Answer", text: p.odpowiedz },
+  })),
+};
+---
+
+<Base
+  title="FAQ — Owell"
+  description="Réponses aux questions fréquentes : où acheter, comment fonctionne la garantie, comment déposer une réclamation et contacter notre service."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title" data-reveal>Foire aux questions</h1>
+
+        <Prose>
+          {pytania.map((p) => (
+            <>
+              <h2>{p.pytanie}</h2>
+              <p>{p.odpowiedz}</p>
+            </>
+          ))}
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+</style>

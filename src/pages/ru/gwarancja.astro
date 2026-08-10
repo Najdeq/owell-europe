@@ -1,0 +1,86 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Prose from "../../components/ui/Prose.astro";
+import { site } from "../../data/site.ts";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("ru", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Гарантия", path: l("/gwarancja") },
+];
+---
+
+<Base
+  title="Гарантия — Owell"
+  description={`Каждый продукт Owell поставляется с гарантией ${site.gwarancjaMiesiace} месяцев. Узнайте, что она покрывает и как оформить ремонт.`}
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title" data-reveal>Гарантийная карта</h1>
+
+        <Prose>
+          <h2>Срок гарантии</h2>
+          <p>
+            Каждый продукт Owell поставляется с гарантией {site.gwarancjaMiesiace} месяцев, отсчитываемой с даты
+            покупки, подтверждённой документом о покупке (чеком или счётом интернет-магазина).
+          </p>
+
+          <h2>Что покрывает гарантия</h2>
+          <p>
+            Дефекты материалов и изготовления, возникшие при нормальных условиях эксплуатации, в соответствии с
+            инструкцией по эксплуатации, прилагаемой к продукту.
+          </p>
+
+          <h2>Что не покрывает гарантия</h2>
+          <ul>
+            <li>Механические повреждения, причинённые пользователем.</li>
+            <li>Естественный износ расходных деталей (например, лезвий, аккумуляторов).</li>
+            <li>Неисправности, возникшие из-за использования, не соответствующего инструкции по эксплуатации.</li>
+          </ul>
+
+          <h2>Продление гарантии</h2>
+          <p>
+            После регистрации продукта мы продлеваем гарантию с {site.gwarancjaMiesiace} до{" "}
+            {site.gwarancjaMiesiace + site.gwarancjaPlus.dodatkoweMiesiace} месяцев — бесплатно. Заявку нужно
+            отправить в течение {site.gwarancjaPlus.terminDni} дней с момента покупки. Подробности и порядок
+            регистрации описаны на странице <a href={l("/rejestracja-produktu")}>регистрации продукта</a>.
+          </p>
+
+          <h2>Как оформить ремонт</h2>
+          <p>
+            Напишите на <a href={`mailto:${site.kontakt.emailSerwis}`}>{site.kontakt.emailSerwis}</a>, указав модель
+            продукта, номер заказа и описание неисправности. Фотографии или короткое видео ускоряют процесс. Мы
+            обрабатываем заявки по электронной почте, без колл-центра.
+          </p>
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+</style>

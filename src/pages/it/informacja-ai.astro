@@ -1,0 +1,75 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Prose from "../../components/ui/Prose.astro";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("it", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Informativa AI Act", path: l("/informacja-ai") },
+];
+---
+
+<Base
+  title="Informativa AI Act — Owell"
+  description="Informazioni sull'uso dell'intelligenza artificiale per la realizzazione delle immagini dei prodotti, in conformità con l'AI Act dell'UE."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title">Informativa AI Act</h1>
+
+        <Prose>
+          <p>
+            Le immagini dei prodotti presenti su questo sito sono state realizzate utilizzando tecnologia di
+            intelligenza artificiale. Sono state create a partire da fotografie reali dei prodotti e dai design
+            delle confezioni.
+          </p>
+
+          <p>
+            Pubblichiamo questa informativa in relazione agli obblighi derivanti dall'articolo 50 del Regolamento
+            (UE) 2024/1689 del Parlamento europeo e del Consiglio che stabilisce regole armonizzate
+            sull'intelligenza artificiale (l'AI Act).
+          </p>
+
+          <h2>Perché lo dichiariamo</h2>
+          <ul>
+            <li><strong>Trasparenza</strong> — rispettiamo il tuo diritto di sapere da dove provengono le immagini.</li>
+            <li><strong>Conformità legale</strong> — adempiamo agli obblighi di informativa previsti dall'AI Act dell'UE.</li>
+            <li><strong>Accuratezza</strong> — ci assicuriamo che le immagini digitali riflettano fedelmente il prodotto reale.</li>
+          </ul>
+
+          <p>
+            Se hai domande sull'origine di un'immagine specifica, contattaci — trovi i nostri dati di contatto
+            nella pagina <a href={l("/bezpieczenstwo-produktu")}>sicurezza del prodotto</a>.
+          </p>
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+</style>

@@ -1,0 +1,97 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Prose from "../../components/ui/Prose.astro";
+import { site } from "../../data/site.ts";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("fr", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Déclaration d'accessibilité", path: l("/deklaracja-dostepnosci") },
+];
+---
+
+<Base
+  title="Déclaration d'accessibilité — Owell"
+  description="Déclaration d'accessibilité du site Owell : niveau de conformité WCAG 2.2 AA déclaré, méthode d'évaluation et limitations connues."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title">Déclaration d'accessibilité</h1>
+
+        <Prose>
+          <p>
+            {site.firma.nazwaPelna} s'efforce de rendre le site Owell accessible au plus grand nombre d'utilisateurs
+            possible, y compris les personnes en situation de handicap, conformément à la loi polonaise du 4 avril
+            2019 sur l'accessibilité numérique des sites internet et des applications mobiles des entités publiques
+            et à l'European Accessibility Act (EAA).
+          </p>
+
+          <h2>État de conformité</h2>
+          <p>
+            Le site est <strong>partiellement conforme</strong> à la norme{" "}
+            <strong>WCAG 2.2 niveau AA</strong>. Nous visons une conformité totale et considérons l'accessibilité
+            comme une exigence de conception, et non comme un ajout après coup.
+          </p>
+
+          <h2>Date d'établissement et méthode d'évaluation</h2>
+          <p>Cette déclaration a été établie le 7 août 2026.</p>
+          <p>
+            La conformité a été évaluée par <strong>auto-évaluation</strong> — une évaluation réalisée en interne par
+            l'équipe responsable du site, sans auditeur externe.
+          </p>
+
+          <h2>Limitations connues</h2>
+          <p>Nous souhaitons être transparents sur les points qui ne sont pas encore pleinement finalisés à la date de cette déclaration :</p>
+          <ul>
+            <li>Certaines pages listées dans le menu et le pied de page sont actuellement en construction et peuvent renvoyer une erreur 404.</li>
+            <li>L'accessibilité numérique des modes d'emploi PDF joints aux fiches produits n'a pas encore été vérifiée.</li>
+          </ul>
+          <p>Hormis les points mentionnés ci-dessus, aucune autre limitation d'accessibilité connue n'a été identifiée à la date de cette déclaration.</p>
+
+          <h2>Procédure de retour d'information et de recours</h2>
+          <p>
+            Si vous rencontrez un problème d'accessibilité sur le site — par exemple un élément non utilisable au
+            clavier, une image sans description ou un contraste insuffisant — faites-le-nous savoir. Vous avez le
+            droit de demander que le site ou un élément donné soit rendu accessible numériquement. Si nous ne
+            répondons pas dans le délai légal, ou si un refus de mise en accessibilité n'est pas justifié, vous avez
+            le droit de déposer une plainte auprès de l'autorité de contrôle, puis auprès du Médiateur polonais des
+            droits de l'homme (Rzecznik Praw Obywatelskich).
+          </p>
+
+          <h2>Contact</h2>
+          <p>
+            Signalez les problèmes d'accessibilité à <a href={`mailto:${site.kontakt.email}`}>{site.kontakt.email}</a>.
+            Nous ferons de notre mieux pour répondre et résoudre le problème signalé aussi rapidement que possible.
+          </p>
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+</style>

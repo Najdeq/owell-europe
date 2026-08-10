@@ -1,0 +1,104 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Prose from "../../components/ui/Prose.astro";
+import { site } from "../../data/site.ts";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("de", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Barrierefreiheitserklärung", path: l("/deklaracja-dostepnosci") },
+];
+---
+
+<Base
+  title="Barrierefreiheitserklärung — Owell"
+  description="Barrierefreiheitserklärung für die Owell-Website: erklärte WCAG-2.2-AA-Konformitätsstufe, Bewertungsmethode und bekannte Einschränkungen."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title">Barrierefreiheitserklärung</h1>
+
+        <Prose>
+          <p>
+            {site.firma.nazwaPelna} ist bestrebt, die Owell-Website für einen möglichst breiten Nutzerkreis
+            zugänglich zu machen, einschließlich Menschen mit Behinderungen, im Einklang mit dem polnischen Gesetz
+            vom 4. April 2019 über die digitale Barrierefreiheit von Websites und mobilen Anwendungen öffentlicher
+            Stellen sowie dem European Accessibility Act (EAA).
+          </p>
+
+          <h2>Konformitätsstatus</h2>
+          <p>
+            Die Website ist <strong>teilweise konform</strong> mit dem Standard{" "}
+            <strong>WCAG 2.2 Stufe AA</strong>. Wir streben eine vollständige Konformität an und betrachten
+            Barrierefreiheit als Gestaltungsanforderung, nicht als nachträglichen Zusatz.
+          </p>
+
+          <h2>Datum der Erstellung und Bewertungsmethode</h2>
+          <p>Diese Erklärung wurde am 7. August 2026 erstellt.</p>
+          <p>
+            Die Konformität wurde durch <strong>Selbstbewertung</strong> beurteilt — eine intern vom für die Website
+            verantwortlichen Team durchgeführte Bewertung, ohne externen Prüfer.
+          </p>
+
+          <h2>Bekannte Einschränkungen</h2>
+          <p>
+            Wir möchten offen über Bereiche informieren, die zum Datum dieser Erklärung noch nicht vollständig
+            fertiggestellt sind:
+          </p>
+          <ul>
+            <li>Einige im Menü und in der Fußzeile aufgeführte Seiten befinden sich derzeit im Aufbau und können einen 404-Fehler zurückgeben.</li>
+            <li>Die digitale Barrierefreiheit der PDF-Bedienungsanleitungen auf den Produktseiten wurde noch nicht überprüft.</li>
+          </ul>
+          <p>
+            Über die oben genannten hinaus wurden zum Datum dieser Erklärung keine weiteren bekannten
+            Einschränkungen der Barrierefreiheit festgestellt.
+          </p>
+
+          <h2>Feedback- und Durchsetzungsverfahren</h2>
+          <p>
+            Sollten Sie auf der Website ein Problem mit der Barrierefreiheit feststellen — zum Beispiel ein Element,
+            das nicht per Tastatur bedient werden kann, eine fehlende Bildbeschreibung oder unzureichenden Kontrast
+            — teilen Sie uns dies bitte mit. Sie haben das Recht, zu verlangen, dass die Website oder ein bestimmtes
+            Element digital barrierefrei gemacht wird. Antworten wir nicht innerhalb der gesetzlichen Frist, oder ist
+            eine Ablehnung der Barrierefreiheit nicht gerechtfertigt, haben Sie das Recht, eine Beschwerde bei der
+            zuständigen Aufsichtsbehörde und anschließend beim polnischen Bürgerrechtsbeauftragten (Rzecznik Praw
+            Obywatelskich) einzureichen.
+          </p>
+
+          <h2>Kontakt</h2>
+          <p>
+            Melden Sie Probleme mit der Barrierefreiheit an <a href={`mailto:${site.kontakt.email}`}>{site.kontakt.email}</a>.
+            Wir werden unser Bestes tun, um so schnell wie möglich zu antworten und das gemeldete Problem zu beheben.
+          </p>
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+</style>

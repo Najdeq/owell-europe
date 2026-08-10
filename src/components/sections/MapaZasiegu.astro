@@ -8,28 +8,100 @@ import { domyslnyJezyk, type Jezyk } from "../../i18n/ui.ts";
 
 const jezyk = (Astro.currentLocale ?? domyslnyJezyk) as Jezyk;
 
-const tresc =
-  jezyk === "en"
-    ? {
-        eyebrow: "Reach",
-        tytul: "Our products travel across Europe",
-        leadPrefix: "Owell is",
-        leadYears: "years of production, over",
-        leadModels: "models, over",
-        leadMarkets: "markets. The same factory, the same quality control, the same service team.",
-        mapLabel: "Map of Europe with the countries where Owell sells highlighted",
-        podpisMarkets: "markets Owell",
-      }
-    : {
-        eyebrow: "Zasięg",
-        tytul: "Nasze produkty jeżdżą po całej Europie",
-        leadPrefix: "Owell to",
-        leadYears: "lat produkcji, ponad",
-        leadModels: "modeli, ponad",
-        leadMarkets: "rynków. Ta sama fabryka, ta sama kontrola jakości, ci sami ludzie od serwisu.",
-        mapLabel: "Mapa Europy z zaznaczonymi krajami, w których sprzedaje Owell",
-        podpisMarkets: "rynków Owell",
-      };
+type Tresc = {
+  eyebrow: string;
+  tytul: string;
+  leadPrefix: string;
+  leadYears: string;
+  leadModels: string;
+  leadMarkets: string;
+  mapLabel: string;
+  podpisMarkets: string;
+};
+
+const trescPoJezyku: Partial<Record<Jezyk, Tresc>> = {
+  en: {
+    eyebrow: "Reach",
+    tytul: "Our products travel across Europe",
+    leadPrefix: "Owell is",
+    leadYears: "years of production, over",
+    leadModels: "models, over",
+    leadMarkets: "markets. The same factory, the same quality control, the same service team.",
+    mapLabel: "Map of Europe with the countries where Owell sells highlighted",
+    podpisMarkets: "markets Owell",
+  },
+  de: {
+    eyebrow: "Reichweite",
+    tytul: "Unsere Produkte reisen durch ganz Europa",
+    leadPrefix: "Owell steht für",
+    leadYears: "Jahre Produktion, über",
+    leadModels: "Modelle, über",
+    leadMarkets: "Märkte. Dieselbe Fabrik, dieselbe Qualitätskontrolle, dasselbe Serviceteam.",
+    mapLabel: "Europakarte mit den hervorgehobenen Ländern, in denen Owell verkauft",
+    podpisMarkets: "Märkte Owell",
+  },
+  ru: {
+    eyebrow: "Охват",
+    tytul: "Наши товары путешествуют по всей Европе",
+    leadPrefix: "Owell — это",
+    leadYears: "лет производства, более",
+    leadModels: "моделей, более",
+    leadMarkets: "рынков. Та же фабрика, тот же контроль качества, та же сервисная команда.",
+    mapLabel: "Карта Европы с выделенными странами, в которых продаёт Owell",
+    podpisMarkets: "рынков Owell",
+  },
+  fr: {
+    eyebrow: "Portée",
+    tytul: "Nos produits voyagent à travers l'Europe",
+    leadPrefix: "Owell, c'est",
+    leadYears: "ans de production, plus de",
+    leadModels: "modèles, plus de",
+    leadMarkets: "marchés. La même usine, le même contrôle qualité, la même équipe de service.",
+    mapLabel: "Carte de l'Europe avec les pays où Owell est vendu mis en évidence",
+    podpisMarkets: "marchés Owell",
+  },
+  es: {
+    eyebrow: "Alcance",
+    tytul: "Nuestros productos viajan por toda Europa",
+    leadPrefix: "Owell son",
+    leadYears: "años de producción, más de",
+    leadModels: "modelos, más de",
+    leadMarkets: "mercados. La misma fábrica, el mismo control de calidad, el mismo equipo de servicio.",
+    mapLabel: "Mapa de Europa con los países donde vende Owell resaltados",
+    podpisMarkets: "mercados Owell",
+  },
+  cs: {
+    eyebrow: "Dosah",
+    tytul: "Naše produkty jezdí po celé Evropě",
+    leadPrefix: "Owell znamená",
+    leadYears: "let výroby, přes",
+    leadModels: "modelů, přes",
+    leadMarkets: "trhů. Stejná továrna, stejná kontrola kvality, stejný servisní tým.",
+    mapLabel: "Mapa Evropy se zvýrazněnými zeměmi, kde Owell prodává",
+    podpisMarkets: "trhů Owell",
+  },
+  it: {
+    eyebrow: "Diffusione",
+    tytul: "I nostri prodotti viaggiano in tutta Europa",
+    leadPrefix: "Owell significa",
+    leadYears: "anni di produzione, oltre",
+    leadModels: "modelli, oltre",
+    leadMarkets: "mercati. La stessa fabbrica, lo stesso controllo qualità, lo stesso team di assistenza.",
+    mapLabel: "Mappa dell'Europa con i paesi in cui Owell vende evidenziati",
+    podpisMarkets: "mercati Owell",
+  },
+};
+
+const tresc = trescPoJezyku[jezyk] ?? {
+  eyebrow: "Zasięg",
+  tytul: "Nasze produkty jeżdżą po całej Europie",
+  leadPrefix: "Owell to",
+  leadYears: "lat produkcji, ponad",
+  leadModels: "modeli, ponad",
+  leadMarkets: "rynków. Ta sama fabryka, ta sama kontrola jakości, ci sami ludzie od serwisu.",
+  mapLabel: "Mapa Europy z zaznaczonymi krajami, w których sprzedaje Owell",
+  podpisMarkets: "rynków Owell",
+};
 
 // Bez listy rynków nie renderujemy nic — pusta mapa świata wyglądałaby jak
 // błąd, a wypełnianie jej „na oko" byłoby zmyślaniem danych o firmie.

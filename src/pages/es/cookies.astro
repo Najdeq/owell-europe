@@ -1,0 +1,209 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Prose from "../../components/ui/Prose.astro";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("es", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Cookies", path: l("/cookies") },
+];
+
+const kategorie = [
+  {
+    nazwa: "Necesarias",
+    opis: "Necesarias para el correcto funcionamiento del sitio web y para recordar tus preferencias de consentimiento. No se pueden desactivar.",
+    cookies: [
+      {
+        nazwa: "owell-consent (localStorage)",
+        dostawca: "Owell (propia)",
+        cel: "Recuerda tu decisión de consentimiento para las cookies de analítica y de marketing.",
+        czas: "Sin caducidad, hasta que se borre manualmente o se cambie la configuración.",
+      },
+    ],
+  },
+  {
+    nazwa: "Analítica",
+    opis: "Nos ayudan a entender cómo los visitantes usan el sitio web. Se cargan solo tras dar tu consentimiento (Consent Mode v2).",
+    cookies: [
+      {
+        nazwa: "_ga",
+        dostawca: "Google (Google Analytics 4)",
+        cel: "Distingue a los usuarios únicos.",
+        czas: "13 meses",
+      },
+      {
+        nazwa: "_ga_&lt;identificador&gt;",
+        dostawca: "Google (Google Analytics 4)",
+        cel: "Mantiene el estado de la sesión y recopila estadísticas de visitas.",
+        czas: "13 meses",
+      },
+    ],
+  },
+  {
+    nazwa: "Marketing",
+    opis: "Actualmente no utilizamos cookies de marketing. Esta sección se actualizará si eso cambia.",
+    cookies: [],
+  },
+];
+---
+
+<Base
+  title="Política de cookies — Owell"
+  description="Qué cookies utilizamos en el sitio web de Owell, con qué finalidad y durante cuánto tiempo se almacenan."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title">Política de cookies</h1>
+
+        <Prose>
+          <p>
+            Este sitio web utiliza cookies. Las cookies necesarias se cargan siempre; las demás categorías solo tras
+            dar tu consentimiento en el banner que aparece en tu primera visita. Puedes cambiar tu consentimiento en
+            cualquier momento.
+          </p>
+
+          <button type="button" class="zmien-ustawienia" data-open-consent-settings>
+            Cambiar la configuración de cookies
+          </button>
+
+          {kategorie.map((kategoria) => (
+            <>
+              <h2>{kategoria.nazwa}</h2>
+              <p>{kategoria.opis}</p>
+
+              {kategoria.cookies.length > 0 && (
+                <div class="table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Proveedor</th>
+                        <th scope="col">Finalidad</th>
+                        <th scope="col">Duración</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {kategoria.cookies.map((cookie) => (
+                        <tr>
+                          <td data-label="Nombre" set:html={cookie.nazwa} />
+                          <td data-label="Proveedor">{cookie.dostawca}</td>
+                          <td data-label="Finalidad">{cookie.cel}</td>
+                          <td data-label="Duración">{cookie.czas}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </>
+          ))}
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .zmien-ustawienia {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--sp-3) var(--sp-6);
+    margin-block: var(--sp-2) var(--sp-8);
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    font-weight: 500;
+    color: var(--text);
+    background-color: transparent;
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition:
+      border-color var(--dur) var(--ease),
+      color var(--dur) var(--ease);
+  }
+
+  .zmien-ustawienia:hover {
+    border-color: var(--gold);
+    color: var(--gold-bright);
+  }
+
+  .table-wrap {
+    margin-bottom: var(--sp-8);
+    overflow-x: auto;
+    border: 1px solid var(--hairline-soft);
+    border-radius: var(--radius);
+  }
+
+  table {
+    width: 100%;
+    min-width: 640px;
+    border-collapse: collapse;
+    font-size: var(--fs-small);
+  }
+
+  th {
+    padding: var(--sp-3) var(--sp-4);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+    text-align: left;
+    background-color: var(--bg-2);
+    white-space: nowrap;
+  }
+
+  td {
+    padding: var(--sp-3) var(--sp-4);
+    color: var(--text-2);
+    border-top: 1px solid var(--hairline-soft);
+    vertical-align: top;
+  }
+
+  td:first-child {
+    font-family: var(--font-mono);
+    color: var(--text);
+    white-space: nowrap;
+  }
+</style>
+
+<script>
+  const button = document.querySelector<HTMLButtonElement>(
+    "[data-open-consent-settings]"
+  );
+
+  button?.addEventListener("click", () => {
+    const openConsentSettings = (
+      window as unknown as { openConsentSettings?: () => void }
+    ).openConsentSettings;
+
+    if (typeof openConsentSettings === "function") {
+      openConsentSettings();
+    }
+  });
+</script>

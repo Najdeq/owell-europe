@@ -1,0 +1,706 @@
+---
+import { Image } from "astro:assets";
+import { getCollection, type CollectionEntry } from "astro:content";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../../layouts/Base.astro";
+import Header from "../../../components/Header.astro";
+import Footer from "../../../components/Footer.astro";
+import BreadcrumbSchema from "../../../components/BreadcrumbSchema.astro";
+import Container from "../../../components/ui/Container.astro";
+import Section from "../../../components/ui/Section.astro";
+import Button from "../../../components/ui/Button.astro";
+import Eyebrow from "../../../components/ui/Eyebrow.astro";
+import IkonaWyroznika from "../../../components/ui/IkonaWyroznika.astro";
+import { site } from "../../../data/site.ts";
+import instrukcje from "../../../data/instrukcje.json";
+import { useTranslations } from "../../../i18n/utils.ts";
+
+import fotoOw1360b from "../../../assets/produkty/hero/ow-1360b.jpg";
+import fotoOw1360w from "../../../assets/produkty/hero/ow-1360w.jpg";
+import fotoOw2856 from "../../../assets/produkty/hero/ow-2856.jpg";
+import fotoOw2859 from "../../../assets/produkty/hero/ow-2859.jpg";
+import fotoOw3097 from "../../../assets/produkty/hero/ow-3097.jpg";
+import fotoOw3300 from "../../../assets/produkty/hero/ow-3300.jpg";
+import fotoOw4634 from "../../../assets/produkty/hero/ow-4634.jpg";
+import fotoOw4819 from "../../../assets/produkty/hero/ow-4819.jpg";
+import fotoOw8058 from "../../../assets/produkty/hero/ow-8058.jpg";
+import fotoOw8805 from "../../../assets/produkty/hero/ow-8805.jpg";
+import fotoOw7832 from "../../../assets/produkty/hero/ow-7832.jpg";
+import fotoOw7833 from "../../../assets/produkty/hero/ow-7833.jpg";
+import fotoOw7834 from "../../../assets/produkty/hero/ow-7834.jpg";
+import fotoOw7101 from "../../../assets/produkty/hero/ow-7101.jpg";
+import fotoOw7449 from "../../../assets/produkty/hero/ow-7449.jpg";
+import fotoOw7450 from "../../../assets/produkty/hero/ow-7450.jpg";
+
+export async function getStaticPaths() {
+  const produkty = await getCollection("produkty");
+  const tlumaczenia = await getCollection("produkty-fr");
+  const tlumaczeniaMap = new Map(tlumaczenia.map((t) => [t.id, t.data]));
+
+  return produkty
+    .filter((p) => p.data.opublikowany)
+    .map((produkt) => ({
+      params: { id: produkt.id },
+      props: { produkt, tlumaczenie: tlumaczeniaMap.get(produkt.id) },
+    }));
+}
+
+interface Props {
+  produkt: CollectionEntry<"produkty">;
+  tlumaczenie?: CollectionEntry<"produkty-fr">["data"];
+}
+
+const { produkt, tlumaczenie } = Astro.props;
+const pl = produkt.data;
+
+// Zdjęcia, EAN, dane GPSR (tożsamość prawna), kolejność i publikacja zostają
+// wspólne ze źródłem PL. Tylko pola tekstowe mają tłumaczenie — brakujące
+// pole pokazuje polski oryginał w tym miejscu.
+const d = {
+  ...pl,
+  tagline: tlumaczenie?.tagline ?? pl.tagline,
+  opis: tlumaczenie?.opis ?? pl.opis,
+  dane: tlumaczenie?.dane ?? pl.dane,
+  wyroznniki: tlumaczenie?.wyroznniki ?? pl.wyroznniki,
+  pytania: tlumaczenie?.pytania ?? pl.pytania,
+  gpsr: {
+    ...pl.gpsr,
+    ostrzezenia: tlumaczenie?.ostrzezeniaGpsr ?? pl.gpsr.ostrzezenia,
+  },
+};
+
+const t = useTranslations("fr");
+const l = (sciezka: string) => getRelativeLocaleUrl("fr", sciezka);
+
+const fotki: Record<string, ImageMetadata> = {
+  "ow-1360b": fotoOw1360b,
+  "ow-1360w": fotoOw1360w,
+  "ow-2856": fotoOw2856,
+  "ow-2859": fotoOw2859,
+  "ow-3097": fotoOw3097,
+  "ow-3300": fotoOw3300,
+  "ow-4634": fotoOw4634,
+  "ow-4819": fotoOw4819,
+  "ow-8058": fotoOw8058,
+  "ow-8805": fotoOw8805,
+  "ow-7832": fotoOw7832,
+  "ow-7833": fotoOw7833,
+  "ow-7834": fotoOw7834,
+  "ow-7101": fotoOw7101,
+  "ow-7449": fotoOw7449,
+  "ow-7450": fotoOw7450,
+};
+const foto = fotki[produkt.id];
+
+const instrukcja = instrukcje[produkt.id as keyof typeof instrukcje];
+
+const akapity = d.opis.split("\n\n").filter(Boolean);
+const kupHref = d.gdzieKupic ?? site.sklep;
+
+const nazwaKategorii = t(`kategorie.${d.kategoria}`);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: t("produkt.breadcrumbProdukty"), path: l("/produkty") },
+  { name: d.nazwa, path: l(`/produkty/${produkt.id}`) },
+];
+
+const productSchema = {
+  "@context": "https://schema.org",
+  "@type": "Product",
+  name: d.nazwa,
+  model: d.model,
+  sku: d.model,
+  ...(d.ean ? { gtin13: d.ean } : {}),
+  description: d.tagline,
+  category: nazwaKategorii,
+  brand: { "@type": "Brand", name: site.nazwa },
+  manufacturer: {
+    "@type": "Organization",
+    name: d.gpsr.producent,
+    address: { "@type": "PostalAddress", streetAddress: d.gpsr.adres },
+    email: d.gpsr.emailProducenta,
+  },
+  ...(foto ? { image: new URL(foto.src, Astro.site).toString() } : {}),
+  additionalProperty: d.dane.map((x) => ({
+    "@type": "PropertyValue",
+    name: x.etykieta,
+    value: x.wartosc,
+  })),
+};
+
+const pytaniaAuto: { pytanie: string; odpowiedz: string }[] = [];
+
+const dana = (fragment: string) =>
+  d.dane.find((x) => x.etykieta.toLowerCase().includes(fragment))?.wartosc;
+
+const przewod = dana("cordon") ?? dana("câble");
+if (przewod) {
+  pytaniaAuto.push({ pytanie: t("produkt.pytaniePrzewod"), odpowiedz: `${przewod}.` });
+}
+
+const wymiary = dana("dimensions du produit") ?? dana("dimensions de l'appareil") ?? dana("dimensions extérieures");
+if (wymiary) {
+  pytaniaAuto.push({
+    pytanie: t("produkt.pytanieWymiary"),
+    odpowiedz: `${wymiary} ${t("produkt.pytanieWymiarySufiks")}`,
+  });
+}
+
+const opakowanie = dana("dimensions de l'emballage");
+if (opakowanie) {
+  pytaniaAuto.push({
+    pytanie: t("produkt.pytanieOpakowanie"),
+    odpowiedz: `${opakowanie} ${t("produkt.pytanieOpakowanieSufiks")}`,
+  });
+}
+
+pytaniaAuto.push({
+  pytanie: t("produkt.pytanieGwarancja"),
+  odpowiedz: t("produkt.odpowiedzGwarancja")
+    .replace("{n}", String(d.gwarancjaMiesiace))
+    .replace("{email}", site.kontakt.emailSerwis),
+});
+
+if (instrukcja) {
+  pytaniaAuto.push({
+    pytanie: t("produkt.pytanieInstrukcja"),
+    odpowiedz: t("produkt.odpowiedzInstrukcja").replace("{mb}", instrukcja.mb.toFixed(1)),
+  });
+}
+
+if (d.ean) {
+  pytaniaAuto.push({
+    pytanie: t("produkt.pytanieOryginalnosc"),
+    odpowiedz: t("produkt.odpowiedzOryginalnosc")
+      .replace("{ean}", d.ean)
+      .replace("{model}", d.model)
+      .replace("{producent}", d.gpsr.producent)
+      .replace("{adres}", d.gpsr.adres),
+  });
+}
+
+const pytania = [...(d.pytania ?? []), ...pytaniaAuto];
+
+// Zdania z jednym linkiem w środku — dzielimy w miejscu placeholdera zamiast
+// doklejać link na końcu, żeby tekst i odnośnik faktycznie się łączyły.
+const [pytaniaNotaPrzed, pytaniaNotaPo] = t("produkt.pytaniaNota").split("{email}");
+const [gpsrNotaPrzed, gpsrNotaPo] = t("produkt.gpsrNota").split("{link}");
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: pytania.map((p) => ({
+    "@type": "Question",
+    name: p.pytanie,
+    acceptedAnswer: { "@type": "Answer", text: p.odpowiedz },
+  })),
+};
+---
+
+<Base title={`${d.nazwa} (${d.model}) — Owell`} description={d.tagline}>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(productSchema)} />
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <nav class="okruszki" aria-label="Fil d'Ariane">
+          <a href={l("/produkty")}>{t("produkt.breadcrumbProdukty")}</a>
+          <span aria-hidden="true">/</span>
+          <a href={`${l("/produkty")}#${d.kategoria}`}>{nazwaKategorii}</a>
+        </nav>
+
+        <div class="top">
+          <div class="top-media">
+            {foto ? (
+              <Image
+                src={foto}
+                alt={`${d.nazwa} — ${d.tagline}`}
+                width={900}
+                height={900}
+                loading="eager"
+                class="foto"
+              />
+            ) : (
+              <div class="foto-brak">
+                <span>{d.model}</span>
+              </div>
+            )}
+          </div>
+
+          <div class="top-info">
+            <Eyebrow data-reveal>{d.model}</Eyebrow>
+            <h1 class="tytul" data-reveal data-reveal-delay="80">{d.nazwa}</h1>
+            <p class="tagline" data-reveal data-reveal-delay="160">{d.tagline}</p>
+
+            <div class="kup">
+              {kupHref ? (
+                <Button
+                  href={kupHref}
+                  variant="primary"
+                  external
+                  data-marketplace="sklep"
+                  data-platforma="Sklep internetowy"
+                  data-lokalizacja={`produkt-${produkt.id}`}
+                >
+                  {t("produkt.kupWSklepie")}
+                </Button>
+              ) : (
+                <Button
+                  href={`https://wa.me/${site.kontakt.whatsappWa}`}
+                  variant="primary"
+                  external
+                  data-marketplace="whatsapp"
+                  data-platforma="WhatsApp"
+                  data-lokalizacja={`produkt-${produkt.id}`}
+                >
+                  {t("produkt.zapytajODostepnosc")}
+                </Button>
+              )}
+              {instrukcja && (
+                <Button href={instrukcja.url} variant="ghost">{t("produkt.instrukcjaPdf")}</Button>
+              )}
+            </div>
+
+            <p class="gwarancja-nota">
+              {t("produkt.gwarancjaNota").replace("{n}", String(d.gwarancjaMiesiace))}
+            </p>
+          </div>
+        </div>
+      </Container>
+    </Section>
+
+    <Section bg="raised">
+      <Container>
+        <div class="dwie-kolumny">
+          <div>
+            <h2 class="naglowek" data-reveal>{t("produkt.naglowekOpis")}</h2>
+            {akapity.map((a) => <p class="akapit">{a}</p>)}
+          </div>
+
+          <div>
+            <h2 class="naglowek" data-reveal>{t("produkt.naglowekDane")}</h2>
+            <dl class="dane">
+              {d.dane.map((x) => (
+                <div class="dana">
+                  <dt>{x.etykieta}</dt>
+                  <dd>{x.wartosc}</dd>
+                </div>
+              ))}
+              <div class="dana">
+                <dt>{t("produkt.etykietaModel")}</dt>
+                <dd>{d.model}</dd>
+              </div>
+              {d.ean && (
+                <div class="dana">
+                  <dt>{t("produkt.etykietaEan")}</dt>
+                  <dd>{d.ean}</dd>
+                </div>
+              )}
+            </dl>
+          </div>
+        </div>
+      </Container>
+    </Section>
+
+    <Section bg="base">
+      <Container>
+        <h2 class="naglowek" data-reveal>{t("produkt.naglowekWyroznniki")}</h2>
+        <div class="wyroznniki">
+          {d.wyroznniki.map((w, i) => (
+            <article class="wyroznnik" data-reveal data-reveal-delay={i * 90}>
+              <IkonaWyroznika tytul={w.tytul} class="wyroznnik-ikona" />
+              <div>
+                <h3 class="wyroznnik-tytul">{w.tytul}</h3>
+                <p class="wyroznnik-opis">{w.opis}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </Container>
+    </Section>
+
+    {pytania.length > 0 && (
+      <Section bg="raised">
+        <Container>
+          <h2 class="naglowek" data-reveal>{t("produkt.naglowekPytania")}</h2>
+
+          <div class="pytania">
+            {pytania.map((p: { pytanie: string; odpowiedz: string }) => (
+              <details class="pytanie">
+                <summary>{p.pytanie}</summary>
+                <p>{p.odpowiedz}</p>
+              </details>
+            ))}
+          </div>
+
+          <p class="pytania-nota">
+            {pytaniaNotaPrzed}
+            <a href={`mailto:${site.kontakt.emailSerwis}`}>{site.kontakt.emailSerwis}</a>
+            {pytaniaNotaPo}
+          </p>
+        </Container>
+      </Section>
+    )}
+
+    <Section bg="base">
+      <Container>
+        <div class="gpsr">
+          <Eyebrow>{t("produkt.naglowekGpsrEyebrow")}</Eyebrow>
+          <h2 class="naglowek naglowek--gpsr">{t("produkt.naglowekGpsr")}</h2>
+
+          <dl class="dane dane--gpsr">
+            <div class="dana">
+              <dt>{t("produkt.etykietaProducent")}</dt>
+              <dd>{d.gpsr.producent}</dd>
+            </div>
+            <div class="dana">
+              <dt>{t("produkt.etykietaAdres")}</dt>
+              <dd>{d.gpsr.adres}</dd>
+            </div>
+            <div class="dana">
+              <dt>{t("produkt.etykietaKontakt")}</dt>
+              <dd><a href={`mailto:${d.gpsr.emailProducenta}`}>{d.gpsr.emailProducenta}</a></dd>
+            </div>
+            {d.gpsr.osobaOdpowiedzialnaUE && (
+              <div class="dana">
+                <dt>{t("produkt.etykietaOsobaUE")}</dt>
+                <dd>{d.gpsr.osobaOdpowiedzialnaUE}</dd>
+              </div>
+            )}
+          </dl>
+
+          {d.gpsr.ostrzezenia && d.gpsr.ostrzezenia.length > 0 && (
+            <ul class="ostrzezenia">
+              {d.gpsr.ostrzezenia.map((o) => <li>{o}</li>)}
+            </ul>
+          )}
+
+          <p class="gpsr-nota">
+            {gpsrNotaPrzed}
+            <a href={l("/bezpieczenstwo-produktu")}>{t("produkt.gpsrNotaLink")}</a>
+            {gpsrNotaPo}
+          </p>
+        </div>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .okruszki {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+    margin-top: var(--sp-4);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+  }
+
+  .okruszki a {
+    color: var(--steel);
+    text-decoration: none;
+  }
+
+  .okruszki a:hover {
+    color: var(--gold-bright);
+  }
+
+  .top {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-8);
+    margin-top: var(--sp-8);
+  }
+
+  .foto,
+  .foto-brak {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--hairline-soft);
+  }
+
+  .foto {
+    height: auto;
+    object-fit: cover;
+    background-color: var(--photo-bg);
+  }
+
+  .foto-brak {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--bg-1);
+    font-family: var(--font-mono);
+    font-size: var(--fs-small);
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+  }
+
+  .tytul {
+    margin-top: var(--sp-3);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .tagline {
+    margin-top: var(--sp-4);
+    font-size: var(--fs-lead);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .kup {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-4);
+    margin-top: var(--sp-8);
+  }
+
+  .gwarancja-nota {
+    margin-top: var(--sp-6);
+    padding-top: var(--sp-4);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+    border-top: 1px solid var(--hairline-soft);
+  }
+
+  .naglowek {
+    font-family: var(--font-display);
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .naglowek--gpsr {
+    margin-top: var(--sp-3);
+  }
+
+  .dwie-kolumny {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-12);
+  }
+
+  .akapit {
+    max-width: var(--maxw-prose);
+    margin-top: var(--sp-4);
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .dane {
+    margin-top: var(--sp-6);
+  }
+
+  .dana {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--sp-4);
+    padding-block: var(--sp-3);
+    border-top: 1px solid var(--hairline-soft);
+  }
+
+  .dana dt {
+    font-size: var(--fs-small);
+    color: var(--text-2);
+  }
+
+  .dana dd {
+    font-family: var(--font-mono);
+    font-size: var(--fs-small);
+    color: var(--text);
+  }
+
+  .dana dd a {
+    color: var(--gold);
+  }
+
+  .dana dd a:hover {
+    color: var(--gold-bright);
+  }
+
+  .wyroznniki {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-8);
+    margin-top: var(--sp-8);
+  }
+
+  .wyroznnik {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--sp-5);
+  }
+
+  :global(span.ikona.wyroznnik-ikona) {
+    flex: none;
+    width: 48px;
+    height: 48px;
+  }
+
+  .wyroznnik-tytul {
+    font-family: var(--font-display);
+    font-size: var(--fs-lead);
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .wyroznnik-opis {
+    margin-top: var(--sp-2);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .pytania {
+    max-width: var(--maxw-prose);
+    margin-top: var(--sp-8);
+  }
+
+  .pytanie {
+    border-top: 1px solid var(--hairline-soft);
+  }
+
+  .pytania .pytanie:last-of-type {
+    border-bottom: 1px solid var(--hairline-soft);
+  }
+
+  .pytanie summary {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--sp-4);
+    padding-block: var(--sp-5);
+    font-size: var(--fs-body);
+    font-weight: 500;
+    color: var(--text);
+    cursor: pointer;
+    list-style: none;
+    transition: color var(--dur) var(--ease);
+  }
+
+  .pytanie summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .pytanie summary::after {
+    content: "+";
+    flex: none;
+    font-family: var(--font-mono);
+    font-size: var(--fs-lead);
+    line-height: 1;
+    color: var(--gold);
+    transition: transform var(--dur) var(--ease);
+  }
+
+  .pytanie[open] summary::after {
+    content: "−";
+  }
+
+  .pytanie summary:hover {
+    color: var(--gold-bright);
+  }
+
+  .pytanie summary:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  .pytanie p {
+    max-width: 60ch;
+    padding-bottom: var(--sp-5);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .pytania-nota {
+    max-width: var(--maxw-prose);
+    margin-top: var(--sp-6);
+    font-size: var(--fs-small);
+    color: var(--text-muted);
+  }
+
+  .pytania-nota a {
+    color: var(--gold);
+  }
+
+  .pytania-nota a:hover {
+    color: var(--gold-bright);
+  }
+
+  .gpsr {
+    max-width: var(--maxw-prose);
+  }
+
+  .ostrzezenia {
+    margin-top: var(--sp-6);
+    padding-left: var(--sp-6);
+  }
+
+  .ostrzezenia li {
+    margin-bottom: var(--sp-2);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .gpsr-nota {
+    margin-top: var(--sp-6);
+    font-size: var(--fs-micro);
+    line-height: var(--lh-body);
+    color: var(--text-muted);
+  }
+
+  .gpsr-nota a {
+    color: var(--gold);
+  }
+
+  .gpsr-nota a:hover {
+    color: var(--gold-bright);
+  }
+
+  @media (min-width: 720px) {
+    .dwie-kolumny {
+      grid-template-columns: 1.2fr 1fr;
+      gap: var(--sp-16);
+    }
+
+    .wyroznniki {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 960px) {
+    .top {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-16);
+      align-items: center;
+    }
+
+    .wyroznniki {
+      grid-template-columns: repeat(2, 1fr);
+      column-gap: var(--sp-12);
+    }
+  }
+</style>

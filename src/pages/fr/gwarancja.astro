@@ -1,0 +1,86 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Prose from "../../components/ui/Prose.astro";
+import { site } from "../../data/site.ts";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("fr", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Garantie", path: l("/gwarancja") },
+];
+---
+
+<Base
+  title="Garantie — Owell"
+  description={`Chaque produit Owell est accompagné d'une garantie de ${site.gwarancjaMiesiace} mois. Découvrez ce qu'elle couvre et comment demander une réparation.`}
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title" data-reveal>Carte de garantie</h1>
+
+        <Prose>
+          <h2>Durée de la garantie</h2>
+          <p>
+            Chaque produit Owell est accompagné d'une garantie de {site.gwarancjaMiesiace} mois, à compter de la date
+            d'achat attestée par une preuve d'achat (ticket de caisse ou facture de la boutique en ligne).
+          </p>
+
+          <h2>Ce que couvre la garantie</h2>
+          <p>
+            Les défauts de matériaux et de fabrication apparaissant dans des conditions normales d'utilisation,
+            conformément au mode d'emploi fourni avec le produit.
+          </p>
+
+          <h2>Ce que la garantie ne couvre pas</h2>
+          <ul>
+            <li>Les dommages mécaniques causés par l'utilisateur.</li>
+            <li>L'usure normale des pièces consommables (par exemple les lames, les batteries).</li>
+            <li>Les défauts résultant d'une utilisation non conforme au mode d'emploi.</li>
+          </ul>
+
+          <h2>Prolonger la garantie</h2>
+          <p>
+            Après l'enregistrement de votre produit, nous prolongeons la garantie de {site.gwarancjaMiesiace} à{" "}
+            {site.gwarancjaMiesiace + site.gwarancjaPlus.dodatkoweMiesiace} mois — gratuitement. La demande doit être
+            envoyée dans les {site.gwarancjaPlus.terminDni} jours suivant l'achat. Les détails et la marche à suivre
+            sont décrits sur la page <a href={l("/rejestracja-produktu")}>enregistrement du produit</a>.
+          </p>
+
+          <h2>Comment demander une réparation</h2>
+          <p>
+            Écrivez à <a href={`mailto:${site.kontakt.emailSerwis}`}>{site.kontakt.emailSerwis}</a>, en indiquant le
+            modèle du produit, le numéro de commande et une description du défaut. Des photos ou une courte vidéo
+            accélèrent le traitement. Nous traitons les demandes par e-mail, sans centre d'appels.
+          </p>
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+</style>

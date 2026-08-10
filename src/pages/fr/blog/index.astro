@@ -1,0 +1,183 @@
+---
+import { getCollection } from "astro:content";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../../layouts/Base.astro";
+import Header from "../../../components/Header.astro";
+import Footer from "../../../components/Footer.astro";
+import BreadcrumbSchema from "../../../components/BreadcrumbSchema.astro";
+import Container from "../../../components/ui/Container.astro";
+import Section from "../../../components/ui/Section.astro";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("fr", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Blog", path: l("/blog") },
+];
+
+const wszystkie = await getCollection("blog-fr");
+const wpisy = wszystkie
+  .filter((w) => w.data.opublikowany)
+  .sort((a, b) => b.data.data.valueOf() - a.data.data.valueOf());
+
+const formatData = (d: Date) =>
+  d.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+---
+
+<Base
+  title="Blog — Owell"
+  description="Guides et informations sur le petit électroménager : comment entretenir vos appareils, que vérifier avant d'acheter, comment fonctionnent les certifications de sécurité."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title" data-reveal>Blog</h1>
+        <p class="page-lead" data-reveal data-reveal-delay="80">
+          Guides, explications et informations sur le petit électroménager — sans blabla marketing.
+        </p>
+
+        {wpisy.length > 0 ? (
+          <div class="lista">
+            {wpisy.map((w, i) => (
+              <a href={l(`/blog/${w.id}`)} class="karta" data-reveal data-reveal-delay={i * 90}>
+                {w.data.okladka && (
+                  <div class="karta-okladka">
+                    <img src={w.data.okladka} alt="" width="640" height="360" loading="lazy" />
+                  </div>
+                )}
+                <div class="karta-tresc">
+                  <time class="karta-data" datetime={w.data.data.toISOString()}>
+                    {formatData(w.data.data)}
+                  </time>
+                  <h2 class="karta-tytul">{w.data.tytul}</h2>
+                  <p class="karta-opis">{w.data.opis}</p>
+                  <span class="karta-link">Lire →</span>
+                </div>
+              </a>
+            ))}
+          </div>
+        ) : (
+          <p class="brak">Premiers articles bientôt disponibles.</p>
+        )}
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .page-lead {
+    margin-top: var(--sp-4);
+    max-width: var(--maxw-prose);
+    font-size: var(--fs-lead);
+    color: var(--text-2);
+  }
+
+  .lista {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-8);
+    margin-top: var(--sp-12);
+  }
+
+  .karta {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--hairline-soft);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    text-decoration: none;
+    transition:
+      border-color var(--dur) var(--ease),
+      transform var(--dur) var(--ease);
+  }
+
+  .karta:hover {
+    border-color: var(--gold);
+    transform: translateY(-3px);
+  }
+
+  .karta-okladka {
+    aspect-ratio: 16 / 9;
+    background-color: var(--photo-bg);
+  }
+
+  .karta-okladka img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .karta-tresc {
+    padding: var(--sp-6);
+  }
+
+  .karta-data {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+  }
+
+  .karta-tytul {
+    margin-top: var(--sp-2);
+    font-family: var(--font-display);
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .karta-opis {
+    margin-top: var(--sp-3);
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .karta-link {
+    display: inline-block;
+    margin-top: var(--sp-4);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--gold);
+  }
+
+  .karta:hover .karta-link {
+    color: var(--gold-bright);
+  }
+
+  .brak {
+    margin-top: var(--sp-12);
+    color: var(--text-muted);
+  }
+
+  @media (min-width: 720px) {
+    .lista {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1000px) {
+    .lista {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

@@ -1,0 +1,164 @@
+---
+import { getCollection } from "astro:content";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Prose from "../../components/ui/Prose.astro";
+import { site } from "../../data/site.ts";
+
+const produkty = (await getCollection("produkty", ({ data }) => data.opublikowany)).sort(
+  (a, b) => a.data.kolejnosc - b.data.kolejnosc
+);
+
+const l = (sciezka: string) => getRelativeLocaleUrl("cs", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Bezpečnost produktu", path: l("/bezpieczenstwo-produktu") },
+];
+---
+
+<Base
+  title="Bezpečnost produktu — Owell"
+  description="Údaje o výrobci vyžadované nařízením GPSR (EU) 2023/988, jak nahlásit problém s bezpečností produktu a informace o servisních akcích."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title">Bezpečnost produktu</h1>
+
+        <Prose>
+          <p>
+            Tato stránka obsahuje informace vyžadované nařízením Evropského parlamentu a Rady (EU) 2023/988 o
+            obecné bezpečnosti výrobků (GPSR).
+          </p>
+
+          <h2>Subjekt odpovědný za tento web</h2>
+          <p>
+            <strong>{site.firma.nazwaPelna}</strong><br />
+            {site.firma.adres}<br />
+            DIČ (NIP): {site.firma.nip} · Identifikační číslo firmy (REGON): {site.firma.regon}<br />
+            E-mail pro záležitosti bezpečnosti produktů: <a href={`mailto:${site.kontakt.emailGpsr}`}>{site.kontakt.emailGpsr}</a>
+          </p>
+
+          <h2>Údaje o výrobci pro jednotlivé produkty</h2>
+          <p>
+            V souladu s požadavky GPSR níže zveřejňujeme identifikační údaje výrobce pro každý produkt v naší
+            nabídce. Sloupec „odpovědná osoba v EU" je vyplněn pouze v případě, že výrobce sídlí mimo Evropskou unii.
+          </p>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Produkt</th>
+                  <th scope="col">Výrobce</th>
+                  <th scope="col">Adresa</th>
+                  <th scope="col">E-mail</th>
+                  <th scope="col">Odpovědná osoba v EU</th>
+                </tr>
+              </thead>
+              <tbody>
+                {produkty.map((p) => (
+                  <tr>
+                    <td data-label="Produkt">{p.data.nazwa} ({p.data.model})</td>
+                    <td data-label="Výrobce">{p.data.gpsr.producent}</td>
+                    <td data-label="Adresa">{p.data.gpsr.adres}</td>
+                    <td data-label="E-mail">
+                      <a href={`mailto:${p.data.gpsr.emailProducenta}`}>{p.data.gpsr.emailProducenta}</a>
+                    </td>
+                    <td data-label="Odpovědná osoba v EU">{p.data.gpsr.osobaOdpowiedzialnaUE ?? "—"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <h2>Jak nahlásit problém s bezpečností</h2>
+          <p>
+            Pokud máte podezření, že některý z našich produktů představuje riziko pro zdraví nebo bezpečnost, napište
+            na <a href={`mailto:${site.kontakt.emailGpsr}`}>{site.kontakt.emailGpsr}</a>. Do svého hlášení prosím
+            uveďte:
+          </p>
+          <ul>
+            <li>název a model produktu (např. z etikety nebo z produktové karty na tomto webu),</li>
+            <li>popis zjištěného problému,</li>
+            <li>fotografie problému, pokud je to možné,</li>
+            <li>vaše kontaktní údaje, abychom se vám mohli ozvat.</li>
+          </ul>
+          <p>
+            Pokud produkt představuje závažné riziko, jsou výrobce a distributoři povinni tuto skutečnost nahlásit
+            příslušným orgánům dozoru nad trhem (v Polsku mimo jiné UOKiK) prostřednictvím systému EU Safety Gate.
+          </p>
+
+          <h2>Servisní akce a stažení produktů z trhu</h2>
+          <p>
+            Ke dni vydání tohoto oznámení (7. srpna 2026) společnost Owell neprovádí žádné servisní akce ani
+            stažení produktů z trhu. Pokud se tato situace změní, budeme tuto informaci neprodleně aktualizovat.
+          </p>
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .table-wrap {
+    margin-bottom: var(--sp-8);
+    overflow-x: auto;
+    border: 1px solid var(--hairline-soft);
+    border-radius: var(--radius);
+  }
+
+  table {
+    width: 100%;
+    min-width: 760px;
+    border-collapse: collapse;
+    font-size: var(--fs-small);
+  }
+
+  th {
+    padding: var(--sp-3) var(--sp-4);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+    text-align: left;
+    background-color: var(--bg-2);
+    white-space: nowrap;
+  }
+
+  td {
+    padding: var(--sp-3) var(--sp-4);
+    color: var(--text-2);
+    border-top: 1px solid var(--hairline-soft);
+    vertical-align: top;
+  }
+
+  td:first-child {
+    color: var(--text);
+    font-weight: 500;
+  }
+</style>

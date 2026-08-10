@@ -1,0 +1,105 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Prose from "../../components/ui/Prose.astro";
+import { site } from "../../data/site.ts";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("it", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "FAQ", path: l("/faq") },
+];
+
+const pytania = [
+  {
+    pytanie: "Dove posso acquistare i prodotti Owell?",
+    odpowiedz: `Nel nostro negozio ufficiale su Allegro — dove vendiamo direttamente come produttore, quindi la garanzia e l'assistenza fanno capo direttamente a noi. Stiamo lavorando anche a un nostro negozio online. Trovi i link aggiornati nella pagina "Dove acquistare".`,
+  },
+  {
+    pytanie: "Quanto dura la garanzia e cosa copre?",
+    odpowiedz: `${site.gwarancjaMiesiace} mesi dalla data di acquisto. La garanzia copre i difetti di materiale e di fabbricazione — non copre i danni meccanici causati dall'utilizzatore.`,
+  },
+  {
+    pytanie: "Come faccio a presentare un reclamo?",
+    odpowiedz: `Scrivi a ${site.kontakt.emailSerwis}. Nel messaggio indica il modello del prodotto, il numero d'ordine e una descrizione del guasto — foto o un breve video velocizzano il processo.`,
+  },
+  {
+    pytanie: "Dove trovo il manuale?",
+    odpowiedz: `Il manuale in PDF è disponibile nella pagina di ogni prodotto. Se non lo trovi lì, scrivici — te lo invieremo via email.`,
+  },
+  {
+    pytanie: "Sono disponibili i pezzi di ricambio?",
+    odpowiedz: `Dipende dal modello. Scrivi a ${site.kontakt.emailSerwis} indicando il nome del prodotto e una descrizione del pezzo di cui hai bisogno — verificheremo la disponibilità caso per caso.`,
+  },
+  {
+    pytanie: "Come funziona l'assistenza?",
+    odpowiedz: `Gestiamo le richieste via email, senza call center. Rispondiamo entro 24 ore lavorative e seguiamo il caso fino alla sua conclusione — senza trasferirti ad altri reparti.`,
+  },
+  {
+    pytanie: "Come funziona la consegna?",
+    odpowiedz: `Gli ordini effettuati prima delle 18:30 vengono spediti lo stesso giorno, con consegna garantita tramite InPost. Il tempo e il costo esatti di consegna sono indicati nel negozio al momento dell'ordine — dipendono dal metodo di spedizione scelto.`,
+  },
+  {
+    pytanie: "Come posso contattarvi?",
+    odpowiedz: `Per questioni generali: ${site.kontakt.email}. Per assistenza e reclami: ${site.kontakt.emailSerwis}.`,
+  },
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: pytania.map((p) => ({
+    "@type": "Question",
+    name: p.pytanie,
+    acceptedAnswer: { "@type": "Answer", text: p.odpowiedz },
+  })),
+};
+---
+
+<Base
+  title="FAQ — Owell"
+  description="Risposte alle domande più frequenti: dove acquistare, come funziona la garanzia, come presentare un reclamo e contattare il nostro servizio assistenza."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title" data-reveal>Domande frequenti</h1>
+
+        <Prose>
+          {pytania.map((p) => (
+            <>
+              <h2>{p.pytanie}</h2>
+              <p>{p.odpowiedz}</p>
+            </>
+          ))}
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+</style>

@@ -11,34 +11,123 @@ const l = (sciezka: string) => getRelativeLocaleUrl(jezyk, sciezka);
 
 const czasReakcji = "24h";
 
-const tresc =
-  jezyk === "en"
-    ? {
-        eyebrow: "Warranty and service",
-        jednostka: "months of warranty",
-        opis: `Every Owell product comes with a ${site.gwarancjaMiesiace}-month warranty. Service requests are handled directly, with no redirects between call centres.`,
-        punkty: [
-          `The warranty covers material and manufacturing defects for the full ${site.gwarancjaMiesiace} months from purchase.`,
-          "We handle requests by email, directly — no call centre and no redirects.",
-          "Orders placed before 6:30 PM ship the same day, with guaranteed InPost delivery.",
-        ],
-        detalPodpis: "Service response time",
-        linkInstrukcje: "Manuals →",
-        linkGwarancja: "Warranty card →",
-      }
-    : {
-        eyebrow: "Gwarancja i serwis",
-        jednostka: "miesięcy gwarancji",
-        opis: `Każdy produkt Owell objęty jest ${site.gwarancjaMiesiace}-miesięczną gwarancją. Zgłoszenia serwisowe obsługujemy po polsku, bez przekierowań między infoliniami.`,
-        punkty: [
-          `Gwarancja obejmuje wady materiałowe i produkcyjne przez cały okres ${site.gwarancjaMiesiace} miesięcy od zakupu.`,
-          "Zgłoszenie przyjmujemy mailowo, bezpośrednio — bez infolinii i bez przekierowań.",
-          "Zamówienia złożone do 18:30 wysyłamy tego samego dnia, z gwarancją dostawy InPostem.",
-        ],
-        detalPodpis: "Czas reakcji serwisu",
-        linkInstrukcje: "Instrukcje obsługi →",
-        linkGwarancja: "Karta gwarancyjna →",
-      };
+type Tresc = {
+  eyebrow: string;
+  jednostka: string;
+  opis: string;
+  punkty: string[];
+  detalPodpis: string;
+  linkInstrukcje: string;
+  linkGwarancja: string;
+};
+
+const trescPoJezyku: Partial<Record<Jezyk, Tresc>> = {
+  en: {
+    eyebrow: "Warranty and service",
+    jednostka: "months of warranty",
+    opis: `Every Owell product comes with a ${site.gwarancjaMiesiace}-month warranty. Service requests are handled directly, with no redirects between call centres.`,
+    punkty: [
+      `The warranty covers material and manufacturing defects for the full ${site.gwarancjaMiesiace} months from purchase.`,
+      "We handle requests by email, directly — no call centre and no redirects.",
+      "Orders placed before 6:30 PM ship the same day, with guaranteed InPost delivery.",
+    ],
+    detalPodpis: "Service response time",
+    linkInstrukcje: "Manuals →",
+    linkGwarancja: "Warranty card →",
+  },
+  de: {
+    eyebrow: "Garantie und Service",
+    jednostka: "Monate Garantie",
+    opis: `Jedes Owell-Produkt kommt mit einer ${site.gwarancjaMiesiace}-monatigen Garantie. Serviceanfragen bearbeiten wir direkt, ohne Weiterleitungen zwischen Callcentern.`,
+    punkty: [
+      `Die Garantie deckt Material- und Herstellungsfehler für die vollen ${site.gwarancjaMiesiace} Monate ab dem Kaufdatum ab.`,
+      "Anfragen bearbeiten wir direkt per E-Mail — ohne Callcenter und ohne Weiterleitungen.",
+      "Bis 18:30 Uhr aufgegebene Bestellungen versenden wir noch am selben Tag, mit garantierter InPost-Zustellung.",
+    ],
+    detalPodpis: "Reaktionszeit des Service",
+    linkInstrukcje: "Bedienungsanleitungen →",
+    linkGwarancja: "Garantiekarte →",
+  },
+  ru: {
+    eyebrow: "Гарантия и сервис",
+    jednostka: "месяцев гарантии",
+    opis: `Каждый продукт Owell имеет ${site.gwarancjaMiesiace}-месячную гарантию. Сервисные обращения обрабатываем напрямую, без переадресаций между колл-центрами.`,
+    punkty: [
+      `Гарантия покрывает материальные и производственные дефекты в течение всего срока ${site.gwarancjaMiesiace} месяцев с момента покупки.`,
+      "Обращения принимаем по email, напрямую — без колл-центра и переадресаций.",
+      "Заказы, оформленные до 18:30, отправляем в тот же день, с гарантированной доставкой InPost.",
+    ],
+    detalPodpis: "Время реакции сервиса",
+    linkInstrukcje: "Инструкции по эксплуатации →",
+    linkGwarancja: "Гарантийный талон →",
+  },
+  fr: {
+    eyebrow: "Garantie et service",
+    jednostka: "mois de garantie",
+    opis: `Chaque produit Owell bénéficie d'une garantie de ${site.gwarancjaMiesiace} mois. Les demandes de service sont traitées directement, sans redirection entre centres d'appel.`,
+    punkty: [
+      `La garantie couvre les défauts matériels et de fabrication pendant toute la durée de ${site.gwarancjaMiesiace} mois à compter de l'achat.`,
+      "Nous traitons les demandes par e-mail, directement — sans centre d'appel ni redirection.",
+      "Les commandes passées avant 18h30 sont expédiées le jour même, avec livraison garantie par InPost.",
+    ],
+    detalPodpis: "Délai de réponse du service",
+    linkInstrukcje: "Notices d'utilisation →",
+    linkGwarancja: "Carte de garantie →",
+  },
+  es: {
+    eyebrow: "Garantía y servicio",
+    jednostka: "meses de garantía",
+    opis: `Todos los productos Owell incluyen una garantía de ${site.gwarancjaMiesiace} meses. Gestionamos las solicitudes de servicio directamente, sin redirecciones entre centralitas.`,
+    punkty: [
+      `La garantía cubre defectos de material y de fabricación durante los ${site.gwarancjaMiesiace} meses completos desde la compra.`,
+      "Gestionamos las solicitudes por email, directamente — sin centralita ni redirecciones.",
+      "Los pedidos realizados antes de las 18:30 se envían el mismo día, con entrega garantizada por InPost.",
+    ],
+    detalPodpis: "Tiempo de respuesta del servicio",
+    linkInstrukcje: "Manuales de uso →",
+    linkGwarancja: "Tarjeta de garantía →",
+  },
+  cs: {
+    eyebrow: "Záruka a servis",
+    jednostka: "měsíců záruky",
+    opis: `Každý produkt Owell má ${site.gwarancjaMiesiace}měsíční záruku. Servisní požadavky vyřizujeme přímo, bez přesměrování mezi call centry.`,
+    punkty: [
+      `Záruka pokrývá materiálové a výrobní vady po celou dobu ${site.gwarancjaMiesiace} měsíců od nákupu.`,
+      "Požadavky přijímáme e-mailem, přímo — bez call centra a přesměrování.",
+      "Objednávky zadané do 18:30 odesíláme týž den, s garantovaným doručením přes InPost.",
+    ],
+    detalPodpis: "Reakční doba servisu",
+    linkInstrukcje: "Návody k obsluze →",
+    linkGwarancja: "Záruční list →",
+  },
+  it: {
+    eyebrow: "Garanzia e assistenza",
+    jednostka: "mesi di garanzia",
+    opis: `Ogni prodotto Owell è coperto da una garanzia di ${site.gwarancjaMiesiace} mesi. Gestiamo le richieste di assistenza direttamente, senza reindirizzamenti tra call center.`,
+    punkty: [
+      `La garanzia copre i difetti di materiale e di fabbricazione per l'intero periodo di ${site.gwarancjaMiesiace} mesi dall'acquisto.`,
+      "Gestiamo le richieste via e-mail, direttamente — senza call center né reindirizzamenti.",
+      "Gli ordini effettuati entro le 18:30 vengono spediti lo stesso giorno, con consegna garantita da InPost.",
+    ],
+    detalPodpis: "Tempo di risposta dell'assistenza",
+    linkInstrukcje: "Manuali d'uso →",
+    linkGwarancja: "Scheda di garanzia →",
+  },
+};
+
+const tresc = trescPoJezyku[jezyk] ?? {
+  eyebrow: "Gwarancja i serwis",
+  jednostka: "miesięcy gwarancji",
+  opis: `Każdy produkt Owell objęty jest ${site.gwarancjaMiesiace}-miesięczną gwarancją. Zgłoszenia serwisowe obsługujemy po polsku, bez przekierowań między infoliniami.`,
+  punkty: [
+    `Gwarancja obejmuje wady materiałowe i produkcyjne przez cały okres ${site.gwarancjaMiesiace} miesięcy od zakupu.`,
+    "Zgłoszenie przyjmujemy mailowo, bezpośrednio — bez infolinii i bez przekierowań.",
+    "Zamówienia złożone do 18:30 wysyłamy tego samego dnia, z gwarancją dostawy InPostem.",
+  ],
+  detalPodpis: "Czas reakcji serwisu",
+  linkInstrukcje: "Instrukcje obsługi →",
+  linkGwarancja: "Karta gwarancyjna →",
+};
 ---
 
 <Section bg="raised">

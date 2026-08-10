@@ -1,0 +1,105 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Prose from "../../components/ui/Prose.astro";
+import { site } from "../../data/site.ts";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("de", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "FAQ", path: l("/faq") },
+];
+
+const pytania = [
+  {
+    pytanie: "Wo kann ich Owell-Produkte kaufen?",
+    odpowiedz: `In unserem offiziellen Shop auf Allegro — dort verkaufen wir direkt als Hersteller, sodass Garantie und Service direkt bei uns liegen. Wir arbeiten außerdem an einem eigenen Online-Shop. Aktuelle Links finden Sie auf der Seite „Wo kaufen".`,
+  },
+  {
+    pytanie: "Wie lange gilt die Garantie und was deckt sie ab?",
+    odpowiedz: `${site.gwarancjaMiesiace} Monate ab Kaufdatum. Die Garantie deckt Material- und Herstellungsfehler ab — sie deckt keine vom Nutzer verursachten mechanischen Schäden ab.`,
+  },
+  {
+    pytanie: "Wie reiche ich eine Reklamation ein?",
+    odpowiedz: `Schreiben Sie an ${site.kontakt.emailSerwis}. Geben Sie in Ihrer Nachricht das Produktmodell, die Bestellnummer und eine Beschreibung des Defekts an — Fotos oder ein kurzes Video beschleunigen den Prozess.`,
+  },
+  {
+    pytanie: "Wo finde ich die Bedienungsanleitung?",
+    odpowiedz: `Die PDF-Anleitung ist auf der Seite jedes Produkts verfügbar. Falls Sie sie dort nicht finden, schreiben Sie uns — wir senden sie Ihnen per E-Mail zu.`,
+  },
+  {
+    pytanie: "Sind Ersatzteile verfügbar?",
+    odpowiedz: `Das hängt vom Modell ab. Schreiben Sie an ${site.kontakt.emailSerwis} mit dem Produktnamen und einer Beschreibung des benötigten Teils — wir prüfen die Verfügbarkeit individuell.`,
+  },
+  {
+    pytanie: "Wie funktioniert der Service?",
+    odpowiedz: `Wir bearbeiten Anfragen per E-Mail, ohne Callcenter. Wir antworten innerhalb von 24 Werkstunden und begleiten den Fall bis zum Abschluss — ohne Sie an andere Abteilungen weiterzuleiten.`,
+  },
+  {
+    pytanie: "Wie funktioniert die Lieferung?",
+    odpowiedz: `Bestellungen, die bis 18:30 Uhr eingehen, werden noch am selben Tag versendet, mit garantierter InPost-Lieferung. Die genaue Lieferzeit und die Kosten sehen Sie im Shop bei der Bestellung — sie hängen von der gewählten Versandart ab.`,
+  },
+  {
+    pytanie: "Wie kann ich Sie kontaktieren?",
+    odpowiedz: `Für allgemeine Anliegen: ${site.kontakt.email}. Für Service und Reklamationen: ${site.kontakt.emailSerwis}.`,
+  },
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: pytania.map((p) => ({
+    "@type": "Question",
+    name: p.pytanie,
+    acceptedAnswer: { "@type": "Answer", text: p.odpowiedz },
+  })),
+};
+---
+
+<Base
+  title="FAQ — Owell"
+  description="Antworten auf häufig gestellte Fragen: wo man kauft, wie die Garantie funktioniert, wie man eine Reklamation einreicht und unser Serviceteam erreicht."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title" data-reveal>Häufig gestellte Fragen</h1>
+
+        <Prose>
+          {pytania.map((p) => (
+            <>
+              <h2>{p.pytanie}</h2>
+              <p>{p.odpowiedz}</p>
+            </>
+          ))}
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+</style>

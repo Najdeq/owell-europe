@@ -1,0 +1,39 @@
+---
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import Hero from "../../components/sections/Hero.astro";
+import Wartosci from "../../components/sections/Wartosci.astro";
+import Kategorie from "../../components/sections/Kategorie.astro";
+import KaruzelaProduktow from "../../components/sections/KaruzelaProduktow.astro";
+import Dlaczego from "../../components/sections/Dlaczego.astro";
+import Liczby from "../../components/sections/Liczby.astro";
+import MapaZasiegu from "../../components/sections/MapaZasiegu.astro";
+import Gwarancja from "../../components/sections/Gwarancja.astro";
+import Opinie from "../../components/sections/Opinie.astro";
+import GdzieKupic from "../../components/sections/GdzieKupic.astro";
+import Kontakt from "../../components/sections/Kontakt.astro";
+---
+
+<Base
+  title="Owell — Kleine Haushaltsgeräte, entwickelt in Europa"
+  description="Owell entwickelt kleine Haushaltsgeräte für jahrelangen Alltagsgebrauch. Entdecken Sie das Sortiment und erfahren Sie, wo Sie kaufen können."
+>
+  <Header />
+
+  <main id="content">
+    <Hero />
+    <Wartosci />
+    <Kategorie />
+    <KaruzelaProduktow />
+    <Dlaczego />
+    <Liczby />
+    <MapaZasiegu />
+    <Gwarancja />
+    <Opinie />
+    <GdzieKupic />
+    <Kontakt />
+  </main>
+
+  <Footer />
+</Base>

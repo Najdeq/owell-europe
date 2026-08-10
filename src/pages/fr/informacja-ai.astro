@@ -1,0 +1,74 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Prose from "../../components/ui/Prose.astro";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("fr", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Avis relatif à l'AI Act", path: l("/informacja-ai") },
+];
+---
+
+<Base
+  title="Avis relatif à l'AI Act — Owell"
+  description="Informations sur l'utilisation de l'intelligence artificielle pour la préparation des visuels produits, conformément à l'AI Act de l'UE."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title">Avis relatif à l'AI Act</h1>
+
+        <Prose>
+          <p>
+            Les visuels de produits sur ce site ont été réalisés à l'aide de la technologie d'intelligence
+            artificielle. Ils ont été créés à partir de photos réelles des produits et des designs d'emballage.
+          </p>
+
+          <p>
+            Nous publions cet avis en lien avec les obligations découlant de l'article 50 du règlement (UE)
+            2024/1689 du Parlement européen et du Conseil établissant des règles harmonisées en matière
+            d'intelligence artificielle (l'AI Act).
+          </p>
+
+          <h2>Pourquoi nous le précisons</h2>
+          <ul>
+            <li><strong>Transparence</strong> — nous respectons votre droit de savoir d'où viennent les visuels.</li>
+            <li><strong>Conformité légale</strong> — nous respectons les obligations de divulgation de l'AI Act de l'UE.</li>
+            <li><strong>Exactitude</strong> — nous veillons à ce que les visuels numériques reflètent fidèlement le produit réel.</li>
+          </ul>
+
+          <p>
+            Si vous avez des questions sur l'origine d'un visuel en particulier, contactez-nous — vous trouverez
+            nos coordonnées sur la page <a href={l("/bezpieczenstwo-produktu")}>sécurité des produits</a>.
+          </p>
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+</style>

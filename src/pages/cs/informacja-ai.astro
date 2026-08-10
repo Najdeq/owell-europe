@@ -1,0 +1,74 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Prose from "../../components/ui/Prose.astro";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("cs", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Informace o AI Act", path: l("/informacja-ai") },
+];
+---
+
+<Base
+  title="Informace o AI Act — Owell"
+  description="Informace o použití umělé inteligence při přípravě produktových vizualizací, v souladu s nařízením EU o umělé inteligenci (AI Act)."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title">Informace o AI Act</h1>
+
+        <Prose>
+          <p>
+            Produktové vizualizace na tomto webu byly vytvořeny s využitím technologie umělé inteligence. Vznikly
+            na základě skutečných fotografií produktů a návrhů obalů.
+          </p>
+
+          <p>
+            Toto oznámení zveřejňujeme v souvislosti s povinnostmi vyplývajícími z článku 50 nařízení Evropského
+            parlamentu a Rady (EU) 2024/1689, kterým se stanoví harmonizovaná pravidla pro umělou inteligenci
+            (AI Act).
+          </p>
+
+          <h2>Proč to zveřejňujeme</h2>
+          <ul>
+            <li><strong>Transparentnost</strong> — respektujeme vaše právo vědět, odkud vizualizace pocházejí.</li>
+            <li><strong>Soulad s právními předpisy</strong> — plníme oznamovací povinnosti vyplývající z evropského AI Act.</li>
+            <li><strong>Přesnost</strong> — dbáme na to, aby digitální vizualizace přesně odpovídaly skutečnému produktu.</li>
+          </ul>
+
+          <p>
+            Pokud máte otázky ohledně původu konkrétní vizualizace, ozvěte se nám — naše kontaktní údaje najdete
+            na stránce <a href={l("/bezpieczenstwo-produktu")}>bezpečnost produktu</a>.
+          </p>
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+</style>

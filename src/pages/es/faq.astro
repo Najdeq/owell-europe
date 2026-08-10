@@ -1,0 +1,105 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Prose from "../../components/ui/Prose.astro";
+import { site } from "../../data/site.ts";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("es", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Preguntas frecuentes", path: l("/faq") },
+];
+
+const pytania = [
+  {
+    pytanie: "¿Dónde puedo comprar productos Owell?",
+    odpowiedz: `En nuestra tienda oficial en Allegro: vendemos allí directamente como fabricante, por lo que la garantía y el servicio técnico pasan directamente por nosotros. También estamos trabajando en nuestra propia tienda online. Encontrarás los enlaces actualizados en la página "Dónde comprar".`,
+  },
+  {
+    pytanie: "¿Cuánto dura la garantía y qué cubre?",
+    odpowiedz: `${site.gwarancjaMiesiace} meses desde la fecha de compra. La garantía cubre defectos de material y de fabricación; no cubre los daños mecánicos causados por el usuario.`,
+  },
+  {
+    pytanie: "¿Cómo presento una reclamación?",
+    odpowiedz: `Escribe a ${site.kontakt.emailSerwis}. En tu mensaje, incluye el modelo del producto, el número de pedido y una descripción del fallo; las fotos o un vídeo corto agilizan el proceso.`,
+  },
+  {
+    pytanie: "¿Dónde encuentro el manual?",
+    odpowiedz: `El manual en PDF está disponible en la página de cada producto. Si no lo encuentras allí, escríbenos y te lo enviaremos por correo electrónico.`,
+  },
+  {
+    pytanie: "¿Hay piezas de repuesto disponibles?",
+    odpowiedz: `Depende del modelo. Escribe a ${site.kontakt.emailSerwis} indicando el nombre del producto y una descripción de la pieza que necesitas; comprobaremos la disponibilidad de forma individual.`,
+  },
+  {
+    pytanie: "¿Cómo funciona el servicio técnico?",
+    odpowiedz: `Gestionamos las solicitudes por correo electrónico, sin centro de atención telefónica. Respondemos en un plazo de 24 horas laborables y llevamos el caso hasta el final, sin derivarte a otros departamentos.`,
+  },
+  {
+    pytanie: "¿Cómo funciona el envío?",
+    odpowiedz: `Los pedidos realizados antes de las 18:30 se envían el mismo día, con entrega garantizada por InPost. Verás el plazo y el coste exactos de la entrega en la tienda al realizar tu pedido; dependen del método de envío elegido.`,
+  },
+  {
+    pytanie: "¿Cómo puedo contactar con vosotros?",
+    odpowiedz: `Para asuntos generales: ${site.kontakt.email}. Para servicio técnico y reclamaciones: ${site.kontakt.emailSerwis}.`,
+  },
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: pytania.map((p) => ({
+    "@type": "Question",
+    name: p.pytanie,
+    acceptedAnswer: { "@type": "Answer", text: p.odpowiedz },
+  })),
+};
+---
+
+<Base
+  title="Preguntas frecuentes — Owell"
+  description="Respuestas a las preguntas más frecuentes: dónde comprar, cómo funciona la garantía, cómo presentar una reclamación y cómo contactar con nuestro servicio técnico."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title" data-reveal>Preguntas frecuentes</h1>
+
+        <Prose>
+          {pytania.map((p) => (
+            <>
+              <h2>{p.pytanie}</h2>
+              <p>{p.odpowiedz}</p>
+            </>
+          ))}
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+</style>

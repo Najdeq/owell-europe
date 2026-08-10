@@ -1,0 +1,208 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Prose from "../../components/ui/Prose.astro";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("cs", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Cookies", path: l("/cookies") },
+];
+
+const kategorie = [
+  {
+    nazwa: "Nezbytné",
+    opis: "Nutné pro správné fungování webu a pro zapamatování vaší volby ohledně souhlasu. Tyto nelze vypnout.",
+    cookies: [
+      {
+        nazwa: "owell-consent (localStorage)",
+        dostawca: "Owell (vlastní)",
+        cel: "Uchovává vaše rozhodnutí o souhlasu s analytickými a marketingovými soubory cookie.",
+        czas: "Bez expirace — dokud není ručně vymazáno nebo změněno v nastavení.",
+      },
+    ],
+  },
+  {
+    nazwa: "Analytické",
+    opis: "Pomáhají nám pochopit, jak návštěvníci web používají. Načítají se pouze po udělení souhlasu (Consent Mode v2).",
+    cookies: [
+      {
+        nazwa: "_ga",
+        dostawca: "Google (Google Analytics 4)",
+        cel: "Rozlišuje jednotlivé uživatele.",
+        czas: "13 měsíců",
+      },
+      {
+        nazwa: "_ga_&lt;identifikátor&gt;",
+        dostawca: "Google (Google Analytics 4)",
+        cel: "Udržuje stav relace a sbírá statistiky návštěvnosti.",
+        czas: "13 měsíců",
+      },
+    ],
+  },
+  {
+    nazwa: "Marketingové",
+    opis: "V současné době marketingové soubory cookie nepoužíváme. Tato sekce bude aktualizována, pokud se to změní.",
+    cookies: [],
+  },
+];
+---
+
+<Base
+  title="Zásady používání souborů cookie — Owell"
+  description="Jaké soubory cookie na webu Owell používáme, za jakým účelem a jak dlouho jsou uchovávány."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title">Zásady používání souborů cookie</h1>
+
+        <Prose>
+          <p>
+            Tento web používá soubory cookie. Nezbytné soubory cookie se načítají vždy; ostatní kategorie až po
+            udělení souhlasu v liště zobrazené při první návštěvě. Svůj souhlas můžete kdykoli změnit.
+          </p>
+
+          <button type="button" class="zmien-ustawienia" data-open-consent-settings>
+            Změnit nastavení cookies
+          </button>
+
+          {kategorie.map((kategoria) => (
+            <>
+              <h2>{kategoria.nazwa}</h2>
+              <p>{kategoria.opis}</p>
+
+              {kategoria.cookies.length > 0 && (
+                <div class="table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th scope="col">Název</th>
+                        <th scope="col">Poskytovatel</th>
+                        <th scope="col">Účel</th>
+                        <th scope="col">Doba uchování</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {kategoria.cookies.map((cookie) => (
+                        <tr>
+                          <td data-label="Název" set:html={cookie.nazwa} />
+                          <td data-label="Poskytovatel">{cookie.dostawca}</td>
+                          <td data-label="Účel">{cookie.cel}</td>
+                          <td data-label="Doba uchování">{cookie.czas}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </>
+          ))}
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .zmien-ustawienia {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--sp-3) var(--sp-6);
+    margin-block: var(--sp-2) var(--sp-8);
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    font-weight: 500;
+    color: var(--text);
+    background-color: transparent;
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition:
+      border-color var(--dur) var(--ease),
+      color var(--dur) var(--ease);
+  }
+
+  .zmien-ustawienia:hover {
+    border-color: var(--gold);
+    color: var(--gold-bright);
+  }
+
+  .table-wrap {
+    margin-bottom: var(--sp-8);
+    overflow-x: auto;
+    border: 1px solid var(--hairline-soft);
+    border-radius: var(--radius);
+  }
+
+  table {
+    width: 100%;
+    min-width: 640px;
+    border-collapse: collapse;
+    font-size: var(--fs-small);
+  }
+
+  th {
+    padding: var(--sp-3) var(--sp-4);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+    text-align: left;
+    background-color: var(--bg-2);
+    white-space: nowrap;
+  }
+
+  td {
+    padding: var(--sp-3) var(--sp-4);
+    color: var(--text-2);
+    border-top: 1px solid var(--hairline-soft);
+    vertical-align: top;
+  }
+
+  td:first-child {
+    font-family: var(--font-mono);
+    color: var(--text);
+    white-space: nowrap;
+  }
+</style>
+
+<script>
+  const button = document.querySelector<HTMLButtonElement>(
+    "[data-open-consent-settings]"
+  );
+
+  button?.addEventListener("click", () => {
+    const openConsentSettings = (
+      window as unknown as { openConsentSettings?: () => void }
+    ).openConsentSettings;
+
+    if (typeof openConsentSettings === "function") {
+      openConsentSettings();
+    }
+  });
+</script>

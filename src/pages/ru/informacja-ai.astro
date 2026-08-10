@@ -1,0 +1,74 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Prose from "../../components/ui/Prose.astro";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("ru", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Уведомление об ИИ (AI Act)", path: l("/informacja-ai") },
+];
+---
+
+<Base
+  title="Уведомление об ИИ (AI Act) — Owell"
+  description="Информация об использовании искусственного интеллекта для подготовки визуальных материалов продуктов в соответствии с AI Act ЕС."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title">Уведомление об ИИ (AI Act)</h1>
+
+        <Prose>
+          <p>
+            Визуальные материалы продуктов на этом сайте были подготовлены с использованием технологии
+            искусственного интеллекта. Они созданы на основе реальных фотографий продуктов и дизайна упаковки.
+          </p>
+
+          <p>
+            Мы публикуем это уведомление в связи с обязательствами, вытекающими из статьи 50 Регламента (ЕС)
+            2024/1689 Европейского парламента и Совета, устанавливающего гармонизированные правила в области
+            искусственного интеллекта (AI Act).
+          </p>
+
+          <h2>Почему мы это раскрываем</h2>
+          <ul>
+            <li><strong>Прозрачность</strong> — мы уважаем ваше право знать, откуда взяты визуальные материалы.</li>
+            <li><strong>Соответствие законодательству</strong> — мы выполняем требования раскрытия информации по AI Act ЕС.</li>
+            <li><strong>Точность</strong> — мы следим за тем, чтобы цифровые изображения точно отражали реальный продукт.</li>
+          </ul>
+
+          <p>
+            Если у вас есть вопросы о происхождении конкретного изображения, свяжитесь с нами — наши контактные
+            данные вы найдёте на странице <a href={l("/bezpieczenstwo-produktu")}>безопасности продукции</a>.
+          </p>
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+</style>

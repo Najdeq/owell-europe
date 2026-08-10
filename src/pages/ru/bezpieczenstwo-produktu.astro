@@ -1,0 +1,165 @@
+---
+import { getCollection } from "astro:content";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Prose from "../../components/ui/Prose.astro";
+import { site } from "../../data/site.ts";
+
+const produkty = (await getCollection("produkty", ({ data }) => data.opublikowany)).sort(
+  (a, b) => a.data.kolejnosc - b.data.kolejnosc
+);
+
+const l = (sciezka: string) => getRelativeLocaleUrl("ru", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Безопасность продукции", path: l("/bezpieczenstwo-produktu") },
+];
+---
+
+<Base
+  title="Безопасность продукции — Owell"
+  description="Данные производителя, требуемые Регламентом GPSR (ЕС) 2023/988, как сообщить о проблеме безопасности продукта и информация о сервисных мероприятиях."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title">Безопасность продукции</h1>
+
+        <Prose>
+          <p>
+            Эта страница содержит информацию, требуемую Регламентом (ЕС) 2023/988 Европейского парламента и Совета
+            об общей безопасности продукции (GPSR).
+          </p>
+
+          <h2>Лицо, ответственное за данный сайт</h2>
+          <p>
+            <strong>{site.firma.nazwaPelna}</strong><br />
+            {site.firma.adres}<br />
+            Номер плательщика НДС (NIP): {site.firma.nip} · Регистрационный номер (REGON): {site.firma.regon}<br />
+            Электронная почта по вопросам безопасности продукции: <a href={`mailto:${site.kontakt.emailGpsr}`}>{site.kontakt.emailGpsr}</a>
+          </p>
+
+          <h2>Данные производителя для отдельных продуктов</h2>
+          <p>
+            В соответствии с требованиями GPSR ниже мы публикуем идентификационные данные производителя для каждого
+            продукта нашего ассортимента. Столбец «Ответственное лицо в ЕС» заполняется только в том случае, если
+            производитель находится за пределами Европейского союза.
+          </p>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Продукт</th>
+                  <th scope="col">Производитель</th>
+                  <th scope="col">Адрес</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Ответственное лицо в ЕС</th>
+                </tr>
+              </thead>
+              <tbody>
+                {produkty.map((p) => (
+                  <tr>
+                    <td data-label="Продукт">{p.data.nazwa} ({p.data.model})</td>
+                    <td data-label="Производитель">{p.data.gpsr.producent}</td>
+                    <td data-label="Адрес">{p.data.gpsr.adres}</td>
+                    <td data-label="Email">
+                      <a href={`mailto:${p.data.gpsr.emailProducenta}`}>{p.data.gpsr.emailProducenta}</a>
+                    </td>
+                    <td data-label="Ответственное лицо в ЕС">{p.data.gpsr.osobaOdpowiedzialnaUE ?? "—"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <h2>Как сообщить о проблеме безопасности</h2>
+          <p>
+            Если вы подозреваете, что один из наших продуктов представляет риск для здоровья или безопасности,
+            напишите на <a href={`mailto:${site.kontakt.emailGpsr}`}>{site.kontakt.emailGpsr}</a>. В своём сообщении,
+            пожалуйста, укажите:
+          </p>
+          <ul>
+            <li>название и модель продукта (например, с этикетки или карточки продукта на этом сайте),</li>
+            <li>описание замеченной проблемы,</li>
+            <li>фотографии проблемы, если это возможно,</li>
+            <li>ваши контактные данные, чтобы мы могли с вами связаться.</li>
+          </ul>
+          <p>
+            Если продукт представляет серьёзный риск, производитель и дистрибьюторы обязаны сообщить об этом
+            соответствующим органам надзора за рынком (в Польше, среди прочих, UOKiK) через систему Safety Gate ЕС.
+          </p>
+
+          <h2>Сервисные мероприятия и отзыв продукции</h2>
+          <p>
+            На дату настоящего уведомления (7 августа 2026 года) Owell не проводит никаких сервисных мероприятий
+            или отзывов продукции. Если ситуация изменится, эта информация будет оперативно обновлена здесь.
+          </p>
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .table-wrap {
+    margin-bottom: var(--sp-8);
+    overflow-x: auto;
+    border: 1px solid var(--hairline-soft);
+    border-radius: var(--radius);
+  }
+
+  table {
+    width: 100%;
+    min-width: 760px;
+    border-collapse: collapse;
+    font-size: var(--fs-small);
+  }
+
+  th {
+    padding: var(--sp-3) var(--sp-4);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+    text-align: left;
+    background-color: var(--bg-2);
+    white-space: nowrap;
+  }
+
+  td {
+    padding: var(--sp-3) var(--sp-4);
+    color: var(--text-2);
+    border-top: 1px solid var(--hairline-soft);
+    vertical-align: top;
+  }
+
+  td:first-child {
+    color: var(--text);
+    font-weight: 500;
+  }
+</style>

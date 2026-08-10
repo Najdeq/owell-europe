@@ -1,0 +1,140 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Prose from "../../components/ui/Prose.astro";
+import { site } from "../../data/site.ts";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("fr", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Politique de confidentialité", path: l("/polityka-prywatnosci") },
+];
+---
+
+<Base
+  title="Politique de confidentialité — Owell"
+  description="Comment les données personnelles sont traitées sur le site Owell : responsable du traitement, finalités, bases légales, destinataires des données et droits des personnes concernées."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title">Politique de confidentialité</h1>
+
+        <Prose>
+          <h2>Responsable du traitement</h2>
+          <p>
+            Le responsable du traitement des données personnelles collectées dans le cadre de l'utilisation de ce
+            site est <strong>{site.firma.nazwaPelna}</strong>, {site.firma.adres}, numéro de TVA intracommunautaire
+            (NIP) : {site.firma.nip}, numéro d'immatriculation (REGON) : {site.firma.regon}. Pour toute question
+            relative à la protection des données, contactez{" "}
+            <a href={`mailto:${site.kontakt.email}`}>{site.kontakt.email}</a>.
+          </p>
+
+          <h2>Finalités et bases légales du traitement</h2>
+          <p>Nous traitons les données personnelles aux fins suivantes :</p>
+          <ul>
+            <li>
+              <strong>Traitement de la correspondance et des demandes</strong> (formulaire de contact, e-mail) — base
+              légale : article 6(1)(b) du RGPD (mesures précontractuelles / réponse à une demande) ou article
+              6(1)(f) du RGPD (intérêt légitime à répondre).
+            </li>
+            <li>
+              <strong>Traitement des réclamations et des demandes de service</strong> — base légale : article
+              6(1)(c) du RGPD (obligation légale découlant des dispositions relatives à la garantie) et article
+              6(1)(b) du RGPD.
+            </li>
+            <li>
+              <strong>Statistiques de fréquentation du site</strong> (Google Analytics) — uniquement après
+              consentement donné via le bandeau de cookies, base légale : article 6(1)(a) du RGPD. Détails dans la{" "}
+              <a href={l("/cookies")}>politique de cookies</a>.
+            </li>
+            <li>
+              <strong>Sécurité et bon fonctionnement du site</strong> (journaux du serveur d'hébergement) — base
+              légale : article 6(1)(f) du RGPD (intérêt légitime du responsable du traitement).
+            </li>
+          </ul>
+          <p>Nous ne procédons ni au profilage des utilisateurs ni à des décisions automatisées produisant des effets juridiques à leur égard.</p>
+
+          <h2>Durée de conservation des données</h2>
+          <ul>
+            <li>Données de correspondance et de demandes — pendant 3 ans à compter de la clôture de l'affaire (délai de prescription des créances).</li>
+            <li>
+              Données liées à une réclamation ou à une demande de garantie — pendant la durée nécessaire à son
+              traitement, puis pendant le délai de prescription des créances.
+            </li>
+            <li>Données découlant des réglementations fiscales et comptables — pendant la période exigée par ces réglementations.</li>
+            <li>Cookies — comme indiqué dans la <a href={l("/cookies")}>politique de cookies</a>.</li>
+          </ul>
+
+          <h2>Destinataires des données</h2>
+          <p>Les données peuvent être partagées avec les catégories de destinataires suivantes :</p>
+          <ul>
+            <li>
+              <strong>Cloudflare</strong> — fournisseur de l'infrastructure d'hébergement et de CDN de ce site.
+            </li>
+            <li>
+              <strong>Google</strong> — fournisseur de l'outil Google Analytics, utilisé uniquement après
+              consentement aux cookies analytiques.
+            </li>
+            <li>
+              <strong>nazwa.pl</strong> — fournisseur d'hébergement et de messagerie, par lequel nous traitons la
+              correspondance et les demandes des clients.
+            </li>
+          </ul>
+          <p>
+            Certains des prestataires mentionnés ci-dessus peuvent traiter des données en dehors de l'Espace
+            économique européen. Dans ce cas, le transfert repose sur des clauses contractuelles types approuvées
+            par la Commission européenne ou sur un autre mécanisme conforme au RGPD.
+          </p>
+
+          <h2>Droits des personnes concernées</h2>
+          <p>Vous avez le droit de :</p>
+          <ul>
+            <li>accéder à vos données et en recevoir une copie,</li>
+            <li>rectifier vos données,</li>
+            <li>effacer vos données,</li>
+            <li>limiter le traitement,</li>
+            <li>à la portabilité des données,</li>
+            <li>vous opposer au traitement fondé sur l'article 6(1)(f) du RGPD,</li>
+            <li>retirer votre consentement à tout moment, sans affecter la licéité du traitement effectué avant son retrait,</li>
+            <li>
+              introduire une réclamation auprès du président de l'Office polonais de protection des données
+              personnelles (UODO) si vous estimez que le traitement viole les dispositions du RGPD.
+            </li>
+          </ul>
+
+          <h2>Contact</h2>
+          <p>
+            Pour toute question relative au traitement des données personnelles, vous pouvez nous contacter à{" "}
+            <a href={`mailto:${site.kontakt.email}`}>{site.kontakt.email}</a>.
+          </p>
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+</style>

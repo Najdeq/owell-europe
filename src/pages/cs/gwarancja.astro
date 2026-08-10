@@ -1,0 +1,86 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Prose from "../../components/ui/Prose.astro";
+import { site } from "../../data/site.ts";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("cs", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Záruka", path: l("/gwarancja") },
+];
+---
+
+<Base
+  title="Záruka — Owell"
+  description={`Ke každému produktu Owell poskytujeme ${site.gwarancjaMiesiace}měsíční záruku. Zjistěte, co pokrývá a jak požádat o opravu.`}
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title" data-reveal>Záruční list</h1>
+
+        <Prose>
+          <h2>Záruční doba</h2>
+          <p>
+            Ke každému produktu Owell poskytujeme {site.gwarancjaMiesiace}měsíční záruku počítanou od data
+            zakoupení potvrzeného dokladem o koupi (účtenka nebo faktura z internetového obchodu).
+          </p>
+
+          <h2>Co záruka pokrývá</h2>
+          <p>
+            Materiálové a výrobní vady vzniklé za běžných podmínek používání, v souladu s návodem k použití
+            přiloženým k produktu.
+          </p>
+
+          <h2>Co záruka nepokrývá</h2>
+          <ul>
+            <li>Mechanická poškození způsobená uživatelem.</li>
+            <li>Běžné opotřebení spotřebních dílů (např. čepelí, baterií).</li>
+            <li>Závady vzniklé v důsledku používání v rozporu s návodem k použití.</li>
+          </ul>
+
+          <h2>Prodloužení záruky</h2>
+          <p>
+            Po registraci produktu prodlužujeme záruku z {site.gwarancjaMiesiace} na{" "}
+            {site.gwarancjaMiesiace + site.gwarancjaPlus.dodatkoweMiesiace} měsíců — zdarma. Žádost je třeba
+            odeslat do {site.gwarancjaPlus.terminDni} dnů od zakoupení. Podrobnosti a postup registrace najdete
+            na stránce <a href={l("/rejestracja-produktu")}>registrace produktu</a>.
+          </p>
+
+          <h2>Jak požádat o opravu</h2>
+          <p>
+            Napište na <a href={`mailto:${site.kontakt.emailSerwis}`}>{site.kontakt.emailSerwis}</a> a uveďte
+            model produktu, číslo objednávky a popis závady. Fotografie nebo krátké video celý proces urychlí.
+            Požadavky vyřizujeme e-mailem, bez call centra.
+          </p>
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+</style>

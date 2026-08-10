@@ -1,0 +1,298 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Button from "../../components/ui/Button.astro";
+import Eyebrow from "../../components/ui/Eyebrow.astro";
+import { site } from "../../data/site.ts";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("es", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Registra tu producto", path: l("/rejestracja-produktu") },
+];
+
+const razem = site.gwarancjaMiesiace + site.gwarancjaPlus.dodatkoweMiesiace;
+
+const kroki = [
+  {
+    tytul: "Busca el número de modelo",
+    opis: `Está en la placa de características del aparato y en la caja; empieza por "OW", por ejemplo OW 3300.`,
+  },
+  {
+    tytul: "Prepara el justificante de compra",
+    opis: "Un recibo o la confirmación del pedido. Basta con una foto tomada con el móvil.",
+  },
+  {
+    tytul: "Envíanoslo",
+    opis: `Escríbenos por WhatsApp o correo electrónico dentro de los ${site.gwarancjaPlus.terminDni} días siguientes a la compra. Confirmaremos el registro y, a partir de ese momento, la garantía se extiende a ${razem} meses.`,
+  },
+];
+
+const wiadomosc = encodeURIComponent(
+  "Hola, quiero registrar mi producto Owell y ampliar la garantía.\n\n" +
+    "Modelo: \n" +
+    "Fecha de compra: \n" +
+    "Comprado en: \n\n" +
+    "(justificante de compra adjunto)"
+);
+---
+
+<Base
+  title={`Registra tu producto — ${razem} meses de garantía — Owell`}
+  description={`Registra tu producto Owell dentro de los ${site.gwarancjaPlus.terminDni} días siguientes a la compra y amplía la garantía de ${site.gwarancjaMiesiace} a ${razem} meses. Totalmente gratis.`}
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <Eyebrow data-reveal>Registro de producto</Eyebrow>
+        <h1 class="page-title" data-reveal data-reveal-delay="80">
+          Registra tu producto y consigue un año más de garantía
+        </h1>
+        <p class="page-lead" data-reveal data-reveal-delay="160">
+          Te damos {site.gwarancjaMiesiace} meses de serie. Registra tu dispositivo dentro de los{" "}
+          {site.gwarancjaPlus.terminDni} días siguientes a la compra, y la ampliaremos a {razem} meses.
+          Totalmente gratis y sin letra pequeña.
+        </p>
+
+        <div class="licznik" data-reveal data-reveal-delay="240">
+          <div class="licznik-czlon">
+            <span class="licznik-liczba">{site.gwarancjaMiesiace}</span>
+            <span class="licznik-opis">meses de serie</span>
+          </div>
+          <span class="licznik-znak" aria-hidden="true">+</span>
+          <div class="licznik-czlon">
+            <span class="licznik-liczba">{site.gwarancjaPlus.dodatkoweMiesiace}</span>
+            <span class="licznik-opis">por registrarte</span>
+          </div>
+          <span class="licznik-znak" aria-hidden="true">=</span>
+          <div class="licznik-czlon licznik-czlon--suma">
+            <span class="licznik-liczba">{razem}</span>
+            <span class="licznik-opis">meses de cobertura</span>
+          </div>
+        </div>
+
+        <ol class="kroki">
+          {kroki.map((k, i) => (
+            <li class="krok">
+              <span class="krok-numer">{String(i + 1).padStart(2, "0")}</span>
+              <div>
+                <h2 class="krok-tytul">{k.tytul}</h2>
+                <p class="krok-opis">{k.opis}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+
+        <div class="cta">
+          <Button
+            href={`https://wa.me/${site.kontakt.whatsappWa}?text=${wiadomosc}`}
+            variant="primary"
+            external
+            data-marketplace="whatsapp"
+            data-platforma="WhatsApp"
+            data-lokalizacja="rejestracja-produktu"
+          >
+            Registrarme por WhatsApp
+          </Button>
+          <Button href={`mailto:${site.kontakt.emailSerwis}?subject=Registro de producto Owell`} variant="ghost">
+            Registrarme por correo electrónico
+          </Button>
+        </div>
+
+        <div class="warunki">
+          <h2 class="warunki-tytul">Condiciones</h2>
+          <ul>
+            <li>
+              El registro es gratuito y opcional. Sin él, se aplica la garantía estándar de{" "}
+              {site.gwarancjaMiesiace} meses.
+            </li>
+            <li>
+              La solicitud debe enviarse dentro de los {site.gwarancjaPlus.terminDni} días siguientes a la fecha de
+              compra que figura en tu justificante de compra.
+            </li>
+            <li>
+              La ampliación cubre los mismos defectos que la garantía estándar: material y fabricación. No cubre los
+              daños mecánicos ni el desgaste de piezas consumibles como cuchillas o baterías.
+            </li>
+            <li>
+              El registro no limita tus derechos legales derivados de la normativa de garantías o de protección de
+              los consumidores.
+            </li>
+            <li>
+              Utilizamos los datos de tu registro únicamente para gestionar la garantía; más detalles en la{" "}
+              <a href={l("/polityka-prywatnosci")}>política de privacidad</a>.
+            </li>
+          </ul>
+        </div>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-3);
+    max-width: var(--maxw-prose);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .page-lead {
+    margin-top: var(--sp-4);
+    max-width: var(--maxw-prose);
+    font-size: var(--fs-lead);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .licznik {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--sp-6);
+    margin-top: var(--sp-12);
+    padding: var(--sp-8);
+    background-color: var(--bg-1);
+    border: 1px solid var(--gold);
+    border-radius: var(--radius-lg);
+  }
+
+  .licznik-czlon {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-1);
+  }
+
+  .licznik-liczba {
+    font-family: var(--font-mono);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: 1;
+    color: var(--text-2);
+  }
+
+  .licznik-czlon--suma .licznik-liczba {
+    color: var(--gold-bright);
+  }
+
+  .licznik-opis {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+  }
+
+  .licznik-znak {
+    font-family: var(--font-mono);
+    font-size: var(--fs-h3);
+    color: var(--steel);
+  }
+
+  .kroki {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-8);
+    margin-top: var(--sp-12);
+    list-style: none;
+  }
+
+  .krok {
+    display: flex;
+    align-items: baseline;
+    gap: var(--sp-4);
+  }
+
+  .krok-numer {
+    flex: none;
+    font-family: var(--font-mono);
+    font-size: var(--fs-lead);
+    font-weight: 600;
+    color: var(--gold);
+  }
+
+  .krok-tytul {
+    font-family: var(--font-display);
+    font-size: var(--fs-lead);
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .krok-opis {
+    margin-top: var(--sp-2);
+    max-width: 46ch;
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-4);
+    margin-top: var(--sp-12);
+  }
+
+  .warunki {
+    max-width: var(--maxw-prose);
+    margin-top: var(--sp-16);
+    padding-top: var(--sp-8);
+    border-top: 1px solid var(--hairline-soft);
+  }
+
+  .warunki-tytul {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+  }
+
+  .warunki ul {
+    margin-top: var(--sp-4);
+    padding-left: var(--sp-5);
+  }
+
+  .warunki li {
+    margin-bottom: var(--sp-3);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .warunki a {
+    color: var(--gold);
+  }
+
+  .warunki a:hover {
+    color: var(--gold-bright);
+  }
+
+  @media (min-width: 720px) {
+    .kroki {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--sp-8);
+    }
+
+    .krok {
+      flex-direction: column;
+      gap: var(--sp-3);
+    }
+  }
+</style>

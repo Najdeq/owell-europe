@@ -1,0 +1,138 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Prose from "../../components/ui/Prose.astro";
+import { site } from "../../data/site.ts";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("cs", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Zásady ochrany osobních údajů", path: l("/polityka-prywatnosci") },
+];
+---
+
+<Base
+  title="Zásady ochrany osobních údajů — Owell"
+  description="Jak jsou na webu Owell zpracovávány osobní údaje: správce, účely, právní základy, příjemci údajů a práva subjektů údajů."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title">Zásady ochrany osobních údajů</h1>
+
+        <Prose>
+          <h2>Správce údajů</h2>
+          <p>
+            Správcem osobních údajů zpracovávaných v souvislosti s používáním tohoto webu je{" "}
+            <strong>{site.firma.nazwaPelna}</strong>, {site.firma.adres}, DIČ (NIP): {site.firma.nip},
+            identifikační číslo firmy (REGON): {site.firma.regon}. Ve věcech ochrany osobních údajů nás
+            kontaktujte na <a href={`mailto:${site.kontakt.email}`}>{site.kontakt.email}</a>.
+          </p>
+
+          <h2>Účely a právní základy zpracování</h2>
+          <p>Osobní údaje zpracováváme za následujícími účely:</p>
+          <ul>
+            <li>
+              <strong>Vyřizování korespondence a dotazů</strong> (kontaktní formulář, e-mail) — právní základ:
+              čl. 6 odst. 1 písm. b) GDPR (kroky před uzavřením smlouvy / vyřízení dotazu) nebo čl. 6 odst. 1
+              písm. f) GDPR (oprávněný zájem na poskytnutí odpovědi).
+            </li>
+            <li>
+              <strong>Vyřizování reklamací a servisních požadavků</strong> — právní základ: čl. 6 odst. 1 písm. c)
+              GDPR (právní povinnost vyplývající z předpisů o záruce) a čl. 6 odst. 1 písm. b) GDPR.
+            </li>
+            <li>
+              <strong>Statistiky návštěvnosti webu</strong> (Google Analytics) — pouze po udělení souhlasu v liště
+              cookies, právní základ: čl. 6 odst. 1 písm. a) GDPR. Podrobnosti v{" "}
+              <a href={l("/cookies")}>zásadách používání souborů cookie</a>.
+            </li>
+            <li>
+              <strong>Zajištění bezpečnosti a řádného provozu webu</strong> (protokoly hostingového serveru) —
+              právní základ: čl. 6 odst. 1 písm. f) GDPR (oprávněný zájem správce).
+            </li>
+          </ul>
+          <p>Uživatele neprofilujeme ani o nich neprovádíme automatizovaná rozhodnutí s právními účinky.</p>
+
+          <h2>Doba uchovávání údajů</h2>
+          <ul>
+            <li>Údaje z korespondence a dotazů — po dobu 3 let od ukončení věci (promlčecí lhůta nároků).</li>
+            <li>
+              Údaje související s reklamací nebo uplatněním záruky — po dobu nezbytnou k jejímu vyřízení, poté po
+              dobu promlčecí lhůty nároků.
+            </li>
+            <li>Údaje vyplývající z daňových a účetních předpisů — po dobu vyžadovanou těmito předpisy.</li>
+            <li>Soubory cookie — dle <a href={l("/cookies")}>zásad používání souborů cookie</a>.</li>
+          </ul>
+
+          <h2>Příjemci údajů</h2>
+          <p>Údaje mohou být sdíleny s následujícími kategoriemi příjemců:</p>
+          <ul>
+            <li>
+              <strong>Cloudflare</strong> — poskytovatel hostingové a CDN infrastruktury tohoto webu.
+            </li>
+            <li>
+              <strong>Google</strong> — poskytovatel nástroje Google Analytics, používaného pouze po udělení
+              souhlasu s analytickými soubory cookie.
+            </li>
+            <li>
+              <strong>nazwa.pl</strong> — poskytovatel hostingových a e-mailových služeb, prostřednictvím kterých
+              vyřizujeme korespondenci a požadavky od zákazníků.
+            </li>
+          </ul>
+          <p>
+            Někteří z výše uvedených poskytovatelů mohou zpracovávat údaje mimo Evropský hospodářský prostor. V
+            takových případech je předání založeno na standardních smluvních doložkách schválených Evropskou
+            komisí nebo na jiném mechanismu v souladu s GDPR.
+          </p>
+
+          <h2>Práva subjektů údajů</h2>
+          <p>Máte právo:</p>
+          <ul>
+            <li>na přístup ke svým údajům a získání jejich kopie,</li>
+            <li>na opravu svých údajů,</li>
+            <li>na výmaz svých údajů,</li>
+            <li>na omezení zpracování,</li>
+            <li>na přenositelnost údajů,</li>
+            <li>vznést námitku proti zpracování na základě čl. 6 odst. 1 písm. f) GDPR,</li>
+            <li>kdykoli odvolat souhlas, aniž by tím byla dotčena zákonnost zpracování provedeného před jeho odvoláním,</li>
+            <li>
+              podat stížnost k předsedovi polského Úřadu pro ochranu osobních údajů (UODO), pokud se domníváte,
+              že zpracování porušuje ustanovení GDPR.
+            </li>
+          </ul>
+
+          <h2>Kontakt</h2>
+          <p>
+            Ve věcech souvisejících se zpracováním osobních údajů nás můžete kontaktovat na{" "}
+            <a href={`mailto:${site.kontakt.email}`}>{site.kontakt.email}</a>.
+          </p>
+        </Prose>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+</style>

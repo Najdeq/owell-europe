@@ -1,0 +1,212 @@
+---
+import { Image } from "astro:assets";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import { site } from "../../data/site.ts";
+import lifestyleCzajnik from "../../assets/marka/lifestyle-czajnik.png";
+import lifestyleBlender from "../../assets/marka/lifestyle-blender.png";
+import lifestyleStrzyzarka from "../../assets/marka/lifestyle-strzyzarka.png";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("de", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Über uns", path: l("/o-nas") },
+];
+
+const zdjecia = [
+  { src: lifestyleCzajnik, alt: "Owell OW 1360 Wasserkocher im täglichen Gebrauch in der Küche" },
+  { src: lifestyleBlender, alt: "Owell OW 4634 Stabmixer bei der Zubereitung eines Smoothies" },
+  { src: lifestyleStrzyzarka, alt: "Owell OW 2859 Schermaschine bei der Fellpflege eines Hundes" },
+];
+
+const cyklSekund = 5;
+const totalDuration = zdjecia.length * cyklSekund;
+const segmentPct = 100 / zdjecia.length;
+const fadeInPct = Math.min(2, segmentPct * 0.15);
+const holdEndPct = segmentPct - fadeInPct;
+
+const visualKeyframes = `
+  @keyframes o-nas-carousel {
+    0% { opacity: 0; }
+    ${fadeInPct.toFixed(3)}% { opacity: 1; }
+    ${holdEndPct.toFixed(3)}% { opacity: 1; }
+    ${segmentPct.toFixed(3)}% { opacity: 0; }
+    100% { opacity: 0; }
+  }
+`;
+---
+
+<Base
+  title="Über uns — Owell"
+  description="Owell entwickelt kleine Haushaltsgeräte für den täglichen Gebrauch. Erfahren Sie, woher wir kommen, wofür wir stehen und wie wir arbeiten."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title" data-reveal>Über uns</h1>
+
+        <div class="visual" style={`--visual-cykl: ${totalDuration}s`}>
+          {zdjecia.map((zdjecie, i) => (
+            <Image
+              src={zdjecie.src}
+              alt={zdjecie.alt}
+              width={1600}
+              height={893}
+              class="visual-img"
+              style={`animation-delay: ${i * cyklSekund}s`}
+            />
+          ))}
+
+          <div class="visual-overlay">
+            <div class="visual-text">
+              <p>
+                Owell bringt über {site.grupa.lataHistorii} Jahre Erfahrung in der Herstellung kleiner
+                Haushaltsgeräte mit und ist seit {site.grupa.odRokuWPolsce} auf dem polnischen Markt präsent. Wir
+                haben bereits über {site.grupa.liczbaProduktow} Modelle produziert, die in mehr als{" "}
+                {site.grupa.liczbaKrajow} Ländern verkauft werden. Jedes Owell-Produkt durchläuft strenge
+                Qualitätskontrollverfahren und verfügt über eine vollständige Konformitätsdokumentation für die
+                EU-Sicherheitsanforderungen (GPSR) — Details und Herstellerangaben finden Sie auf unserer Seite{" "}
+                <a href={l("/bezpieczenstwo-produktu")}>Produktsicherheit</a>.
+              </p>
+
+              <p>
+                Wir glauben, dass Haushaltsgeräte nicht laut sein müssen, um gut zu sein. Uns ist eine gut durchdachte
+                Lösung lieber als zehn Funktionen, die man nur einmal nutzt. Deshalb stellt sich jedes Produkt
+                denselben Fragen: Erleichtert es den Alltag wirklich, hält es dem regelmäßigen Gebrauch stand, und
+                falls doch einmal etwas nicht funktioniert — lässt es sich melden, ohne zwischen Callcentern hin- und
+                hergereicht zu werden.
+              </p>
+
+              <p>
+                Wir verkaufen online, ohne ein Netz stationärer Geschäfte — derzeit über unseren offiziellen Shop auf
+                Allegro, wo wir direkt als Hersteller auftreten. Bestellungen, die bis 18:30 Uhr eingehen, werden
+                noch am selben Tag versendet, mit garantierter InPost-Lieferung. Jedes Produkt kommt mit einer
+                GPSR-Karte mit vollständigen Herstellerangaben und {site.gwarancjaMiesiace} Monaten Garantie — ohne
+                Ausnahme, ohne Kleingedrucktes.
+              </p>
+            </div>
+          </div>
+        </div>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style set:html={visualKeyframes} is:global></style>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-12);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .visual {
+    position: relative;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--hairline);
+    overflow: hidden;
+  }
+
+  .visual-img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .visual-img:not(:first-of-type) {
+    display: none;
+  }
+
+  .visual-overlay {
+    padding: var(--sp-8);
+    background-color: var(--bg-0);
+  }
+
+  .visual-text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .visual-text a {
+    color: var(--gold);
+    text-underline-offset: 0.2em;
+  }
+
+  .visual-text a:hover {
+    color: var(--gold-bright);
+  }
+
+  @media (min-width: 960px) {
+    .visual {
+      min-height: 26rem;
+    }
+
+    .visual-img,
+    .visual-img:not(:first-of-type) {
+      display: block;
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      animation: o-nas-carousel var(--visual-cykl) ease-in-out infinite;
+    }
+
+    .visual-overlay {
+      position: relative;
+      display: flex;
+      align-items: center;
+      min-height: 100%;
+      padding: var(--sp-16);
+      background: linear-gradient(
+        to right,
+        var(--bg-0) 0%,
+        var(--bg-0) 42%,
+        transparent 78%
+      );
+      transition: opacity 900ms var(--ease);
+    }
+
+    .visual-text {
+      max-width: 30rem;
+    }
+
+    .visual:hover .visual-overlay {
+      opacity: 0;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .visual-img {
+        animation: none !important;
+        opacity: 0;
+      }
+
+      .visual-img:first-of-type {
+        opacity: 1;
+      }
+    }
+  }
+</style>

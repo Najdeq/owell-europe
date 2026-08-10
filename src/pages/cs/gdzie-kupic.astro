@@ -1,0 +1,223 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema.astro";
+import Container from "../../components/ui/Container.astro";
+import Section from "../../components/ui/Section.astro";
+import Button from "../../components/ui/Button.astro";
+import { site } from "../../data/site.ts";
+
+const l = (sciezka: string) => getRelativeLocaleUrl("cs", sciezka);
+
+const breadcrumbs = [
+  { name: "Owell", path: l("/") },
+  { name: "Kde koupit", path: l("/gdzie-kupic") },
+];
+
+const punkty = [
+  `${site.gwarancjaMiesiace} měsíců záruky na každý produkt, bez výjimek.`,
+  "Objednávky zadané do 18:30 expedujeme týž den, s garantovaným doručením přes InPost.",
+  "Kompletní karta GPSR a údaje o výrobci u každého modelu.",
+];
+---
+
+<Base
+  title="Kde koupit — Owell"
+  description="Produkty Owell jsou k dostání v našem oficiálním obchodě na Allegro. Kompletní záruční a servisní podpora přímo od výrobce."
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title" data-reveal>Kde koupit</h1>
+        <p class="page-lead" data-reveal data-reveal-delay="80">
+          Produkty Owell jsou k dostání v našem oficiálním obchodě na Allegro. Prodáváme tam přímo jako výrobce,
+          takže záruka i servis jdou přímo přes nás — bez prostředníků a bez přehazování mezi call centry.
+        </p>
+
+        <div class="kanaly">
+          <article class="kanal kanal--glowny">
+            <p class="kanal-etykieta">Oficiální obchod</p>
+            <p class="kanal-tytul">Allegro</p>
+            <p class="kanal-opis">
+              Kompletní nabídka, doručení přes InPost a {site.gwarancjaMiesiace} měsíců záruky výrobce.
+            </p>
+            {site.allegro ? (
+              <Button
+                href={site.allegro}
+                variant="primary"
+                external
+                data-marketplace="allegro"
+                data-platforma="Allegro"
+                data-lokalizacja="strona-gdzie-kupic"
+              >
+                Zobrazit naši nabídku
+              </Button>
+            ) : (
+              <p class="kanal-brak">[K DOPLNĚNÍ: odkaz na obchod Owell na Allegro]</p>
+            )}
+          </article>
+
+          <article class="kanal">
+            <p class="kanal-etykieta">Již brzy</p>
+            <p class="kanal-tytul">Obchod owelleurope.com</p>
+            <p class="kanal-opis">
+              Pracujeme na vlastním internetovém obchodě. Do jeho spuštění vyřizujeme dotazy k produktům a
+              dostupnosti přímo.
+            </p>
+            <div class="kanal-cta">
+              <Button
+                href={`https://wa.me/${site.kontakt.whatsappWa}`}
+                variant="ghost"
+                external
+                data-marketplace="whatsapp"
+                data-platforma="WhatsApp"
+                data-lokalizacja="strona-gdzie-kupic"
+              >
+                Napište nám na WhatsApp
+              </Button>
+            </div>
+          </article>
+        </div>
+
+        <ul class="punkty">
+          {punkty.map((p) => (
+            <li>{p}</li>
+          ))}
+        </ul>
+
+        <p class="uwaga">
+          Když nakupujete u nás na Allegro, kupujete přímo od výrobce — stejnou záruku, stejný servis a stejné
+          registrační údaje společnosti, jaké najdete na této stránce. V případě pochybností nám napište ještě
+          před nákupem.
+        </p>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .page-lead {
+    margin-top: var(--sp-4);
+    max-width: var(--maxw-prose);
+    font-size: var(--fs-lead);
+    color: var(--text-2);
+  }
+
+  .cta {
+    margin-top: var(--sp-8);
+  }
+
+  .kanaly {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-6);
+    margin-top: var(--sp-8);
+  }
+
+  .kanal {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: var(--sp-8);
+    background-color: var(--bg-1);
+    border: 1px solid var(--hairline-soft);
+    border-radius: var(--radius-lg);
+  }
+
+  .kanal--glowny {
+    border-color: var(--gold);
+  }
+
+  .kanal-etykieta {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+  }
+
+  .kanal-tytul {
+    margin-top: var(--sp-2);
+    font-family: var(--font-display);
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .kanal-opis {
+    margin-top: var(--sp-3);
+    margin-bottom: var(--sp-6);
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .kanal-brak {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    color: var(--text-muted);
+  }
+
+  @media (min-width: 720px) {
+    .kanaly {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .punkty {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+    max-width: var(--maxw-prose);
+    margin-top: var(--sp-8);
+    padding-left: var(--sp-4);
+    list-style: none;
+  }
+
+  .punkty li {
+    position: relative;
+    padding-left: var(--sp-4);
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .punkty li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.65em;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background-color: var(--gold);
+  }
+
+  .uwaga {
+    margin-top: var(--sp-10);
+    padding-top: var(--sp-6);
+    max-width: var(--maxw-prose);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--text-muted);
+    border-top: 1px solid var(--hairline-soft);
+  }
+</style>
