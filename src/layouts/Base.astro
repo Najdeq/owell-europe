@@ -154,6 +154,19 @@ const organizationSchema = {
 
     <meta name="generator" content={Astro.generator} />
 
+    <!-- [data-reveal] ma domyślnie opacity:0 (patrz global.css) i staje się
+         widoczny wyłącznie przez JS (ScrollReveal.astro, IntersectionObserver).
+         Bez tego fallbacku każdy scenariusz bez działającego JS (błąd skryptu,
+         wolne łącze, wyłączony JS) trwale ukrywałby nagłówki i treść sekcji. -->
+    <noscript>
+      <style>
+        [data-reveal] {
+          opacity: 1 !important;
+          transform: none !important;
+        }
+      </style>
+    </noscript>
+
     <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
 
     <slot name="head" />
