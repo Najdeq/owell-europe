@@ -1,5 +1,10 @@
 ---
 import { site } from "../data/site.ts";
+import { domyslnyJezyk, type Jezyk } from "../i18n/ui.ts";
+import { useTranslations } from "../i18n/utils.ts";
+
+const jezyk = (Astro.currentLocale ?? domyslnyJezyk) as Jezyk;
+const t = useTranslations(jezyk);
 
 const waHref = `https://wa.me/${site.kontakt.whatsappWa}`;
 ---
@@ -8,10 +13,10 @@ const waHref = `https://wa.me/${site.kontakt.whatsappWa}`;
   <div id="wa-popup" class="wa-popup" role="dialog" aria-labelledby="wa-popup-title" hidden>
     <div class="wa-popup-header">
       <p id="wa-popup-title" class="wa-popup-title">{site.nazwa}</p>
-      <button type="button" class="wa-popup-close" data-wa-close aria-label="Zamknij">✕</button>
+      <button type="button" class="wa-popup-close" data-wa-close aria-label={t("common.waZamknij")}>✕</button>
     </div>
     <p class="wa-popup-text">
-      Cześć! Masz pytanie o produkt, zamówienie lub gwarancję? Napisz do nas na WhatsApp — pracujemy w godzinach{" "}
+      {t("common.waPopupText")}{" "}
       {site.kontakt.godzinyPracy}.
     </p>
     <a
@@ -23,7 +28,7 @@ const waHref = `https://wa.me/${site.kontakt.whatsappWa}`;
       data-platforma="WhatsApp"
       data-lokalizacja="widget-floating"
     >
-      Rozpocznij czat
+      {t("common.waCta")}
     </a>
   </div>
 
@@ -34,7 +39,7 @@ const waHref = `https://wa.me/${site.kontakt.whatsappWa}`;
     aria-haspopup="dialog"
     aria-expanded="false"
     aria-controls="wa-popup"
-    aria-label="Napisz do nas na WhatsApp"
+    aria-label={t("common.waAriaLabel")}
   >
     <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true" class="wa-icon">
       <path

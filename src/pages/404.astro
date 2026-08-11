@@ -1,0 +1,78 @@
+---
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import Container from "../components/ui/Container.astro";
+import Section from "../components/ui/Section.astro";
+import Button from "../components/ui/Button.astro";
+---
+
+<Base title="Strona nie została znaleziona — Owell" description="Ta strona nie istnieje albo została przeniesiona. Wróć na stronę główną albo zajrzyj do katalogu produktów." noindex>
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container class="blad-404">
+        <p class="kod" aria-hidden="true">404</p>
+        <h1 class="tytul">Nie znaleźliśmy tej strony</h1>
+        <p class="opis">
+          Adres mógł się zmienić albo literówka wkradła się po drodze. Sprawdź, czy dobrze wpisałeś adres, albo
+          wróć na stronę główną.
+        </p>
+
+        <div class="akcje">
+          <Button href="/">Strona główna</Button>
+          <Button href="/produkty" variant="ghost">Katalog produktów</Button>
+          <Button href="/kontakt" variant="ghost">Kontakt</Button>
+        </div>
+      </Container>
+    </Section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .blad-404 {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-top: var(--sp-16);
+    padding-bottom: var(--sp-16);
+  }
+
+  .kod {
+    font-family: var(--font-mono);
+    font-size: clamp(3rem, 10vw, 6rem);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: var(--tracking-mono);
+    color: var(--gold);
+    opacity: 0.5;
+  }
+
+  .tytul {
+    margin-top: var(--sp-4);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .opis {
+    margin-top: var(--sp-4);
+    max-width: var(--maxw-prose);
+    font-size: var(--fs-lead);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .akcje {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-4);
+    margin-top: var(--sp-8);
+  }
+</style>
