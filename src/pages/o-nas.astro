@@ -154,10 +154,10 @@ const visualKeyframes = `
     color: var(--gold-bright);
   }
 
-  /* Nachodzenie tekstu na zdjęcie w gradiencie + zanikanie po najechaniu —
-     tylko na desktopie. Na mobile to zwykły, czytelny stos: zdjęcie, potem
-     tekst na pełnym, nieprzezroczystym tle (bez hover, bo na dotyku i tak
-     nie zadziała, a nachodzący tekst byłby nieczytelny). */
+  /* Nachodzenie tekstu na zdjęcie w gradiencie, tylko na desktopie — tekst
+     zostaje widoczny cały czas, zmienia się jedynie zdjęcie w tle (karuzela
+     wyżej). Na mobile to zwykły, czytelny stos: zdjęcie, potem tekst na
+     pełnym, nieprzezroczystym tle. */
   @media (min-width: 960px) {
     .visual {
       min-height: 26rem;
@@ -191,15 +191,10 @@ const visualKeyframes = `
         var(--bg-0) 42%,
         transparent 78%
       );
-      transition: opacity 900ms var(--ease);
     }
 
     .visual-text {
       max-width: 30rem;
-    }
-
-    .visual:hover .visual-overlay {
-      opacity: 0;
     }
 
     @media (prefers-reduced-motion: reduce) {
