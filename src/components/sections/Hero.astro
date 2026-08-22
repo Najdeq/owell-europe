@@ -237,11 +237,14 @@ const fakty = [
 
   @media (min-width: 960px) {
     .hero-inner {
-      /* Wideo pionowe (9:16) zajmuje więc znacznie węższą kolumnę niż
-         poprzednie landscape'owe 4:3 — tekst dostaje więcej miejsca
-         (1.4fr zamiast 0.9fr). */
-      grid-template-columns: 1.4fr 0.6fr;
-      gap: var(--sp-12);
+      /* fit-content(--maxw-prose) zamiast 1fr — kolumna tekstu kurczy się
+         do faktycznej szerokości treści (tej samej, do której i tak jest
+         przycięta przez max-width na .hero-content), więc nie zostaje
+         martwe miejsce między końcem tekstu a węższą, pionową ramką wideo
+         (auto). Przy 1fr kolumna była dużo szersza niż sam tekst — pusta
+         przestrzeń po prostu przenosiła się w prawo, przed wideo. */
+      grid-template-columns: fit-content(42rem) auto;
+      gap: var(--sp-10);
       /* Tekst (nagłówek + lead + CTA + szukajka + statystyki) ustala
          wysokość wiersza — stretch pozwala pionowej ramce wideo dorównać
          jej wysokością, zamiast wisieć wyśrodkowana nad pustym miejscem. */
