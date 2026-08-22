@@ -275,6 +275,23 @@ const faqSchema = {
 
     <Section bg="raised">
       <Container>
+        <h2 class="naglowek" data-reveal>{t("produkt.naglowekWyroznniki")}</h2>
+        <div class="wyroznniki">
+          {d.wyroznniki.map((w, i) => (
+            <article class="wyroznnik" data-reveal data-reveal-delay={i * 90}>
+              <IkonaWyroznika tytul={w.tytul} class="wyroznnik-ikona" />
+              <div>
+                <h3 class="wyroznnik-tytul">{w.tytul}</h3>
+                <p class="wyroznnik-opis">{w.opis}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </Container>
+    </Section>
+
+    <Section bg="base">
+      <Container>
         <div class="dwie-kolumny">
           <div>
             <h2 class="naglowek" data-reveal>{t("produkt.naglowekOpis")}</h2>
@@ -302,23 +319,6 @@ const faqSchema = {
               )}
             </dl>
           </div>
-        </div>
-      </Container>
-    </Section>
-
-    <Section bg="base">
-      <Container>
-        <h2 class="naglowek" data-reveal>{t("produkt.naglowekWyroznniki")}</h2>
-        <div class="wyroznniki">
-          {d.wyroznniki.map((w, i) => (
-            <article class="wyroznnik" data-reveal data-reveal-delay={i * 90}>
-              <IkonaWyroznika tytul={w.tytul} class="wyroznnik-ikona" />
-              <div>
-                <h3 class="wyroznnik-tytul">{w.tytul}</h3>
-                <p class="wyroznnik-opis">{w.opis}</p>
-              </div>
-            </article>
-          ))}
         </div>
       </Container>
     </Section>
