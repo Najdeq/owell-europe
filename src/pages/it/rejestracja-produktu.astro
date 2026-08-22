@@ -17,8 +17,6 @@ const breadcrumbs = [
   { name: "Registra il prodotto", path: l("/rejestracja-produktu") },
 ];
 
-const razem = site.gwarancjaMiesiace + site.gwarancjaPlus.dodatkoweMiesiace;
-
 const kroki = [
   {
     tytul: "Trova il numero del modello",
@@ -30,12 +28,12 @@ const kroki = [
   },
   {
     tytul: "Inviacela",
-    opis: `Scrivici su WhatsApp o via email entro ${site.gwarancjaPlus.terminDni} giorni dall'acquisto. Confermeremo la registrazione e da quel momento la garanzia sarà valida per ${razem} mesi.`,
+    opis: "Scrivici su WhatsApp o via email indicando modello e data di acquisto. Confermeremo la ricezione e conserveremo i dati.",
   },
 ];
 
 const wiadomosc = encodeURIComponent(
-  "Salve, vorrei registrare il mio prodotto Owell ed estendere la garanzia.\n\n" +
+  "Salve, vorrei registrare il mio prodotto Owell.\n\n" +
     "Modello: \n" +
     "Data di acquisto: \n" +
     "Acquistato presso: \n\n" +
@@ -44,8 +42,8 @@ const wiadomosc = encodeURIComponent(
 ---
 
 <Base
-  title={`Registra il tuo prodotto — ${razem} mesi di garanzia — Owell`}
-  description={`Registra il tuo prodotto Owell entro ${site.gwarancjaPlus.terminDni} giorni dall'acquisto ed estendi la garanzia da ${site.gwarancjaMiesiace} a ${razem} mesi. Gratuitamente.`}
+  title="Registra il tuo prodotto — Owell"
+  description="Registra il tuo prodotto Owell — contatto più rapido in caso di assistenza o reclamo, gratuitamente."
 >
   <BreadcrumbSchema slot="head" items={breadcrumbs} />
 
@@ -56,30 +54,13 @@ const wiadomosc = encodeURIComponent(
       <Container>
         <Eyebrow data-reveal>Registrazione del prodotto</Eyebrow>
         <h1 class="page-title" data-reveal data-reveal-delay="80">
-          Registra il tuo prodotto e ottieni un anno di garanzia in più
+          Registra il tuo prodotto Owell
         </h1>
         <p class="page-lead" data-reveal data-reveal-delay="160">
-          Ti offriamo {site.gwarancjaMiesiace} mesi come standard. Registra il tuo dispositivo entro{" "}
-          {site.gwarancjaPlus.terminDni} giorni dall'acquisto e la estenderemo a {razem} mesi. Gratuitamente
-          e senza clausole nascoste.
+          Conserva i dati del tuo acquisto con noi — questo velocizza la gestione di un eventuale reclamo o
+          assistenza, senza dover cercare di nuovo lo scontrino. La registrazione è gratuita e non modifica le
+          condizioni della garanzia standard di {site.gwarancjaMiesiace} mesi.
         </p>
-
-        <div class="licznik" data-reveal data-reveal-delay="240">
-          <div class="licznik-czlon">
-            <span class="licznik-liczba">{site.gwarancjaMiesiace}</span>
-            <span class="licznik-opis">mesi standard</span>
-          </div>
-          <span class="licznik-znak" aria-hidden="true">+</span>
-          <div class="licznik-czlon">
-            <span class="licznik-liczba">{site.gwarancjaPlus.dodatkoweMiesiace}</span>
-            <span class="licznik-opis">per la registrazione</span>
-          </div>
-          <span class="licznik-znak" aria-hidden="true">=</span>
-          <div class="licznik-czlon licznik-czlon--suma">
-            <span class="licznik-liczba">{razem}</span>
-            <span class="licznik-opis">mesi di copertura</span>
-          </div>
-        </div>
 
         <ol class="kroki">
           {kroki.map((k, i) => (
@@ -113,24 +94,16 @@ const wiadomosc = encodeURIComponent(
           <h2 class="warunki-tytul">Termini</h2>
           <ul>
             <li>
-              La registrazione è gratuita e facoltativa. Senza di essa, si applica la garanzia standard di{" "}
+              La registrazione è gratuita e facoltativa. Non modifica la garanzia standard di{" "}
               {site.gwarancjaMiesiace} mesi.
-            </li>
-            <li>
-              La richiesta deve essere inviata entro {site.gwarancjaPlus.terminDni} giorni dalla data di acquisto
-              indicata sulla prova d'acquisto.
-            </li>
-            <li>
-              L'estensione copre gli stessi difetti della garanzia standard — materiali e fabbricazione. Non copre
-              danni meccanici o l'usura delle parti di consumo come lame o batterie.
             </li>
             <li>
               La registrazione non limita i tuoi diritti previsti dalla legge sulla garanzia o sulla tutela dei
               consumatori.
             </li>
             <li>
-              Utilizziamo i dati della tua registrazione solo per gestire la garanzia — dettagli nella{" "}
-              <a href={l("/polityka-prywatnosci")}>informativa sulla privacy</a>.
+              Utilizziamo i dati della tua registrazione solo per gestire un eventuale reclamo o assistenza —
+              dettagli nella <a href={l("/polityka-prywatnosci")}>informativa sulla privacy</a>.
             </li>
           </ul>
         </div>
@@ -159,50 +132,6 @@ const wiadomosc = encodeURIComponent(
     font-size: var(--fs-lead);
     line-height: var(--lh-body);
     color: var(--text-2);
-  }
-
-  .licznik {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--sp-6);
-    margin-top: var(--sp-12);
-    padding: var(--sp-8);
-    background-color: var(--bg-1);
-    border: 1px solid var(--gold);
-    border-radius: var(--radius-lg);
-  }
-
-  .licznik-czlon {
-    display: flex;
-    flex-direction: column;
-    gap: var(--sp-1);
-  }
-
-  .licznik-liczba {
-    font-family: var(--font-mono);
-    font-size: var(--fs-h2);
-    font-weight: 600;
-    line-height: 1;
-    color: var(--text-2);
-  }
-
-  .licznik-czlon--suma .licznik-liczba {
-    color: var(--gold-bright);
-  }
-
-  .licznik-opis {
-    font-family: var(--font-mono);
-    font-size: var(--fs-micro);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-mono);
-    color: var(--steel);
-  }
-
-  .licznik-znak {
-    font-family: var(--font-mono);
-    font-size: var(--fs-h3);
-    color: var(--steel);
   }
 
   .kroki {

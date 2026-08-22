@@ -17,8 +17,6 @@ const breadcrumbs = [
   { name: "Register your product", path: l("/rejestracja-produktu") },
 ];
 
-const razem = site.gwarancjaMiesiace + site.gwarancjaPlus.dodatkoweMiesiace;
-
 const kroki = [
   {
     tytul: "Find the model number",
@@ -30,12 +28,12 @@ const kroki = [
   },
   {
     tytul: "Send it to us",
-    opis: `Message us on WhatsApp or email within ${site.gwarancjaPlus.terminDni} days of purchase. We'll confirm the registration and from that moment the warranty runs for ${razem} months.`,
+    opis: "Message us on WhatsApp or email with the model and purchase date. We'll confirm we've received it and keep the details on file.",
   },
 ];
 
 const wiadomosc = encodeURIComponent(
-  "Hello, I'd like to register my Owell product and extend the warranty.\n\n" +
+  "Hello, I'd like to register my Owell product.\n\n" +
     "Model: \n" +
     "Purchase date: \n" +
     "Purchased from: \n\n" +
@@ -44,8 +42,8 @@ const wiadomosc = encodeURIComponent(
 ---
 
 <Base
-  title={`Register your product — ${razem} months of warranty — Owell`}
-  description={`Register your Owell product within ${site.gwarancjaPlus.terminDni} days of purchase and extend the warranty from ${site.gwarancjaMiesiace} to ${razem} months. Free of charge.`}
+  title="Register your product — Owell"
+  description="Register your Owell product — faster contact if you ever need service or a repair, free of charge."
 >
   <BreadcrumbSchema slot="head" items={breadcrumbs} />
 
@@ -56,30 +54,13 @@ const wiadomosc = encodeURIComponent(
       <Container>
         <Eyebrow data-reveal>Product registration</Eyebrow>
         <h1 class="page-title" data-reveal data-reveal-delay="80">
-          Register your product and get an extra year of warranty
+          Register your Owell product
         </h1>
         <p class="page-lead" data-reveal data-reveal-delay="160">
-          We give you {site.gwarancjaMiesiace} months as standard. Register your device within{" "}
-          {site.gwarancjaPlus.terminDni} days of purchase, and we'll extend it to {razem} months. Free of charge
-          and with no fine print.
+          Save your purchase details with us — it makes handling any future repair or complaint faster, with no
+          need to dig up your receipt again. Registration is free and doesn't change the terms of the standard,{" "}
+          {site.gwarancjaMiesiace}-month warranty.
         </p>
-
-        <div class="licznik" data-reveal data-reveal-delay="240">
-          <div class="licznik-czlon">
-            <span class="licznik-liczba">{site.gwarancjaMiesiace}</span>
-            <span class="licznik-opis">months standard</span>
-          </div>
-          <span class="licznik-znak" aria-hidden="true">+</span>
-          <div class="licznik-czlon">
-            <span class="licznik-liczba">{site.gwarancjaPlus.dodatkoweMiesiace}</span>
-            <span class="licznik-opis">for registering</span>
-          </div>
-          <span class="licznik-znak" aria-hidden="true">=</span>
-          <div class="licznik-czlon licznik-czlon--suma">
-            <span class="licznik-liczba">{razem}</span>
-            <span class="licznik-opis">months of cover</span>
-          </div>
-        </div>
 
         <ol class="kroki">
           {kroki.map((k, i) => (
@@ -113,22 +94,14 @@ const wiadomosc = encodeURIComponent(
           <h2 class="warunki-tytul">Terms</h2>
           <ul>
             <li>
-              Registration is free and optional. Without it, the standard {site.gwarancjaMiesiace}-month warranty
-              applies.
-            </li>
-            <li>
-              The request must be sent within {site.gwarancjaPlus.terminDni} days of the purchase date shown on
-              your proof of purchase.
-            </li>
-            <li>
-              The extension covers the same defects as the standard warranty — material and manufacturing. It does
-              not cover mechanical damage or wear of consumable parts such as blades or batteries.
+              Registration is free and optional. It doesn't change the standard {site.gwarancjaMiesiace}-month
+              warranty.
             </li>
             <li>
               Registration does not limit your statutory rights under warranty law or consumer protection.
             </li>
             <li>
-              We use the data from your registration only to handle the warranty — details in the{" "}
+              We use the data from your registration only to handle a future repair or complaint — details in the{" "}
               <a href={l("/polityka-prywatnosci")}>privacy policy</a>.
             </li>
           </ul>
@@ -158,50 +131,6 @@ const wiadomosc = encodeURIComponent(
     font-size: var(--fs-lead);
     line-height: var(--lh-body);
     color: var(--text-2);
-  }
-
-  .licznik {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--sp-6);
-    margin-top: var(--sp-12);
-    padding: var(--sp-8);
-    background-color: var(--bg-1);
-    border: 1px solid var(--gold);
-    border-radius: var(--radius-lg);
-  }
-
-  .licznik-czlon {
-    display: flex;
-    flex-direction: column;
-    gap: var(--sp-1);
-  }
-
-  .licznik-liczba {
-    font-family: var(--font-mono);
-    font-size: var(--fs-h2);
-    font-weight: 600;
-    line-height: 1;
-    color: var(--text-2);
-  }
-
-  .licznik-czlon--suma .licznik-liczba {
-    color: var(--gold-bright);
-  }
-
-  .licznik-opis {
-    font-family: var(--font-mono);
-    font-size: var(--fs-micro);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-mono);
-    color: var(--steel);
-  }
-
-  .licznik-znak {
-    font-family: var(--font-mono);
-    font-size: var(--fs-h3);
-    color: var(--steel);
   }
 
   .kroki {

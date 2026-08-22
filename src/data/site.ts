@@ -21,18 +21,6 @@ export const site = {
 
   gwarancjaMiesiace: 24,
 
-  // Przedłużona gwarancja po zarejestrowaniu produktu — wzorzec stosowany
-  // przez Boscha i Philipsa, którego Adler nie ma.
-  //
-  // UWAGA: to zobowiązanie wobec konsumenta, nie hasło marketingowe. Zmiana
-  // tych liczb zmienia warunki, na które ktoś już mógł się powołać — jeśli
-  // trzeba je skrócić, rób to z datą obowiązywania, a nie po cichu.
-  gwarancjaPlus: {
-    dodatkoweMiesiace: 12,
-    // Ile dni od zakupu klient ma na rejestrację.
-    terminDni: 30,
-  },
-
   // Adres własnego sklepu internetowego. `null` = sklep jeszcze nie wystartował.
   // Po wykupieniu domeny wystarczy wpisać tu URL — reszta strony zadziała sama.
   sklep: null as string | null,

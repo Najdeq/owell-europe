@@ -14,8 +14,6 @@ const breadcrumbs = [
   { name: "Rejestracja produktu", path: "/rejestracja-produktu" },
 ];
 
-const razem = site.gwarancjaMiesiace + site.gwarancjaPlus.dodatkoweMiesiace;
-
 const kroki = [
   {
     tytul: "Znajdź numer modelu",
@@ -27,14 +25,14 @@ const kroki = [
   },
   {
     tytul: "Wyślij do nas",
-    opis: `Napisz na WhatsApp lub mailem w ciągu ${site.gwarancjaPlus.terminDni} dni od zakupu. Potwierdzimy rejestrację i od tej chwili obowiązuje ${razem} miesięcy gwarancji.`,
+    opis: "Napisz na WhatsApp lub mailem, podając model i datę zakupu. Potwierdzimy przyjęcie zgłoszenia i zapiszemy dane u siebie.",
   },
 ];
 
 // Treść wiadomości wstawiamy w link, żeby klient nie musiał się zastanawiać,
 // co napisać — otwiera czat z gotowym szkieletem zgłoszenia.
 const wiadomosc = encodeURIComponent(
-  "Dzień dobry, chcę zarejestrować produkt Owell i przedłużyć gwarancję.\n\n" +
+  "Dzień dobry, chcę zarejestrować zakupiony produkt Owell.\n\n" +
     "Model: \n" +
     "Data zakupu: \n" +
     "Gdzie kupiony: \n\n" +
@@ -43,8 +41,8 @@ const wiadomosc = encodeURIComponent(
 ---
 
 <Base
-  title={`Rejestracja produktu — ${razem} miesięcy gwarancji — Owell`}
-  description={`Zarejestruj produkt Owell w ciągu ${site.gwarancjaPlus.terminDni} dni od zakupu i przedłuż gwarancję z ${site.gwarancjaMiesiace} do ${razem} miesięcy. Bez opłat.`}
+  title="Rejestracja produktu — Owell"
+  description="Zarejestruj zakupiony produkt Owell — szybszy kontakt w razie serwisu czy reklamacji, bez dodatkowych opłat."
 >
   <BreadcrumbSchema slot="head" items={breadcrumbs} />
 
@@ -55,30 +53,13 @@ const wiadomosc = encodeURIComponent(
       <Container>
         <Eyebrow data-reveal>Rejestracja produktu</Eyebrow>
         <h1 class="page-title" data-reveal data-reveal-delay="80">
-          Zarejestruj produkt i zyskaj rok gwarancji więcej
+          Zarejestruj swój produkt Owell
         </h1>
         <p class="page-lead" data-reveal data-reveal-delay="160">
-          Standardowo dajemy {site.gwarancjaMiesiace} miesiące. Zarejestruj urządzenie w ciągu{" "}
-          {site.gwarancjaPlus.terminDni} dni od zakupu, a wydłużymy je do {razem} miesięcy. Bezpłatnie i bez
-          drobnego druku.
+          Zapisz dane zakupu w naszej bazie — dzięki temu obsługa ewentualnej reklamacji czy serwisu przebiega
+          szybciej, bez szukania paragonu na nowo. Rejestracja jest bezpłatna i nie zmienia warunków standardowej,{" "}
+          {site.gwarancjaMiesiace}-miesięcznej gwarancji.
         </p>
-
-        <div class="licznik" data-reveal data-reveal-delay="240">
-          <div class="licznik-czlon">
-            <span class="licznik-liczba">{site.gwarancjaMiesiace}</span>
-            <span class="licznik-opis">miesiące standardowo</span>
-          </div>
-          <span class="licznik-znak" aria-hidden="true">+</span>
-          <div class="licznik-czlon">
-            <span class="licznik-liczba">{site.gwarancjaPlus.dodatkoweMiesiace}</span>
-            <span class="licznik-opis">za rejestrację</span>
-          </div>
-          <span class="licznik-znak" aria-hidden="true">=</span>
-          <div class="licznik-czlon licznik-czlon--suma">
-            <span class="licznik-liczba">{razem}</span>
-            <span class="licznik-opis">miesięcy ochrony</span>
-          </div>
-        </div>
 
         <ol class="kroki">
           {kroki.map((k, i) => (
@@ -112,22 +93,14 @@ const wiadomosc = encodeURIComponent(
           <h2 class="warunki-tytul">Warunki</h2>
           <ul>
             <li>
-              Rejestracja jest bezpłatna i dobrowolna. Bez niej obowiązuje standardowa gwarancja{" "}
-              {site.gwarancjaMiesiace} miesięcy.
-            </li>
-            <li>
-              Zgłoszenie trzeba wysłać w ciągu {site.gwarancjaPlus.terminDni} dni od daty zakupu widniejącej na
-              dowodzie zakupu.
-            </li>
-            <li>
-              Przedłużenie obejmuje te same wady co gwarancja podstawowa — materiałowe i produkcyjne. Nie obejmuje
-              uszkodzeń mechanicznych ani zużycia elementów eksploatacyjnych, takich jak ostrza czy akumulatory.
+              Rejestracja jest bezpłatna i dobrowolna. Nie zmienia warunków standardowej gwarancji —{" "}
+              {site.gwarancjaMiesiace} miesięcy od zakupu.
             </li>
             <li>
               Rejestracja nie ogranicza Twoich uprawnień ustawowych z tytułu rękojmi ani praw konsumenta.
             </li>
             <li>
-              Dane ze zgłoszenia wykorzystujemy wyłącznie do obsługi gwarancji — szczegóły w{" "}
+              Dane ze zgłoszenia wykorzystujemy wyłącznie do obsługi ewentualnej reklamacji lub serwisu — szczegóły w{" "}
               <a href="/polityka-prywatnosci">polityce prywatności</a>.
             </li>
           </ul>
@@ -157,50 +130,6 @@ const wiadomosc = encodeURIComponent(
     font-size: var(--fs-lead);
     line-height: var(--lh-body);
     color: var(--text-2);
-  }
-
-  .licznik {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--sp-6);
-    margin-top: var(--sp-12);
-    padding: var(--sp-8);
-    background-color: var(--bg-1);
-    border: 1px solid var(--gold);
-    border-radius: var(--radius-lg);
-  }
-
-  .licznik-czlon {
-    display: flex;
-    flex-direction: column;
-    gap: var(--sp-1);
-  }
-
-  .licznik-liczba {
-    font-family: var(--font-mono);
-    font-size: var(--fs-h2);
-    font-weight: 600;
-    line-height: 1;
-    color: var(--text-2);
-  }
-
-  .licznik-czlon--suma .licznik-liczba {
-    color: var(--gold-bright);
-  }
-
-  .licznik-opis {
-    font-family: var(--font-mono);
-    font-size: var(--fs-micro);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-mono);
-    color: var(--steel);
-  }
-
-  .licznik-znak {
-    font-family: var(--font-mono);
-    font-size: var(--fs-h3);
-    color: var(--steel);
   }
 
   .kroki {

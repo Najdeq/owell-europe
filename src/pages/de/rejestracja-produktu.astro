@@ -17,8 +17,6 @@ const breadcrumbs = [
   { name: "Produkt registrieren", path: l("/rejestracja-produktu") },
 ];
 
-const razem = site.gwarancjaMiesiace + site.gwarancjaPlus.dodatkoweMiesiace;
-
 const kroki = [
   {
     tytul: "Modellnummer finden",
@@ -30,12 +28,12 @@ const kroki = [
   },
   {
     tytul: "An uns senden",
-    opis: `Schreiben Sie uns innerhalb von ${site.gwarancjaPlus.terminDni} Tagen nach dem Kauf per WhatsApp oder E-Mail. Wir bestätigen die Registrierung, und ab diesem Zeitpunkt läuft die Garantie ${razem} Monate.`,
+    opis: "Schreiben Sie uns per WhatsApp oder E-Mail mit Modell und Kaufdatum. Wir bestätigen den Eingang und speichern die Daten bei uns.",
   },
 ];
 
 const wiadomosc = encodeURIComponent(
-  "Hallo, ich möchte mein Owell-Produkt registrieren und die Garantie verlängern.\n\n" +
+  "Hallo, ich möchte mein Owell-Produkt registrieren.\n\n" +
     "Modell: \n" +
     "Kaufdatum: \n" +
     "Gekauft bei: \n\n" +
@@ -44,8 +42,8 @@ const wiadomosc = encodeURIComponent(
 ---
 
 <Base
-  title={`Produkt registrieren — ${razem} Monate Garantie — Owell`}
-  description={`Registrieren Sie Ihr Owell-Produkt innerhalb von ${site.gwarancjaPlus.terminDni} Tagen nach dem Kauf und verlängern Sie die Garantie von ${site.gwarancjaMiesiace} auf ${razem} Monate. Kostenlos.`}
+  title="Produkt registrieren — Owell"
+  description="Registrieren Sie Ihr Owell-Produkt — schnellerer Kontakt im Service- oder Reklamationsfall, kostenlos."
 >
   <BreadcrumbSchema slot="head" items={breadcrumbs} />
 
@@ -56,30 +54,13 @@ const wiadomosc = encodeURIComponent(
       <Container>
         <Eyebrow data-reveal>Produktregistrierung</Eyebrow>
         <h1 class="page-title" data-reveal data-reveal-delay="80">
-          Registrieren Sie Ihr Produkt und erhalten Sie ein zusätzliches Jahr Garantie
+          Registrieren Sie Ihr Owell-Produkt
         </h1>
         <p class="page-lead" data-reveal data-reveal-delay="160">
-          Standardmäßig gewähren wir Ihnen {site.gwarancjaMiesiace} Monate. Registrieren Sie Ihr Gerät innerhalb
-          von {site.gwarancjaPlus.terminDni} Tagen nach dem Kauf, und wir verlängern die Garantie auf {razem}{" "}
-          Monate. Kostenlos und ohne Kleingedrucktes.
+          Speichern Sie Ihre Kaufdaten bei uns — das beschleunigt die Bearbeitung im Service- oder Reklamationsfall,
+          ohne dass Sie den Beleg erneut suchen müssen. Die Registrierung ist kostenlos und ändert nichts an den
+          Bedingungen der regulären {site.gwarancjaMiesiace}-monatigen Garantie.
         </p>
-
-        <div class="licznik" data-reveal data-reveal-delay="240">
-          <div class="licznik-czlon">
-            <span class="licznik-liczba">{site.gwarancjaMiesiace}</span>
-            <span class="licznik-opis">Monate Standard</span>
-          </div>
-          <span class="licznik-znak" aria-hidden="true">+</span>
-          <div class="licznik-czlon">
-            <span class="licznik-liczba">{site.gwarancjaPlus.dodatkoweMiesiace}</span>
-            <span class="licznik-opis">für Registrierung</span>
-          </div>
-          <span class="licznik-znak" aria-hidden="true">=</span>
-          <div class="licznik-czlon licznik-czlon--suma">
-            <span class="licznik-liczba">{razem}</span>
-            <span class="licznik-opis">Monate Absicherung</span>
-          </div>
-        </div>
 
         <ol class="kroki">
           {kroki.map((k, i) => (
@@ -113,25 +94,16 @@ const wiadomosc = encodeURIComponent(
           <h2 class="warunki-tytul">Bedingungen</h2>
           <ul>
             <li>
-              Die Registrierung ist kostenlos und freiwillig. Ohne sie gilt die reguläre {site.gwarancjaMiesiace}-monatige
-              Garantie.
-            </li>
-            <li>
-              Der Antrag muss innerhalb von {site.gwarancjaPlus.terminDni} Tagen nach dem auf Ihrem Kaufbeleg
-              angegebenen Kaufdatum eingereicht werden.
-            </li>
-            <li>
-              Die Verlängerung deckt dieselben Mängel wie die Standardgarantie ab — Material- und
-              Herstellungsfehler. Sie umfasst keine mechanischen Schäden oder Verschleiß von Verbrauchsteilen wie
-              Klingen oder Batterien.
+              Die Registrierung ist kostenlos und freiwillig. Sie ändert nichts an der regulären{" "}
+              {site.gwarancjaMiesiace}-monatigen Garantie.
             </li>
             <li>
               Die Registrierung schränkt Ihre gesetzlichen Rechte aus Gewährleistung oder Verbraucherschutz nicht
               ein.
             </li>
             <li>
-              Wir verwenden die bei der Registrierung angegebenen Daten ausschließlich zur Bearbeitung der
-              Garantie — Details finden Sie in der{" "}
+              Wir verwenden die bei der Registrierung angegebenen Daten ausschließlich zur Bearbeitung eines
+              künftigen Service- oder Reklamationsfalls — Details finden Sie in der{" "}
               <a href={l("/polityka-prywatnosci")}>Datenschutzerklärung</a>.
             </li>
           </ul>
@@ -161,50 +133,6 @@ const wiadomosc = encodeURIComponent(
     font-size: var(--fs-lead);
     line-height: var(--lh-body);
     color: var(--text-2);
-  }
-
-  .licznik {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--sp-6);
-    margin-top: var(--sp-12);
-    padding: var(--sp-8);
-    background-color: var(--bg-1);
-    border: 1px solid var(--gold);
-    border-radius: var(--radius-lg);
-  }
-
-  .licznik-czlon {
-    display: flex;
-    flex-direction: column;
-    gap: var(--sp-1);
-  }
-
-  .licznik-liczba {
-    font-family: var(--font-mono);
-    font-size: var(--fs-h2);
-    font-weight: 600;
-    line-height: 1;
-    color: var(--text-2);
-  }
-
-  .licznik-czlon--suma .licznik-liczba {
-    color: var(--gold-bright);
-  }
-
-  .licznik-opis {
-    font-family: var(--font-mono);
-    font-size: var(--fs-micro);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-mono);
-    color: var(--steel);
-  }
-
-  .licznik-znak {
-    font-family: var(--font-mono);
-    font-size: var(--fs-h3);
-    color: var(--steel);
   }
 
   .kroki {

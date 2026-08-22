@@ -17,8 +17,6 @@ const breadcrumbs = [
   { name: "Регистрация продукта", path: l("/rejestracja-produktu") },
 ];
 
-const razem = site.gwarancjaMiesiace + site.gwarancjaPlus.dodatkoweMiesiace;
-
 const kroki = [
   {
     tytul: "Найдите номер модели",
@@ -30,12 +28,12 @@ const kroki = [
   },
   {
     tytul: "Отправьте нам",
-    opis: `Напишите нам в WhatsApp или на почту в течение ${site.gwarancjaPlus.terminDni} дней с момента покупки. Мы подтвердим регистрацию, и с этого момента гарантия будет действовать ${razem} месяцев.`,
+    opis: "Напишите нам в WhatsApp или на почту, указав модель и дату покупки. Мы подтвердим получение и сохраним данные у себя.",
   },
 ];
 
 const wiadomosc = encodeURIComponent(
-  "Здравствуйте, я хотел(а) бы зарегистрировать свой продукт Owell и продлить гарантию.\n\n" +
+  "Здравствуйте, я хотел(а) бы зарегистрировать свой продукт Owell.\n\n" +
     "Модель: \n" +
     "Дата покупки: \n" +
     "Место покупки: \n\n" +
@@ -44,8 +42,8 @@ const wiadomosc = encodeURIComponent(
 ---
 
 <Base
-  title={`Регистрация продукта — ${razem} месяцев гарантии — Owell`}
-  description={`Зарегистрируйте продукт Owell в течение ${site.gwarancjaPlus.terminDni} дней после покупки и продлите гарантию с ${site.gwarancjaMiesiace} до ${razem} месяцев. Бесплатно.`}
+  title="Регистрация продукта — Owell"
+  description="Зарегистрируйте продукт Owell — быстрее свяжемся в случае сервиса или рекламации, бесплатно."
 >
   <BreadcrumbSchema slot="head" items={breadcrumbs} />
 
@@ -56,30 +54,13 @@ const wiadomosc = encodeURIComponent(
       <Container>
         <Eyebrow data-reveal>Регистрация продукта</Eyebrow>
         <h1 class="page-title" data-reveal data-reveal-delay="80">
-          Зарегистрируйте продукт и получите дополнительный год гарантии
+          Зарегистрируйте свой продукт Owell
         </h1>
         <p class="page-lead" data-reveal data-reveal-delay="160">
-          Мы предоставляем {site.gwarancjaMiesiace} месяцев по умолчанию. Зарегистрируйте устройство в течение{" "}
-          {site.gwarancjaPlus.terminDni} дней после покупки, и мы продлим гарантию до {razem} месяцев. Бесплатно и
-          без мелкого шрифта.
+          Сохраните данные о покупке у нас — это ускорит обработку возможной рекламации или сервисного случая, без
+          необходимости искать чек заново. Регистрация бесплатна и не меняет условия стандартной гарантии —{" "}
+          {site.gwarancjaMiesiace} месяцев.
         </p>
-
-        <div class="licznik" data-reveal data-reveal-delay="240">
-          <div class="licznik-czlon">
-            <span class="licznik-liczba">{site.gwarancjaMiesiace}</span>
-            <span class="licznik-opis">месяцев стандартно</span>
-          </div>
-          <span class="licznik-znak" aria-hidden="true">+</span>
-          <div class="licznik-czlon">
-            <span class="licznik-liczba">{site.gwarancjaPlus.dodatkoweMiesiace}</span>
-            <span class="licznik-opis">за регистрацию</span>
-          </div>
-          <span class="licznik-znak" aria-hidden="true">=</span>
-          <div class="licznik-czlon licznik-czlon--suma">
-            <span class="licznik-liczba">{razem}</span>
-            <span class="licznik-opis">месяцев покрытия</span>
-          </div>
-        </div>
 
         <ol class="kroki">
           {kroki.map((k, i) => (
@@ -113,21 +94,15 @@ const wiadomosc = encodeURIComponent(
           <h2 class="warunki-tytul">Условия</h2>
           <ul>
             <li>
-              Регистрация бесплатна и необязательна. Без неё действует стандартная гарантия {site.gwarancjaMiesiace} месяцев.
-            </li>
-            <li>
-              Заявку нужно отправить в течение {site.gwarancjaPlus.terminDni} дней с даты покупки, указанной в
-              документе о покупке.
-            </li>
-            <li>
-              Продление покрывает те же дефекты, что и стандартная гарантия, — материалов и изготовления. Оно не
-              покрывает механические повреждения или износ расходных деталей, таких как лезвия или аккумуляторы.
+              Регистрация бесплатна и необязательна. Она не меняет условия стандартной гарантии —{" "}
+              {site.gwarancjaMiesiace} месяцев.
             </li>
             <li>
               Регистрация не ограничивает ваши законные права по гарантии или защите прав потребителей.
             </li>
             <li>
-              Мы используем данные вашей регистрации только для обработки гарантии — подробности в{" "}
+              Мы используем данные вашей регистрации только для обработки возможной рекламации или сервисного
+              случая — подробности в{" "}
               <a href={l("/polityka-prywatnosci")}>политике конфиденциальности</a>.
             </li>
           </ul>
@@ -157,50 +132,6 @@ const wiadomosc = encodeURIComponent(
     font-size: var(--fs-lead);
     line-height: var(--lh-body);
     color: var(--text-2);
-  }
-
-  .licznik {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--sp-6);
-    margin-top: var(--sp-12);
-    padding: var(--sp-8);
-    background-color: var(--bg-1);
-    border: 1px solid var(--gold);
-    border-radius: var(--radius-lg);
-  }
-
-  .licznik-czlon {
-    display: flex;
-    flex-direction: column;
-    gap: var(--sp-1);
-  }
-
-  .licznik-liczba {
-    font-family: var(--font-mono);
-    font-size: var(--fs-h2);
-    font-weight: 600;
-    line-height: 1;
-    color: var(--text-2);
-  }
-
-  .licznik-czlon--suma .licznik-liczba {
-    color: var(--gold-bright);
-  }
-
-  .licznik-opis {
-    font-family: var(--font-mono);
-    font-size: var(--fs-micro);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-mono);
-    color: var(--steel);
-  }
-
-  .licznik-znak {
-    font-family: var(--font-mono);
-    font-size: var(--fs-h3);
-    color: var(--steel);
   }
 
   .kroki {

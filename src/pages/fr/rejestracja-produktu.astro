@@ -17,8 +17,6 @@ const breadcrumbs = [
   { name: "Enregistrer votre produit", path: l("/rejestracja-produktu") },
 ];
 
-const razem = site.gwarancjaMiesiace + site.gwarancjaPlus.dodatkoweMiesiace;
-
 const kroki = [
   {
     tytul: "Trouvez le numéro de modèle",
@@ -30,12 +28,12 @@ const kroki = [
   },
   {
     tytul: "Envoyez-la-nous",
-    opis: `Écrivez-nous sur WhatsApp ou par e-mail dans les ${site.gwarancjaPlus.terminDni} jours suivant l'achat. Nous confirmerons l'enregistrement et, à partir de ce moment, la garantie court pour ${razem} mois.`,
+    opis: "Écrivez-nous sur WhatsApp ou par e-mail en indiquant le modèle et la date d'achat. Nous confirmerons la réception et conserverons les données.",
   },
 ];
 
 const wiadomosc = encodeURIComponent(
-  "Bonjour, je souhaite enregistrer mon produit Owell et prolonger la garantie.\n\n" +
+  "Bonjour, je souhaite enregistrer mon produit Owell.\n\n" +
     "Modèle : \n" +
     "Date d'achat : \n" +
     "Acheté chez : \n\n" +
@@ -44,8 +42,8 @@ const wiadomosc = encodeURIComponent(
 ---
 
 <Base
-  title={`Enregistrer votre produit — ${razem} mois de garantie — Owell`}
-  description={`Enregistrez votre produit Owell dans les ${site.gwarancjaPlus.terminDni} jours suivant l'achat et prolongez la garantie de ${site.gwarancjaMiesiace} à ${razem} mois. Gratuitement.`}
+  title="Enregistrer votre produit — Owell"
+  description="Enregistrez votre produit Owell — un contact plus rapide en cas de service ou de réclamation, gratuitement."
 >
   <BreadcrumbSchema slot="head" items={breadcrumbs} />
 
@@ -56,30 +54,13 @@ const wiadomosc = encodeURIComponent(
       <Container>
         <Eyebrow data-reveal>Enregistrement du produit</Eyebrow>
         <h1 class="page-title" data-reveal data-reveal-delay="80">
-          Enregistrez votre produit et gagnez une année de garantie supplémentaire
+          Enregistrez votre produit Owell
         </h1>
         <p class="page-lead" data-reveal data-reveal-delay="160">
-          Nous vous offrons {site.gwarancjaMiesiace} mois de garantie standard. Enregistrez votre appareil dans les{" "}
-          {site.gwarancjaPlus.terminDni} jours suivant l'achat, et nous la prolongerons à {razem} mois.
-          Gratuitement et sans petites lignes.
+          Conservez vos informations d'achat chez nous — cela accélère le traitement d'une éventuelle réclamation
+          ou d'un service après-vente, sans avoir à rechercher votre preuve d'achat. L'enregistrement est gratuit
+          et ne modifie pas les conditions de la garantie standard de {site.gwarancjaMiesiace} mois.
         </p>
-
-        <div class="licznik" data-reveal data-reveal-delay="240">
-          <div class="licznik-czlon">
-            <span class="licznik-liczba">{site.gwarancjaMiesiace}</span>
-            <span class="licznik-opis">mois standard</span>
-          </div>
-          <span class="licznik-znak" aria-hidden="true">+</span>
-          <div class="licznik-czlon">
-            <span class="licznik-liczba">{site.gwarancjaPlus.dodatkoweMiesiace}</span>
-            <span class="licznik-opis">pour l'enregistrement</span>
-          </div>
-          <span class="licznik-znak" aria-hidden="true">=</span>
-          <div class="licznik-czlon licznik-czlon--suma">
-            <span class="licznik-liczba">{razem}</span>
-            <span class="licznik-opis">mois de couverture</span>
-          </div>
-        </div>
 
         <ol class="kroki">
           {kroki.map((k, i) => (
@@ -113,25 +94,17 @@ const wiadomosc = encodeURIComponent(
           <h2 class="warunki-tytul">Conditions</h2>
           <ul>
             <li>
-              L'enregistrement est gratuit et facultatif. Sans lui, la garantie standard de{" "}
-              {site.gwarancjaMiesiace} mois s'applique.
-            </li>
-            <li>
-              La demande doit être envoyée dans les {site.gwarancjaPlus.terminDni} jours suivant la date d'achat
-              indiquée sur votre preuve d'achat.
-            </li>
-            <li>
-              L'extension couvre les mêmes défauts que la garantie standard — matériaux et fabrication. Elle ne
-              couvre pas les dommages mécaniques ni l'usure des pièces consommables comme les lames ou les
-              batteries.
+              L'enregistrement est gratuit et facultatif. Il ne modifie pas la garantie standard de{" "}
+              {site.gwarancjaMiesiace} mois.
             </li>
             <li>
               L'enregistrement ne limite pas vos droits légaux au titre du droit de la garantie ou de la protection
               des consommateurs.
             </li>
             <li>
-              Nous utilisons les données de votre enregistrement uniquement pour la gestion de la garantie —
-              détails dans la <a href={l("/polityka-prywatnosci")}>politique de confidentialité</a>.
+              Nous utilisons les données de votre enregistrement uniquement pour traiter une éventuelle réclamation
+              ou un service après-vente — détails dans la{" "}
+              <a href={l("/polityka-prywatnosci")}>politique de confidentialité</a>.
             </li>
           </ul>
         </div>
@@ -160,50 +133,6 @@ const wiadomosc = encodeURIComponent(
     font-size: var(--fs-lead);
     line-height: var(--lh-body);
     color: var(--text-2);
-  }
-
-  .licznik {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--sp-6);
-    margin-top: var(--sp-12);
-    padding: var(--sp-8);
-    background-color: var(--bg-1);
-    border: 1px solid var(--gold);
-    border-radius: var(--radius-lg);
-  }
-
-  .licznik-czlon {
-    display: flex;
-    flex-direction: column;
-    gap: var(--sp-1);
-  }
-
-  .licznik-liczba {
-    font-family: var(--font-mono);
-    font-size: var(--fs-h2);
-    font-weight: 600;
-    line-height: 1;
-    color: var(--text-2);
-  }
-
-  .licznik-czlon--suma .licznik-liczba {
-    color: var(--gold-bright);
-  }
-
-  .licznik-opis {
-    font-family: var(--font-mono);
-    font-size: var(--fs-micro);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-mono);
-    color: var(--steel);
-  }
-
-  .licznik-znak {
-    font-family: var(--font-mono);
-    font-size: var(--fs-h3);
-    color: var(--steel);
   }
 
   .kroki {

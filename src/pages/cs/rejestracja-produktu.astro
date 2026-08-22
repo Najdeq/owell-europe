@@ -17,8 +17,6 @@ const breadcrumbs = [
   { name: "Registrace produktu", path: l("/rejestracja-produktu") },
 ];
 
-const razem = site.gwarancjaMiesiace + site.gwarancjaPlus.dodatkoweMiesiace;
-
 const kroki = [
   {
     tytul: "Najděte číslo modelu",
@@ -30,12 +28,12 @@ const kroki = [
   },
   {
     tytul: "Zašlete nám jej",
-    opis: `Napište nám na WhatsApp nebo e-mailem do ${site.gwarancjaPlus.terminDni} dnů od zakoupení. Registraci potvrdíme a od té chvíle běží záruka po dobu ${razem} měsíců.`,
+    opis: "Napište nám na WhatsApp nebo e-mailem a uveďte model a datum zakoupení. Přijetí potvrdíme a údaje si uložíme.",
   },
 ];
 
 const wiadomosc = encodeURIComponent(
-  "Dobrý den, rád(a) bych zaregistroval(a) svůj produkt Owell a prodloužil(a) záruku.\n\n" +
+  "Dobrý den, rád(a) bych zaregistroval(a) svůj produkt Owell.\n\n" +
     "Model: \n" +
     "Datum zakoupení: \n" +
     "Zakoupeno od: \n\n" +
@@ -44,8 +42,8 @@ const wiadomosc = encodeURIComponent(
 ---
 
 <Base
-  title={`Registrace produktu — ${razem} měsíců záruky — Owell`}
-  description={`Zaregistrujte svůj produkt Owell do ${site.gwarancjaPlus.terminDni} dnů od zakoupení a prodlužte záruku z ${site.gwarancjaMiesiace} na ${razem} měsíců. Zdarma.`}
+  title="Registrace produktu — Owell"
+  description="Zaregistrujte svůj produkt Owell — rychlejší kontakt v případě servisu nebo reklamace, zdarma."
 >
   <BreadcrumbSchema slot="head" items={breadcrumbs} />
 
@@ -56,30 +54,13 @@ const wiadomosc = encodeURIComponent(
       <Container>
         <Eyebrow data-reveal>Registrace produktu</Eyebrow>
         <h1 class="page-title" data-reveal data-reveal-delay="80">
-          Zaregistrujte svůj produkt a získejte rok záruky navíc
+          Zaregistrujte svůj produkt Owell
         </h1>
         <p class="page-lead" data-reveal data-reveal-delay="160">
-          Standardně poskytujeme {site.gwarancjaMiesiace} měsíců. Zaregistrujte své zařízení do{" "}
-          {site.gwarancjaPlus.terminDni} dnů od zakoupení a prodloužíme ji na {razem} měsíců. Zdarma a bez
-          drobného písmenka.
+          Uložte si u nás údaje o nákupu — díky tomu bude vyřízení případné reklamace nebo servisu rychlejší, bez
+          nutnosti znovu hledat účtenku. Registrace je zdarma a nemění podmínky standardní{" "}
+          {site.gwarancjaMiesiace}měsíční záruky.
         </p>
-
-        <div class="licznik" data-reveal data-reveal-delay="240">
-          <div class="licznik-czlon">
-            <span class="licznik-liczba">{site.gwarancjaMiesiace}</span>
-            <span class="licznik-opis">měsíců standardně</span>
-          </div>
-          <span class="licznik-znak" aria-hidden="true">+</span>
-          <div class="licznik-czlon">
-            <span class="licznik-liczba">{site.gwarancjaPlus.dodatkoweMiesiace}</span>
-            <span class="licznik-opis">za registraci</span>
-          </div>
-          <span class="licznik-znak" aria-hidden="true">=</span>
-          <div class="licznik-czlon licznik-czlon--suma">
-            <span class="licznik-liczba">{razem}</span>
-            <span class="licznik-opis">měsíců krytí</span>
-          </div>
-        </div>
 
         <ol class="kroki">
           {kroki.map((k, i) => (
@@ -113,21 +94,13 @@ const wiadomosc = encodeURIComponent(
           <h2 class="warunki-tytul">Podmínky</h2>
           <ul>
             <li>
-              Registrace je zdarma a nepovinná. Bez ní platí standardní {site.gwarancjaMiesiace}měsíční záruka.
-            </li>
-            <li>
-              Žádost je třeba odeslat do {site.gwarancjaPlus.terminDni} dnů od data zakoupení uvedeného na
-              dokladu o koupi.
-            </li>
-            <li>
-              Prodloužení pokrývá stejné vady jako standardní záruka — materiálové a výrobní. Nevztahuje se na
-              mechanická poškození ani opotřebení spotřebních dílů, jako jsou čepele nebo baterie.
+              Registrace je zdarma a nepovinná. Nemění podmínky standardní {site.gwarancjaMiesiace}měsíční záruky.
             </li>
             <li>
               Registrace neomezuje vaše zákonná práva vyplývající ze záruky ani z ochrany spotřebitele.
             </li>
             <li>
-              Údaje z vaší registrace používáme pouze k vyřízení záruky — podrobnosti v{" "}
+              Údaje z vaší registrace používáme pouze k vyřízení případné reklamace nebo servisu — podrobnosti v{" "}
               <a href={l("/polityka-prywatnosci")}>zásadách ochrany osobních údajů</a>.
             </li>
           </ul>
@@ -157,50 +130,6 @@ const wiadomosc = encodeURIComponent(
     font-size: var(--fs-lead);
     line-height: var(--lh-body);
     color: var(--text-2);
-  }
-
-  .licznik {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--sp-6);
-    margin-top: var(--sp-12);
-    padding: var(--sp-8);
-    background-color: var(--bg-1);
-    border: 1px solid var(--gold);
-    border-radius: var(--radius-lg);
-  }
-
-  .licznik-czlon {
-    display: flex;
-    flex-direction: column;
-    gap: var(--sp-1);
-  }
-
-  .licznik-liczba {
-    font-family: var(--font-mono);
-    font-size: var(--fs-h2);
-    font-weight: 600;
-    line-height: 1;
-    color: var(--text-2);
-  }
-
-  .licznik-czlon--suma .licznik-liczba {
-    color: var(--gold-bright);
-  }
-
-  .licznik-opis {
-    font-family: var(--font-mono);
-    font-size: var(--fs-micro);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-mono);
-    color: var(--steel);
-  }
-
-  .licznik-znak {
-    font-family: var(--font-mono);
-    font-size: var(--fs-h3);
-    color: var(--steel);
   }
 
   .kroki {
