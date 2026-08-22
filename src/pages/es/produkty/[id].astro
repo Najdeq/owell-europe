@@ -1,5 +1,4 @@
 ---
-import { Image } from "astro:assets";
 import { getCollection, type CollectionEntry } from "astro:content";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import Base from "../../../layouts/Base.astro";
@@ -13,6 +12,8 @@ import Eyebrow from "../../../components/ui/Eyebrow.astro";
 import IkonaWyroznika from "../../../components/ui/IkonaWyroznika.astro";
 import { site } from "../../../data/site.ts";
 import instrukcje from "../../../data/instrukcje.json";
+import { galeria as galeriaDodatkowa } from "../../../data/galeria.ts";
+import ProduktGaleria from "../../../components/ProduktGaleria.astro";
 import { useTranslations } from "../../../i18n/utils.ts";
 
 import fotoOw1360b from "../../../assets/produkty/hero/ow-1360b.jpg";
@@ -91,6 +92,7 @@ const fotki: Record<string, ImageMetadata> = {
   "ow-7450": fotoOw7450,
 };
 const foto = fotki[produkt.id];
+const zdjeciaProduktu = foto ? [foto, ...(galeriaDodatkowa[produkt.id] ?? [])] : [];
 
 const instrukcja = instrukcje[produkt.id as keyof typeof instrukcje];
 
@@ -221,14 +223,7 @@ const faqSchema = {
         <div class="top">
           <div class="top-media">
             {foto ? (
-              <Image
-                src={foto}
-                alt={`${d.nazwa} — ${d.tagline}`}
-                width={900}
-                height={900}
-                loading="eager"
-                class="foto"
-              />
+              <ProduktGaleria zdjecia={zdjeciaProduktu} alt={`${d.nazwa} — ${d.tagline}`} />
             ) : (
               <div class="foto-brak">
                 <span>{d.model}</span>

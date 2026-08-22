@@ -1,0 +1,303 @@
+---
+import { Image } from "astro:assets";
+import { domyslnyJezyk, type Jezyk } from "../i18n/ui.ts";
+import { useTranslations } from "../i18n/utils.ts";
+
+interface Props {
+  zdjecia: ImageMetadata[];
+  alt: string;
+}
+
+const { zdjecia, alt } = Astro.props;
+
+const jezyk = (Astro.currentLocale ?? domyslnyJezyk) as Jezyk;
+const t = useTranslations(jezyk);
+---
+
+{zdjecia.length > 0 && (
+  <div class="galeria" data-galeria data-aktywny="0">
+    <button type="button" class="galeria-glowna" data-galeria-otworz aria-label={t("produkt.galeriaPowieksz")}>
+      {zdjecia.map((z, i) => (
+        <Image
+          src={z}
+          alt={i === 0 ? alt : ""}
+          width={900}
+          height={900}
+          loading={i === 0 ? "eager" : "lazy"}
+          class="foto"
+          data-galeria-slajd
+          data-index={i}
+        />
+      ))}
+    </button>
+
+    {zdjecia.length > 1 && (
+      <div class="miniatury" role="tablist" aria-label={t("produkt.galeriaMiniatury")}>
+        {zdjecia.map((z, i) => (
+          <button
+            type="button"
+            class="miniatura"
+            data-galeria-miniatura
+            data-index={i}
+            role="tab"
+            aria-selected={i === 0 ? "true" : "false"}
+          >
+            <Image src={z} alt="" width={140} height={140} loading="lazy" />
+          </button>
+        ))}
+      </div>
+    )}
+
+    <div class="lightbox" data-galeria-lightbox hidden>
+      {zdjecia.length > 1 && (
+        <button type="button" class="lightbox-nav lightbox-poprzednie" data-galeria-poprzednie aria-label={t("produkt.galeriaPoprzednie")}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+        </button>
+      )}
+
+      <img data-galeria-lightbox-img alt="" />
+
+      {zdjecia.length > 1 && (
+        <button type="button" class="lightbox-nav lightbox-nastepne" data-galeria-nastepne aria-label={t("produkt.galeriaNastepne")}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 18l6-6-6-6" />
+          </svg>
+        </button>
+      )}
+
+      <button type="button" class="lightbox-zamknij" data-galeria-zamknij aria-label={t("produkt.galeriaZamknij")}>✕</button>
+    </div>
+  </div>
+)}
+
+<style>
+  .galeria {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+  }
+
+  .galeria-glowna {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    padding: 0;
+    border: 1px solid var(--hairline-soft);
+    border-radius: var(--radius-lg);
+    background-color: var(--photo-bg);
+    overflow: hidden;
+    cursor: zoom-in;
+  }
+
+  .foto {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity var(--dur) var(--ease);
+  }
+
+  [data-aktywny="0"] .foto[data-index="0"],
+  [data-aktywny="1"] .foto[data-index="1"],
+  [data-aktywny="2"] .foto[data-index="2"],
+  [data-aktywny="3"] .foto[data-index="3"],
+  [data-aktywny="4"] .foto[data-index="4"],
+  [data-aktywny="5"] .foto[data-index="5"] {
+    opacity: 1;
+  }
+
+  .miniatury {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(4.5rem, 1fr));
+    gap: var(--sp-3);
+  }
+
+  .miniatura {
+    aspect-ratio: 1 / 1;
+    padding: 0;
+    border: 1px solid var(--hairline-soft);
+    border-radius: var(--radius);
+    background-color: var(--photo-bg);
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color var(--dur) var(--ease);
+  }
+
+  .miniatura :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .miniatura:hover {
+    border-color: var(--gold);
+  }
+
+  .miniatura[aria-selected="true"] {
+    border-color: var(--gold-bright);
+  }
+
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--sp-8);
+    background-color: rgba(0, 0, 0, 0.9);
+  }
+
+  .lightbox img {
+    max-width: min(90vw, 60rem);
+    max-height: 85vh;
+    object-fit: contain;
+    border-radius: var(--radius);
+  }
+
+  .lightbox-zamknij {
+    position: absolute;
+    top: var(--sp-6);
+    right: var(--sp-6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: 1px solid var(--hairline);
+    border-radius: 50%;
+    color: var(--text);
+    font-size: var(--fs-body);
+    cursor: pointer;
+  }
+
+  .lightbox-zamknij:hover {
+    border-color: var(--gold);
+    color: var(--gold-bright);
+  }
+
+  .lightbox-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 44px;
+    height: 44px;
+    margin-inline: var(--sp-4);
+    background: transparent;
+    border: 1px solid var(--hairline);
+    border-radius: 50%;
+    color: var(--text);
+    cursor: pointer;
+  }
+
+  .lightbox-nav svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .lightbox-nav:hover {
+    border-color: var(--gold);
+    color: var(--gold-bright);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .foto {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  function setupGaleria() {
+    const galerie = document.querySelectorAll<HTMLElement>("[data-galeria]");
+
+    galerie.forEach((galeria) => {
+      if (galeria.dataset.owellBound === "true") return;
+      galeria.dataset.owellBound = "true";
+
+      const miniatury = Array.from(galeria.querySelectorAll<HTMLButtonElement>("[data-galeria-miniatura]"));
+      const slajdy = Array.from(galeria.querySelectorAll<HTMLImageElement>("[data-galeria-slajd]"));
+      const otworz = galeria.querySelector<HTMLButtonElement>("[data-galeria-otworz]");
+      const lightbox = galeria.querySelector<HTMLElement>("[data-galeria-lightbox]");
+      const lightboxImg = galeria.querySelector<HTMLImageElement>("[data-galeria-lightbox-img]");
+      const zamknij = galeria.querySelector<HTMLButtonElement>("[data-galeria-zamknij]");
+      const poprzednie = galeria.querySelector<HTMLButtonElement>("[data-galeria-poprzednie]");
+      const nastepne = galeria.querySelector<HTMLButtonElement>("[data-galeria-nastepne]");
+
+      let aktywny = 0;
+
+      function ustawAktywny(index: number) {
+        aktywny = (index + slajdy.length) % slajdy.length;
+        galeria.dataset.aktywny = String(aktywny);
+        miniatury.forEach((m) => {
+          m.setAttribute("aria-selected", String(Number(m.dataset.index) === aktywny));
+        });
+      }
+
+      miniatury.forEach((m) => {
+        m.addEventListener("click", () => ustawAktywny(Number(m.dataset.index)));
+      });
+
+      function otworzLightbox() {
+        if (!lightbox || !lightboxImg) return;
+        const slajd = slajdy[aktywny];
+        lightboxImg.src = slajd.currentSrc || slajd.src;
+        lightboxImg.alt = slajd.alt;
+        lightbox.hidden = false;
+        document.body.style.overflow = "hidden";
+        document.addEventListener("keydown", onKeydown);
+      }
+
+      function zamknijLightbox() {
+        if (!lightbox) return;
+        lightbox.hidden = true;
+        document.body.style.overflow = "";
+        document.removeEventListener("keydown", onKeydown);
+        otworz?.focus();
+      }
+
+      function pokazWLightbox() {
+        if (!lightboxImg) return;
+        const slajd = slajdy[aktywny];
+        lightboxImg.src = slajd.currentSrc || slajd.src;
+        lightboxImg.alt = slajd.alt;
+      }
+
+      function onKeydown(event: KeyboardEvent) {
+        if (event.key === "Escape") zamknijLightbox();
+        if (event.key === "ArrowLeft") {
+          ustawAktywny(aktywny - 1);
+          pokazWLightbox();
+        }
+        if (event.key === "ArrowRight") {
+          ustawAktywny(aktywny + 1);
+          pokazWLightbox();
+        }
+      }
+
+      otworz?.addEventListener("click", otworzLightbox);
+      zamknij?.addEventListener("click", zamknijLightbox);
+      lightbox?.addEventListener("click", (e) => {
+        if (e.target === lightbox) zamknijLightbox();
+      });
+      poprzednie?.addEventListener("click", () => {
+        ustawAktywny(aktywny - 1);
+        pokazWLightbox();
+      });
+      nastepne?.addEventListener("click", () => {
+        ustawAktywny(aktywny + 1);
+        pokazWLightbox();
+      });
+    });
+  }
+
+  setupGaleria();
+  document.addEventListener("astro:page-load", setupGaleria);
+</script>
