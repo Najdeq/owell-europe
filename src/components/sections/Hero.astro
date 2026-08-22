@@ -1,5 +1,4 @@
 ---
-import { getCollection } from "astro:content";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import Section from "../ui/Section.astro";
 import Button from "../ui/Button.astro";
@@ -13,11 +12,7 @@ const jezyk = (Astro.currentLocale ?? domyslnyJezyk) as Jezyk;
 const t = useTranslations(jezyk);
 const l = (sciezka: string) => getRelativeLocaleUrl(jezyk, sciezka);
 
-const produkty = await getCollection("produkty");
-const produktWideo = produkty.find((p) => p.id === "ow-3300");
-const wideoAlt = produktWideo
-  ? `${produktWideo.data.nazwa} — ${produktWideo.data.tagline}`
-  : "Produkt Owell";
+const wideoAlt = `${site.nazwa} — ${t("common.tagline")}`;
 
 const fakty = [
   { target: 40, prefix: "+", suffix: "", etykieta: t("hero.statProdukty") },
@@ -70,8 +65,8 @@ const fakty = [
         <video
           class="hero-video"
           aria-label={wideoAlt}
-          src="/video/ow-3300.mp4"
-          poster="/video/ow-3300-poster.jpg"
+          src="/video/owell-commercial.mp4"
+          poster="/video/owell-commercial-poster.jpg"
           autoplay
           muted
           loop
@@ -208,7 +203,13 @@ const fakty = [
   .hero-media-frame {
     position: relative;
     width: 100%;
-    aspect-ratio: 4 / 3;
+    /* Wideo źródłowe jest pionowe (9:16, format "reels") — ramka na mobile/
+       tablet dostaje ten sam kształt zamiast szerokiego 4:3, który wymuszałby
+       mocne kadrowanie boków. max-height chroni przed zdominowaniem ekranu
+       na wąskich telefonach, gdzie 9:16 pełnej szerokości byłoby bardzo wysokie. */
+    aspect-ratio: 9 / 16;
+    max-height: 70vh;
+    margin-inline: auto;
     background-color: var(--photo-bg);
     border-radius: var(--radius-lg);
     border: 1px solid var(--hairline);
@@ -236,15 +237,14 @@ const fakty = [
 
   @media (min-width: 960px) {
     .hero-inner {
-      /* Szerszy lewy słupek niż wcześniej (było 0.7fr) — nagłówek to teraz
-         pełne zdanie, przy wąskiej kolumnie łamał się na kilkanaście
-         wierszy. */
-      grid-template-columns: 0.9fr 1.1fr;
-      gap: var(--sp-16);
-      /* Tekst (nagłówek + lead + CTA + szukajka + statystyki) jest teraz
-         wyższy niż stały kadr 4:3 wideo — stretch zamiast center pozwala
-         prawej kolumnie dorównać jej wysokością, zamiast wisieć wyśrodkowana
-         nad pustym miejscem pod spodem. */
+      /* Wideo pionowe (9:16) zajmuje więc znacznie węższą kolumnę niż
+         poprzednie landscape'owe 4:3 — tekst dostaje więcej miejsca
+         (1.4fr zamiast 0.9fr). */
+      grid-template-columns: 1.4fr 0.6fr;
+      gap: var(--sp-12);
+      /* Tekst (nagłówek + lead + CTA + szukajka + statystyki) ustala
+         wysokość wiersza — stretch pozwala pionowej ramce wideo dorównać
+         jej wysokością, zamiast wisieć wyśrodkowana nad pustym miejscem. */
       align-items: stretch;
     }
 
@@ -253,12 +253,14 @@ const fakty = [
     }
 
     .hero-media-frame {
-      /* Wypełnia całą wysokość wiersza gridu (czyli wysokość lewej kolumny)
-         zamiast trzymać sztywne aspect-ratio 4:3 — na mobile/tablet, gdzie
-         kolumny się układają jedna pod drugą, aspect-ratio niżej w tym samym
-         pliku nadal obowiązuje. */
-      aspect-ratio: auto;
+      /* Wysokość = wysokość lewej kolumny tekstu, szerokość wynika z
+         aspect-ratio 9:16 (odziedziczone z reguły bazowej) — więc ramka
+         zostaje wierna kształtowi źródłowego wideo zamiast rozciągać się
+         na całą szerokość kolumny 0.6fr. width:auto nadpisuje width:100%
+         z reguły bazowej, która by ten wybór aspect-ratio popsuła. */
+      width: auto;
       height: 100%;
+      max-height: none;
     }
   }
 </style>
