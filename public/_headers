@@ -1,9 +1,10 @@
 # Cloudflare Pages czyta ten plik automatycznie i dokłada nagłówki do
-# każdej odpowiedzi. Bez CSP na script/style — strona używa inline <script>
-# (define:vars) w wielu miejscach (karuzela, zgoda na cookies, analytics),
-# więc restrykcyjny CSP bez przebudowy na nonce/hash zablokowałby te
-# skrypty. Reszta nagłówków nie ma tego ograniczenia i jest bezpieczna
-# do włączenia od razu.
+# każdej odpowiedzi. Content-Security-Policy NIE jest tu wpisany na sztywno —
+# scripts/csp.mjs (npm postbuild) dopisuje go do dist/client/_headers po
+# każdym buildzie, bo lista sha256 dozwolonych inline-skryptów zależy od
+# aktualnej zawartości strony (np. wyszukiwarka modelu osadza dane produktów
+# przez define:vars — inny hash dla każdego z 8 języków, zmienia się razem
+# z katalogiem produktów). Zobacz komentarz na górze scripts/csp.mjs.
 /*
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY

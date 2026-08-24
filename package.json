@@ -10,7 +10,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "prebuild": "node scripts/instrukcje.mjs"
+    "prebuild": "node scripts/instrukcje.mjs",
+    "postbuild": "node scripts/csp.mjs"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.1.7",
