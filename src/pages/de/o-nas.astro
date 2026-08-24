@@ -11,6 +11,7 @@ import { site } from "../../data/site.ts";
 import lifestyleCzajnik from "../../assets/marka/lifestyle-czajnik.png";
 import lifestyleBlender from "../../assets/marka/lifestyle-blender.png";
 import lifestyleStrzyzarka from "../../assets/marka/lifestyle-strzyzarka.png";
+import magazyn from "../../assets/marka/magazyn.jpg";
 
 const l = (sciezka: string) => getRelativeLocaleUrl("de", sciezka);
 
@@ -95,6 +96,29 @@ const visualKeyframes = `
                 Ausnahme, ohne Kleingedrucktes.
               </p>
             </div>
+          </div>
+        </div>
+      </Container>
+    </Section>
+    <Section bg="raised">
+      <Container>
+        <div class="zaplecze">
+          <div class="zaplecze-media">
+            <Image
+              src={magazyn}
+              alt="Logistikzentrum von Owell aus der Vogelperspektive"
+              width={1740}
+              height={742}
+              class="zaplecze-img"
+            />
+          </div>
+
+          <div class="zaplecze-tekst">
+            <p class="zaplecze-eyebrow" data-reveal>Infrastruktur</p>
+            <h2 class="zaplecze-tytul" data-reveal data-reveal-delay="80">Eigenes Logistikzentrum</h2>
+            <p class="zaplecze-opis" data-reveal data-reveal-delay="160">
+              30.000 m² unter einem Dach — von der Warenannahme über die Lagerung bis zum Verpacken und Versand. Dank eigenem Zentrum kontrollieren wir den gesamten Prozess: Bis 18:30 Uhr aufgegebene Bestellungen versenden wir noch am selben Tag, und wir prüfen den Lagerbestand laufend — wir versprechen also nie die Verfügbarkeit eines Produkts, das gerade nicht auf Lager ist.
+            </p>
           </div>
         </div>
       </Container>
@@ -208,5 +232,48 @@ const visualKeyframes = `
         opacity: 1;
       }
     }
+  }
+  .zaplecze {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-8);
+  }
+
+  .zaplecze-media {
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--hairline);
+    overflow: hidden;
+  }
+
+  .zaplecze-img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .zaplecze-eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+  }
+
+  .zaplecze-tytul {
+    margin-top: var(--sp-3);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .zaplecze-opis {
+    margin-top: var(--sp-4);
+    max-width: var(--maxw-prose);
+    font-size: var(--fs-lead);
+    line-height: var(--lh-body);
+    color: var(--text-2);
   }
 </style>
