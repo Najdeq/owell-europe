@@ -1,4 +1,14 @@
 ---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { domyslnyJezyk, type Jezyk } from "../i18n/ui.ts";
+import { useTranslations } from "../i18n/utils.ts";
+
+const jezyk = (Astro.currentLocale ?? domyslnyJezyk) as Jezyk;
+const t = useTranslations(jezyk);
+const l = (sciezka: string) => getRelativeLocaleUrl(jezyk, sciezka);
+
+const [bannerDescPrzed, bannerDescPo] = t("consent.bannerDesc").split("{link}");
+const [settingsLeadPrzed, settingsLeadPo] = t("consent.settingsLead").split("{link}");
 ---
 
 <div
@@ -12,22 +22,21 @@
 >
   <div class="banner-inner">
     <div class="banner-text">
-      <p id="consent-banner-title" class="banner-title">Ta strona używa plików cookies</p>
+      <p id="consent-banner-title" class="banner-title">{t("consent.bannerTitle")}</p>
       <p id="consent-banner-desc" class="banner-desc">
-        Niezbędne są zawsze aktywne. Analityczne i marketingowe włączymy dopiero po Twojej zgodzie — możesz ją
-        zmienić w każdej chwili w <a href="/cookies">polityce cookies</a>.
+        {bannerDescPrzed}<a href={l("/cookies")}>{t("consent.bannerDescLink")}</a>{bannerDescPo}
       </p>
     </div>
 
     <div class="banner-actions">
       <button type="button" class="btn-consent btn-consent--ghost" data-consent-necessary-only>
-        Tylko niezbędne
+        {t("consent.necessaryOnly")}
       </button>
       <button type="button" class="btn-consent btn-consent--ghost" data-consent-open-settings>
-        Ustawienia
+        {t("consent.settings")}
       </button>
       <button type="button" class="btn-consent btn-consent--primary" data-consent-accept-all>
-        Akceptuj wszystkie
+        {t("consent.acceptAll")}
       </button>
     </div>
   </div>
@@ -44,56 +53,55 @@
   hidden
 >
   <div class="panel-header">
-    <h2 id="consent-settings-title" class="panel-title">Ustawienia prywatności</h2>
-    <button type="button" class="panel-close" data-consent-close-settings aria-label="Zamknij ustawienia">
+    <h2 id="consent-settings-title" class="panel-title">{t("consent.settingsTitle")}</h2>
+    <button type="button" class="panel-close" data-consent-close-settings aria-label={t("consent.closeSettingsAria")}>
       ✕
     </button>
   </div>
 
   <p class="panel-lead">
-    Wybierz, które kategorie plików cookies chcesz dopuścić. Szczegóły każdej kategorii znajdziesz w{" "}
-    <a href="/cookies">polityce cookies</a>.
+    {settingsLeadPrzed}<a href={l("/cookies")}>{t("consent.bannerDescLink")}</a>{settingsLeadPo}
   </p>
 
   <div class="panel-item">
     <div class="panel-item-text">
-      <p class="panel-item-title">Niezbędne</p>
-      <p class="panel-item-desc">Wymagane do działania strony i zapamiętania Twojej zgody. Nie można ich wyłączyć.</p>
+      <p class="panel-item-title">{t("consent.necessaryTitle")}</p>
+      <p class="panel-item-desc">{t("consent.necessaryDesc")}</p>
     </div>
     <label class="switch switch--disabled">
-      <input type="checkbox" role="switch" checked disabled aria-label="Niezbędne — zawsze włączone" />
+      <input type="checkbox" role="switch" checked disabled aria-label={t("consent.necessaryAria")} />
       <span class="switch-track"><span class="switch-thumb"></span></span>
     </label>
   </div>
 
   <div class="panel-item">
     <div class="panel-item-text">
-      <p class="panel-item-title">Analityczne</p>
-      <p class="panel-item-desc">Google Analytics — pomagają nam zrozumieć, jak korzystasz ze strony.</p>
+      <p class="panel-item-title">{t("consent.analyticsTitle")}</p>
+      <p class="panel-item-desc">{t("consent.analyticsDesc")}</p>
     </div>
     <label class="switch">
-      <input type="checkbox" role="switch" data-consent-toggle="analytics" aria-label="Zgoda na cookies analityczne" />
+      <input type="checkbox" role="switch" data-consent-toggle="analytics" aria-label={t("consent.analyticsAria")} />
       <span class="switch-track"><span class="switch-thumb"></span></span>
     </label>
   </div>
 
   <div class="panel-item">
     <div class="panel-item-text">
-      <p class="panel-item-title">Marketingowe</p>
-      <p class="panel-item-desc">Obecnie nieużywane. Włączenie przygotowuje zgodę na przyszłość.</p>
+      <p class="panel-item-title">{t("consent.marketingTitle")}</p>
+      <p class="panel-item-desc">{t("consent.marketingDesc")}</p>
     </div>
     <label class="switch">
-      <input type="checkbox" role="switch" data-consent-toggle="marketing" aria-label="Zgoda na cookies marketingowe" />
+      <input type="checkbox" role="switch" data-consent-toggle="marketing" aria-label={t("consent.marketingAria")} />
       <span class="switch-track"><span class="switch-thumb"></span></span>
     </label>
   </div>
 
   <div class="panel-actions">
     <button type="button" class="btn-consent btn-consent--ghost" data-consent-necessary-only>
-      Tylko niezbędne
+      {t("consent.necessaryOnly")}
     </button>
     <button type="button" class="btn-consent btn-consent--primary" data-consent-save-settings>
-      Zapisz ustawienia
+      {t("consent.saveSettings")}
     </button>
   </div>
 </div>
