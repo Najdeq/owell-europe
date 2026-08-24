@@ -131,7 +131,7 @@ const productSchema = {
   })),
 };
 
-const pytaniaAuto: { pytanie: string; odpowiedz: string }[] = [];
+const pytaniaAuto: { pytanie: string; odpowiedz: string; link?: string; linkTekst?: string }[] = [];
 
 const dana = (fragment: string) =>
   d.dane.find((x) => x.etykieta.toLowerCase().includes(fragment))?.wartosc;
@@ -172,6 +172,8 @@ if (instrukcja) {
   pytaniaAuto.push({
     pytanie: t("produkt.pytanieInstrukcja"),
     odpowiedz: t("produkt.odpowiedzInstrukcja").replace("{mb}", instrukcja.mb.toFixed(1)),
+  link: instrukcja.url,
+  linkTekst: t("produkt.odpowiedzInstrukcjaLink"),
   });
 }
 
@@ -187,6 +189,16 @@ if (d.ean) {
 }
 
 const pytania = [...(d.pytania ?? []), ...pytaniaAuto];
+
+const pytaniaRender = pytania.map((p) => {
+  const link = "link" in p ? (p.link as string | undefined) : undefined;
+  const linkTekst = "linkTekst" in p ? (p.linkTekst as string | undefined) : undefined;
+  if (link && linkTekst) {
+    const [przed, po] = p.odpowiedz.split(linkTekst);
+    return { pytanie: p.pytanie, przed, link, linkTekst, po };
+  }
+  return { pytanie: p.pytanie, przed: p.odpowiedz, link: null as string | null, linkTekst: null as string | null, po: "" };
+});
 
 // Zdania z jednym linkiem w środku — dzielimy w miejscu placeholdera zamiast
 // doklejać link na końcu, żeby tekst i odnośnik faktycznie się łączyły.
@@ -329,12 +341,16 @@ const faqSchema = {
           <h2 class="naglowek" data-reveal>{t("produkt.naglowekPytania")}</h2>
 
           <div class="pytania">
-            {pytania.map((p: { pytanie: string; odpowiedz: string }) => (
+            {pytaniaRender.map((p) => (
               <details class="pytanie">
                 <summary>{p.pytanie}</summary>
-                <p>{p.odpowiedz}</p>
+                <p>
+                  {p.przed}
+                  {p.link && <a href={p.link}>{p.linkTekst}</a>}
+                  {p.po}
+                </p>
               </details>
-            ))}
+              ))}
           </div>
 
           <p class="pytania-nota">
