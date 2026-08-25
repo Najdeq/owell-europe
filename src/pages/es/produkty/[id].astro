@@ -13,7 +13,9 @@ import IkonaWyroznika from "../../../components/ui/IkonaWyroznika.astro";
 import { site } from "../../../data/site.ts";
 import instrukcje from "../../../data/instrukcje.json";
 import { galeria as galeriaDodatkowa } from "../../../data/galeria.ts";
+import { kalkulatorPojemnosci } from "../../../data/kalkulatorPojemnosci.ts";
 import ProduktGaleria from "../../../components/ProduktGaleria.astro";
+import KalkulatorPojemnosci from "../../../components/ui/KalkulatorPojemnosci.astro";
 import { useTranslations } from "../../../i18n/utils.ts";
 
 import fotoOw1360b from "../../../assets/produkty/hero/ow-1360b.jpg";
@@ -94,6 +96,7 @@ const fotki: Record<string, ImageMetadata> = {
   "ow-4096": fotoOw4096,
 };
 const foto = fotki[produkt.id];
+const kalkulator = kalkulatorPojemnosci[produkt.id];
 const zdjeciaProduktu = foto ? [foto, ...(galeriaDodatkowa[produkt.id] ?? [])] : [];
 
 const instrukcja = instrukcje[produkt.id as keyof typeof instrukcje];
@@ -332,6 +335,16 @@ const faqSchema = {
                 </div>
               )}
             </dl>
+
+            {kalkulator && (
+              <div class="kalkulator-wrap">
+                <KalkulatorPojemnosci
+                  pojemnoscMl={kalkulator.pojemnoscMl}
+                  jednostkaMl={kalkulator.jednostkaMl}
+                  jednostkaTyp={kalkulator.jednostkaTyp}
+                />
+              </div>
+            )}
           </div>
         </div>
       </Container>
@@ -525,6 +538,10 @@ const faqSchema = {
   }
 
   .dane {
+    margin-top: var(--sp-6);
+  }
+
+  .kalkulator-wrap {
     margin-top: var(--sp-6);
   }
 
