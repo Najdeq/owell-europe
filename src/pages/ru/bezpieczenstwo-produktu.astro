@@ -1,5 +1,4 @@
 ---
-import { getCollection } from "astro:content";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import Base from "../../layouts/Base.astro";
 import Header from "../../components/Header.astro";
@@ -9,10 +8,6 @@ import Container from "../../components/ui/Container.astro";
 import Section from "../../components/ui/Section.astro";
 import Prose from "../../components/ui/Prose.astro";
 import { site } from "../../data/site.ts";
-
-const produkty = (await getCollection("produkty", ({ data }) => data.opublikowany)).sort(
-  (a, b) => a.data.kolejnosc - b.data.kolejnosc
-);
 
 const l = (sciezka: string) => getRelativeLocaleUrl("ru", sciezka);
 
@@ -50,38 +45,7 @@ const breadcrumbs = [
           </p>
 
           <h2>Данные производителя для отдельных продуктов</h2>
-          <p>
-            В соответствии с требованиями GPSR ниже мы публикуем идентификационные данные производителя для каждого
-            продукта нашего ассортимента. Столбец «Ответственное лицо в ЕС» заполняется только в том случае, если
-            производитель находится за пределами Европейского союза.
-          </p>
-
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th scope="col">Продукт</th>
-                  <th scope="col">Производитель</th>
-                  <th scope="col">Адрес</th>
-                  <th scope="col">Email</th>
-                  <th scope="col">Ответственное лицо в ЕС</th>
-                </tr>
-              </thead>
-              <tbody>
-                {produkty.map((p) => (
-                  <tr>
-                    <td data-label="Продукт">{p.data.nazwa} ({p.data.model})</td>
-                    <td data-label="Производитель">{p.data.gpsr.producent}</td>
-                    <td data-label="Адрес">{p.data.gpsr.adres}</td>
-                    <td data-label="Email">
-                      <a href={`mailto:${p.data.gpsr.emailProducenta}`}>{p.data.gpsr.emailProducenta}</a>
-                    </td>
-                    <td data-label="Ответственное лицо в ЕС">{p.data.gpsr.osobaOdpowiedzialnaUE ?? "—"}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <p>Производителем всех продуктов нашего ассортимента является Adler Sp. z o.o., ul. Ordona 2A, 01-237 Warszawa, Польша (эл. почта: gpsr@adlereurope.eu); поскольку производитель находится в Европейском союзе, ни для одного из продуктов не требуется указывать ответственное лицо в ЕС.</p>
 
           <h2>Как сообщить о проблеме безопасности</h2>
           <p>
@@ -125,41 +89,4 @@ const breadcrumbs = [
     color: var(--text);
   }
 
-  .table-wrap {
-    margin-bottom: var(--sp-8);
-    overflow-x: auto;
-    border: 1px solid var(--hairline-soft);
-    border-radius: var(--radius);
-  }
-
-  table {
-    width: 100%;
-    min-width: 760px;
-    border-collapse: collapse;
-    font-size: var(--fs-small);
-  }
-
-  th {
-    padding: var(--sp-3) var(--sp-4);
-    font-family: var(--font-mono);
-    font-size: var(--fs-micro);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-mono);
-    color: var(--steel);
-    text-align: left;
-    background-color: var(--bg-2);
-    white-space: nowrap;
-  }
-
-  td {
-    padding: var(--sp-3) var(--sp-4);
-    color: var(--text-2);
-    border-top: 1px solid var(--hairline-soft);
-    vertical-align: top;
-  }
-
-  td:first-child {
-    color: var(--text);
-    font-weight: 500;
-  }
 </style>

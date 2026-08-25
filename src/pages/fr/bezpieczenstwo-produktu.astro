@@ -1,5 +1,4 @@
 ---
-import { getCollection } from "astro:content";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import Base from "../../layouts/Base.astro";
 import Header from "../../components/Header.astro";
@@ -9,10 +8,6 @@ import Container from "../../components/ui/Container.astro";
 import Section from "../../components/ui/Section.astro";
 import Prose from "../../components/ui/Prose.astro";
 import { site } from "../../data/site.ts";
-
-const produkty = (await getCollection("produkty", ({ data }) => data.opublikowany)).sort(
-  (a, b) => a.data.kolejnosc - b.data.kolejnosc
-);
 
 const l = (sciezka: string) => getRelativeLocaleUrl("fr", sciezka);
 
@@ -50,38 +45,7 @@ const breadcrumbs = [
           </p>
 
           <h2>Données du fabricant pour chaque produit</h2>
-          <p>
-            Conformément aux exigences du GPSR, nous publions ci-dessous les données d'identification du fabricant
-            pour chaque produit de notre gamme. La colonne « Personne responsable UE » n'est renseignée que lorsque
-            le fabricant est établi en dehors de l'Union européenne.
-          </p>
-
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th scope="col">Produit</th>
-                  <th scope="col">Fabricant</th>
-                  <th scope="col">Adresse</th>
-                  <th scope="col">E-mail</th>
-                  <th scope="col">Personne responsable UE</th>
-                </tr>
-              </thead>
-              <tbody>
-                {produkty.map((p) => (
-                  <tr>
-                    <td data-label="Produit">{p.data.nazwa} ({p.data.model})</td>
-                    <td data-label="Fabricant">{p.data.gpsr.producent}</td>
-                    <td data-label="Adresse">{p.data.gpsr.adres}</td>
-                    <td data-label="E-mail">
-                      <a href={`mailto:${p.data.gpsr.emailProducenta}`}>{p.data.gpsr.emailProducenta}</a>
-                    </td>
-                    <td data-label="Personne responsable UE">{p.data.gpsr.osobaOdpowiedzialnaUE ?? "—"}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <p>Le fabricant de tous les produits de notre gamme est Adler Sp. z o.o., ul. Ordona 2A, 01-237 Varsovie, Pologne (e-mail : gpsr@adlereurope.eu) ; le fabricant étant établi dans l'Union européenne, aucun produit ne nécessite de personne responsable UE.</p>
 
           <h2>Comment signaler un problème de sécurité</h2>
           <p>
@@ -126,41 +90,4 @@ const breadcrumbs = [
     color: var(--text);
   }
 
-  .table-wrap {
-    margin-bottom: var(--sp-8);
-    overflow-x: auto;
-    border: 1px solid var(--hairline-soft);
-    border-radius: var(--radius);
-  }
-
-  table {
-    width: 100%;
-    min-width: 760px;
-    border-collapse: collapse;
-    font-size: var(--fs-small);
-  }
-
-  th {
-    padding: var(--sp-3) var(--sp-4);
-    font-family: var(--font-mono);
-    font-size: var(--fs-micro);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-mono);
-    color: var(--steel);
-    text-align: left;
-    background-color: var(--bg-2);
-    white-space: nowrap;
-  }
-
-  td {
-    padding: var(--sp-3) var(--sp-4);
-    color: var(--text-2);
-    border-top: 1px solid var(--hairline-soft);
-    vertical-align: top;
-  }
-
-  td:first-child {
-    color: var(--text);
-    font-weight: 500;
-  }
 </style>
