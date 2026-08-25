@@ -45,7 +45,7 @@ export const kategorie: Kategoria[] = [
     nazwa: "Blender kielichowy",
     grupa: "kuchnia",
     opis: "Przygotowywanie smoothie, koktajli i zup w jednym naczyniu.",
-    produkty: [],
+    produkty: ["ow-4096"],
   },
   {
     slug: "opiekacz-do-kanapek",

@@ -145,6 +145,14 @@ import foto_ow_8805_8 from "../assets/produkty/galeria/ow-8805-8.jpg";
 import foto_ow_8805_9 from "../assets/produkty/galeria/ow-8805-9.jpg";
 import foto_ow_8805_10 from "../assets/produkty/galeria/ow-8805-10.jpg";
 import foto_ow_8805_11 from "../assets/produkty/galeria/ow-8805-11.jpg";
+import foto_ow_4096_1 from "../assets/produkty/galeria/ow-4096-1.jpg";
+import foto_ow_4096_2 from "../assets/produkty/galeria/ow-4096-2.jpg";
+import foto_ow_4096_3 from "../assets/produkty/galeria/ow-4096-3.jpg";
+import foto_ow_4096_4 from "../assets/produkty/galeria/ow-4096-4.jpg";
+import foto_ow_4096_5 from "../assets/produkty/galeria/ow-4096-5.jpg";
+import foto_ow_4096_6 from "../assets/produkty/galeria/ow-4096-6.jpg";
+import foto_ow_4096_7 from "../assets/produkty/galeria/ow-4096-7.jpg";
+import foto_ow_4096_8 from "../assets/produkty/galeria/ow-4096-8.jpg";
 
 /**
  * Dodatkowe zdjęcia produktów (poza głównym z `zdjecia.ts`), do galerii na
@@ -172,4 +180,5 @@ export const galeria: Record<string, ImageMetadata[]> = {
   "ow-7834": [foto_ow_7834_1, foto_ow_7834_2, foto_ow_7834_3, foto_ow_7834_4, foto_ow_7834_5, foto_ow_7834_6, foto_ow_7834_7, foto_ow_7834_8, foto_ow_7834_9, foto_ow_7834_10, foto_ow_7834_11],
   "ow-8058": [foto_ow_8058_1, foto_ow_8058_2, foto_ow_8058_3, foto_ow_8058_4, foto_ow_8058_5, foto_ow_8058_6, foto_ow_8058_7, foto_ow_8058_8, foto_ow_8058_9, foto_ow_8058_10, foto_ow_8058_11],
   "ow-8805": [foto_ow_8805_1, foto_ow_8805_2, foto_ow_8805_3, foto_ow_8805_4, foto_ow_8805_5, foto_ow_8805_6, foto_ow_8805_7, foto_ow_8805_8, foto_ow_8805_9, foto_ow_8805_10, foto_ow_8805_11],
+  "ow-4096": [foto_ow_4096_1, foto_ow_4096_2, foto_ow_4096_3, foto_ow_4096_4, foto_ow_4096_5, foto_ow_4096_6, foto_ow_4096_7, foto_ow_4096_8],
 };
