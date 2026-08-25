@@ -2,6 +2,7 @@
 tytul: "GPSR: qué es y por qué todo electrodoméstico debería incluir esta ficha"
 opis: "Desde diciembre de 2024, todo producto vendido en la UE debe revelar la identidad del fabricante. Explicamos qué significa esto en la práctica para los compradores."
 data: 2026-07-20
+okladka: "/blog/gpsr-co-to-jest.jpg"
 tagi: ["seguridad", "normativa"]
 opublikowany: true
 ---

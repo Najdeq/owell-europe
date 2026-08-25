@@ -2,6 +2,7 @@
 tytul: "GPSR: co to je a proč by měl každý spotřebič obsahovat tuto kartu"
 opis: "Od prosince 2024 musí každý výrobek prodávaný v EU zveřejňovat identitu výrobce. Vysvětlujeme, co to v praxi znamená pro kupující."
 data: 2026-07-20
+okladka: "/blog/gpsr-co-to-jest.jpg"
 tagi: ["bezpečnost", "regulace"]
 opublikowany: true
 ---

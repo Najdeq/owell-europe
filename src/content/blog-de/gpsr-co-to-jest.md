@@ -2,6 +2,7 @@
 tytul: "GPSR: Was das ist und warum jedes Gerät diese Karte haben sollte"
 opis: "Seit Dezember 2024 muss jedes in der EU verkaufte Produkt die Identität des Herstellers offenlegen. Wir erklären, was das für Käufer in der Praxis bedeutet."
 data: 2026-07-20
+okladka: "/blog/gpsr-co-to-jest.jpg"
 tagi: ["Sicherheit", "Vorschriften"]
 opublikowany: true
 ---

@@ -2,6 +2,7 @@
 tytul: "GPSR: co to jest i dlaczego każdy sprzęt AGD powinien mieć taką kartę"
 opis: "Od grudnia 2024 roku każdy produkt sprzedawany w UE musi mieć jawne dane producenta. Wyjaśniamy, co to oznacza w praktyce dla kupującego."
 data: 2026-07-20
+okladka: "/blog/gpsr-co-to-jest.jpg"
 tagi: ["bezpieczeństwo", "przepisy"]
 opublikowany: true
 ---

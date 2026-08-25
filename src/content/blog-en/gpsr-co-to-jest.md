@@ -2,6 +2,7 @@
 tytul: "GPSR: what it is and why every appliance should come with this card"
 opis: "Since December 2024, every product sold in the EU must disclose the manufacturer's identity. We explain what that means in practice for buyers."
 data: 2026-07-20
+okladka: "/blog/gpsr-co-to-jest.jpg"
 tagi: ["safety", "regulation"]
 opublikowany: true
 ---

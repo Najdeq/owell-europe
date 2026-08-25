@@ -4,9 +4,14 @@ interface Props {
   variant?: "primary" | "ghost" | "link";
   external?: boolean;
   class?: string;
+  // Pozwala przepuścić dowolne dodatkowe atrybuty (np. data-marketplace,
+  // data-platforma, data-lokalizacja dla Analytics.astro) na renderowany
+  // <a> — bez tego ginęły po cichu, bo Astro nie spreaduje nieznanych
+  // propsów automatycznie.
+  [key: string]: unknown;
 }
 
-const { href, variant = "primary", external = false, class: className } = Astro.props;
+const { href, variant = "primary", external = false, class: className, ...rest } = Astro.props;
 
 const externalAttrs = external
   ? { target: "_blank", rel: "noopener noreferrer" }
@@ -17,6 +22,7 @@ const externalAttrs = external
   href={href}
   class:list={["btn", `btn--${variant}`, className]}
   {...externalAttrs}
+  {...rest}
 >
   <slot />
 </a>
