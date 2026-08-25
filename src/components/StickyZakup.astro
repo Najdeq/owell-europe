@@ -1,0 +1,147 @@
+---
+import { Image } from "astro:assets";
+import Button from "./ui/Button.astro";
+
+interface Props {
+  foto?: ImageMetadata;
+  nazwa: string;
+  ctaHref: string;
+  ctaLabel: string;
+  ctaMarketplace: string;
+  ctaPlatforma: string;
+  produktId: string;
+}
+
+const { foto, nazwa, ctaHref, ctaLabel, ctaMarketplace, ctaPlatforma, produktId } = Astro.props;
+---
+
+<div class="sticky-zakup" data-sticky-zakup>
+  <div class="sticky-inner">
+    {foto && <Image src={foto} alt="" width={56} height={56} class="sticky-foto" />}
+    <p class="sticky-nazwa">{nazwa}</p>
+    <Button
+      href={ctaHref}
+      variant="primary"
+      external
+      class="sticky-cta"
+      tabindex="-1"
+      data-marketplace={ctaMarketplace}
+      data-platforma={ctaPlatforma}
+      data-lokalizacja={`sticky-${produktId}`}
+    >
+      {ctaLabel}
+    </Button>
+  </div>
+</div>
+
+<style>
+  /* Domyślnie schowany nad ekranem (translateY), nie display:none — dzięki
+     temu przejście jest animowane, a stan "brak JS" jest bezpieczny sam z
+     siebie (bar nigdy nie wjeżdża, nie trzeba nic dodatkowo ukrywać). */
+  .sticky-zakup {
+    position: fixed;
+    top: var(--header-h, 65px);
+    left: 0;
+    right: 0;
+    z-index: 60;
+    background-color: var(--bg-1);
+    border-bottom: 1px solid var(--hairline);
+    box-shadow: 0 12px 28px -16px rgba(0, 0, 0, 0.5);
+    transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      transform var(--dur) var(--ease),
+      opacity var(--dur) var(--ease);
+  }
+
+  .sticky-zakup.widoczny {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .sticky-inner {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-4);
+    max-width: var(--maxw);
+    margin-inline: auto;
+    padding: var(--sp-3) var(--gutter);
+  }
+
+  .sticky-foto {
+    flex: none;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-sm);
+    object-fit: cover;
+    border: 1px solid var(--hairline-soft);
+  }
+
+  .sticky-nazwa {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: var(--fs-small);
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .sticky-cta {
+    flex: none;
+    padding: var(--sp-2) var(--sp-5);
+    font-size: var(--fs-small);
+  }
+
+  @media (max-width: 640px) {
+    .sticky-nazwa {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sticky-zakup {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  function setupStickyZakup() {
+    const bar = document.querySelector<HTMLElement>("[data-sticky-zakup]");
+    const sentinel = document.querySelector<HTMLElement>("[data-cta-sentinel]");
+    if (!bar || !sentinel) return;
+    if (bar.dataset.owellBound === "true") return;
+    bar.dataset.owellBound = "true";
+
+    const link = bar.querySelector<HTMLAnchorElement>("a");
+
+    function pokaz() {
+      bar!.classList.add("widoczny");
+      link?.removeAttribute("tabindex");
+    }
+
+    function ukryj() {
+      bar!.classList.remove("widoczny");
+      link?.setAttribute("tabindex", "-1");
+    }
+
+    // Pasek pojawia się dopiero, gdy oryginalny przycisk zakupu (sentinel)
+    // wyjedzie spod nagłówka — nie ma sensu duplikować CTA, które i tak
+    // jest na ekranie.
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) ukryj();
+        else pokaz();
+      },
+      { rootMargin: "-80px 0px 0px 0px" }
+    );
+    observer.observe(sentinel);
+  }
+
+  setupStickyZakup();
+  document.addEventListener("astro:page-load", setupStickyZakup);
+</script>

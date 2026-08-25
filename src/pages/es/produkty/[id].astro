@@ -17,6 +17,7 @@ import { kalkulatorPojemnosci } from "../../../data/kalkulatorPojemnosci.ts";
 import ProduktGaleria from "../../../components/ProduktGaleria.astro";
 import KalkulatorPojemnosci from "../../../components/ui/KalkulatorPojemnosci.astro";
 import OstatnioOgladane from "../../../components/OstatnioOgladane.astro";
+import StickyZakup from "../../../components/StickyZakup.astro";
 import { useTranslations } from "../../../i18n/utils.ts";
 
 import fotoOw1360b from "../../../assets/produkty/hero/ow-1360b.jpg";
@@ -104,6 +105,10 @@ const instrukcja = instrukcje[produkt.id as keyof typeof instrukcje];
 
 const akapity = d.opis.split("\n\n").filter(Boolean);
 const kupHref = d.gdzieKupic ?? site.sklep;
+const ctaHref = kupHref ?? `https://wa.me/${site.kontakt.whatsappWa}`;
+const ctaLabel = kupHref ? t("produkt.kupWSklepie") : t("produkt.zapytajODostepnosc");
+const ctaMarketplace = kupHref ? "sklep" : "whatsapp";
+const ctaPlatforma = kupHref ? "Sklep internetowy" : "WhatsApp";
 
 const nazwaKategorii = t(`kategorie.${d.kategoria}`);
 
@@ -229,6 +234,16 @@ const faqSchema = {
 
   <Header />
 
+  <StickyZakup
+    foto={foto}
+    nazwa={d.nazwa}
+    ctaHref={ctaHref}
+    ctaLabel={ctaLabel}
+    ctaMarketplace={ctaMarketplace}
+    ctaPlatforma={ctaPlatforma}
+    produktId={produkt.id}
+  />
+
   <main id="content">
     <Section bg="base">
       <Container>
@@ -254,30 +269,17 @@ const faqSchema = {
             <h1 class="tytul" data-reveal data-reveal-delay="80">{d.nazwa}</h1>
             <p class="tagline" data-reveal data-reveal-delay="160">{d.tagline}</p>
 
-            <div class="kup">
-              {kupHref ? (
-                <Button
-                  href={kupHref}
-                  variant="primary"
-                  external
-                  data-marketplace="sklep"
-                  data-platforma="Sklep internetowy"
-                  data-lokalizacja={`produkt-${produkt.id}`}
-                >
-                  {t("produkt.kupWSklepie")}
-                </Button>
-              ) : (
-                <Button
-                  href={`https://wa.me/${site.kontakt.whatsappWa}`}
-                  variant="primary"
-                  external
-                  data-marketplace="whatsapp"
-                  data-platforma="WhatsApp"
-                  data-lokalizacja={`produkt-${produkt.id}`}
-                >
-                  {t("produkt.zapytajODostepnosc")}
-                </Button>
-              )}
+            <div class="kup" data-cta-sentinel>
+              <Button
+                href={ctaHref}
+                variant="primary"
+                external
+                data-marketplace={ctaMarketplace}
+                data-platforma={ctaPlatforma}
+                data-lokalizacja={`produkt-${produkt.id}`}
+              >
+                {ctaLabel}
+              </Button>
               {instrukcja && (
                 <Button href={instrukcja.url} variant="ghost">{t("produkt.instrukcjaPdf")}</Button>
               )}
