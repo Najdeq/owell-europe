@@ -15,6 +15,7 @@ import { galeria as galeriaDodatkowa } from "../../data/galeria.ts";
 import { kalkulatorPojemnosci } from "../../data/kalkulatorPojemnosci.ts";
 import ProduktGaleria from "../../components/ProduktGaleria.astro";
 import KalkulatorPojemnosci from "../../components/ui/KalkulatorPojemnosci.astro";
+import OstatnioOgladane from "../../components/OstatnioOgladane.astro";
 
 import fotoOw1360b from "../../assets/produkty/hero/ow-1360b.jpg";
 import fotoOw1360w from "../../assets/produkty/hero/ow-1360w.jpg";
@@ -408,6 +409,8 @@ const faqSchema = {
         </div>
       </Container>
     </Section>
+
+    <OstatnioOgladane produktId={produkt.id} nazwa={d.nazwa} tagline={d.tagline} />
   </main>
 
   <Footer />

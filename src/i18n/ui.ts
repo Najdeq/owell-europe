@@ -161,6 +161,7 @@ export const ui = {
       kalkulatorPuszka: "puszka",
       kalkulatorPorcja: "porcja",
       kalkulatorNota: "orientacyjnie, przy pełnym napełnieniu",
+      ostatnioOgladaneTytul: "Ostatnio oglądane",
     },
     consent: {
       bannerTitle: "Ta strona używa plików cookies",
@@ -326,6 +327,7 @@ export const ui = {
       kalkulatorPuszka: "can",
       kalkulatorPorcja: "serving",
       kalkulatorNota: "approximate, at full capacity",
+      ostatnioOgladaneTytul: "Recently viewed",
     },
     consent: {
       bannerTitle: "This site uses cookies",
@@ -491,6 +493,7 @@ export const ui = {
       kalkulatorPuszka: "Dose",
       kalkulatorPorcja: "Portion",
       kalkulatorNota: "ungefähr, bei voller Füllung",
+      ostatnioOgladaneTytul: "Zuletzt angesehen",
     },
     consent: {
       bannerTitle: "Diese Website verwendet Cookies",
@@ -656,6 +659,7 @@ export const ui = {
       kalkulatorPuszka: "банка",
       kalkulatorPorcja: "порция",
       kalkulatorNota: "ориентировочно, при полном наполнении",
+      ostatnioOgladaneTytul: "Недавно просмотренные",
     },
     consent: {
       bannerTitle: "Этот сайт использует файлы cookie",
@@ -821,6 +825,7 @@ export const ui = {
       kalkulatorPuszka: "canette",
       kalkulatorPorcja: "portion",
       kalkulatorNota: "à titre indicatif, à pleine capacité",
+      ostatnioOgladaneTytul: "Récemment consultés",
     },
     consent: {
       bannerTitle: "Ce site utilise des cookies",
@@ -986,6 +991,7 @@ export const ui = {
       kalkulatorPuszka: "lata",
       kalkulatorPorcja: "ración",
       kalkulatorNota: "orientativo, a capacidad máxima",
+      ostatnioOgladaneTytul: "Vistos recientemente",
     },
     consent: {
       bannerTitle: "Este sitio usa cookies",
@@ -1151,6 +1157,7 @@ export const ui = {
       kalkulatorPuszka: "plechovka",
       kalkulatorPorcja: "porce",
       kalkulatorNota: "orientačně, při plném naplnění",
+      ostatnioOgladaneTytul: "Naposledy zobrazené",
     },
     consent: {
       bannerTitle: "Tento web používá soubory cookie",
@@ -1316,6 +1323,7 @@ export const ui = {
       kalkulatorPuszka: "lattina",
       kalkulatorPorcja: "porzione",
       kalkulatorNota: "indicativo, a piena capacità",
+      ostatnioOgladaneTytul: "Visti di recente",
     },
     consent: {
       bannerTitle: "Questo sito utilizza cookie",
