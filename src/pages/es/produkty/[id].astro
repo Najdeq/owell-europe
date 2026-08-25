@@ -649,6 +649,16 @@ const faqSchema = {
     color: var(--text-2);
   }
 
+  .pytanie p a {
+    color: var(--gold);
+    text-underline-offset: 0.2em;
+    transition: color var(--dur) var(--ease);
+  }
+
+  .pytanie p a:hover {
+    color: var(--gold-bright);
+  }
+
   .pytania-nota {
     max-width: var(--maxw-prose);
     margin-top: var(--sp-6);
