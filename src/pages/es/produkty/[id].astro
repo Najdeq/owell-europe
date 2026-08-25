@@ -237,7 +237,7 @@ const faqSchema = {
         <div class="top">
           <div class="top-media">
             {foto ? (
-              <ProduktGaleria zdjecia={zdjeciaProduktu} alt={`${d.nazwa} — ${d.tagline}`} />
+              <ProduktGaleria zdjecia={zdjeciaProduktu} alt={`${d.nazwa} — ${d.tagline}`} produktId={produkt.id} />
             ) : (
               <div class="foto-brak">
                 <span>{d.model}</span>

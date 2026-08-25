@@ -22,6 +22,10 @@ const gaId = import.meta.env.PUBLIC_GA_ID ?? "";
       }
     }
 
+    function currentPagePath() {
+      return window.location.pathname + window.location.search;
+    }
+
     function injectGA() {
       // Brak zmiennej środowiskowej = nic się nie ładuje, bez błędu w konsoli.
       if (!gaId) return;
@@ -37,11 +41,34 @@ const gaId = import.meta.env.PUBLIC_GA_ID ?? "";
         window.gtag("js", new Date());
         window.gtag("config", gaId);
       }
+
+      // "config" powyżej już wysyła pierwsze page_view dla BIEŻĄCEJ ścieżki —
+      // zapamiętujemy ją, żeby trackPageView() (patrz niżej) jej nie zdublował.
+      window.__owellLastTrackedPath = currentPagePath();
     }
 
     function maybeInjectGA() {
       var consent = readConsent();
       if (consent && consent.analytics) injectGA();
+    }
+
+    // Od włączenia View Transitions (astro:transitions) nawigacja między
+    // stronami nie przeładowuje dokumentu — gtag("config", ...) powyżej
+    // wysyła page_view tylko raz, przy pierwszym wejściu na stronę. Bez tego
+    // każda kolejna nawigacja w obrębie sesji byłaby niewidoczna w GA4.
+    // setupAnalytics() woła to po każdym astro:page-load (pierwsze wejście
+    // i każda kolejna nawigacja), a dzięki __owellLastTrackedPath ustawionej
+    // w injectGA() pierwsze wejście nie dubluje pageview z "config".
+    function trackPageView() {
+      if (!window.__owellGaInjected || typeof window.gtag !== "function") return;
+      var path = currentPagePath();
+      if (window.__owellLastTrackedPath === path) return;
+      window.__owellLastTrackedPath = path;
+      window.gtag("event", "page_view", {
+        page_path: path,
+        page_title: document.title,
+        page_location: window.location.href,
+      });
     }
 
     // ---- UTM na linkach wychodzących do marketplace/sklepu ----
@@ -107,6 +134,7 @@ const gaId = import.meta.env.PUBLIC_GA_ID ?? "";
     }
 
     maybeInjectGA();
+    trackPageView();
     setupMarketplaceLinks();
 
     // "window" przeżywa nawigacje Astro (w przeciwieństwie do <body>), więc

@@ -27,13 +27,16 @@ import { createHash } from "node:crypto";
  * dla atrybutów style w statycznie budowanej stronie, a ryzyko wstrzyknięcia
  * przez CSS jest nieporównywalnie niższe niż przez JS. font-src ma `data:` —
  * część czcionek (@fontsource-variable) osadza fallback jako base64 wprost
- * w CSS, bez tego przeglądarka blokowała ich wczytanie.
+ * w CSS, bez tego przeglądarka blokowała ich wczytanie. script-src też ma
+ * `data:` — gtag.js sam sonduje wsparcie dynamic import przez pusty
+ * <script src="data:application/javascript,">, niezależnie od naszego kodu.
  *
- * Zweryfikowane ręcznie: build → npx serve dist/client z tymi nagłówkami →
- * przejście przez menu mobilne, wyszukiwarkę modelu, przeciąganie karuzeli,
- * przełącznik motywu i języka, lightbox galerii, akordeon FAQ, widget
- * WhatsApp, baner zgody na cookies — zero błędów CSP w konsoli po dodaniu
- * font-src data:.
+ * Zweryfikowane ręcznie: build → lokalny serwer z tymi nagłówkami → pełne
+ * przejście po stronie z włączonymi View Transitions (astro:transitions):
+ * nawigacja kategoria → produkt, galeria zdjęć, lupa na hover, menu mobilne,
+ * wyszukiwarka modelu, przeciąganie karuzeli, przełącznik motywu i języka,
+ * akordeon FAQ, widget WhatsApp, baner zgody na cookies, zgoda na GA4 —
+ * zero błędów CSP w konsoli.
  */
 
 const DIST = "dist/client";
@@ -71,6 +74,11 @@ for (const plik of pliki) {
 
 const scriptSrc = [
   "'self'",
+  // gtag.js sam sonduje wsparcie dynamic import przez pusty
+  // <script type="module" src="data:application/javascript,">, niezależnie
+  // od naszego kodu — bez tego przeglądarka blokuje tę (nieszkodliwą, pustą)
+  // sondę i loguje błąd CSP w konsoli przy każdym wczytaniu GA4.
+  "data:",
   "https://www.googletagmanager.com",
   ...[...hashe].sort().map((h) => `'sha256-${h}'`),
 ].join(" ");

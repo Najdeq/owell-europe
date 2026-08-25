@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import { ClientRouter } from "astro:transitions";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import ConsentBanner from "../components/ConsentBanner.astro";
 import Analytics from "../components/Analytics.astro";
@@ -168,6 +169,8 @@ const organizationSchema = {
     </noscript>
 
     <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
+
+    <ClientRouter />
 
     <slot name="head" />
   </head>

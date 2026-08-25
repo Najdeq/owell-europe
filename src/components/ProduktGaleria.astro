@@ -6,9 +6,14 @@ import { useTranslations } from "../i18n/utils.ts";
 interface Props {
   zdjecia: ImageMetadata[];
   alt: string;
+  // Identyfikator produktu — jeśli podany, pierwsze zdjęcie dostaje
+  // transition:name pasujący do kafelka na liście kategorii, dzięki czemu
+  // View Transitions morfuje jedno zdjęcie w drugie zamiast zwykłego
+  // przenikania całej strony.
+  produktId?: string;
 }
 
-const { zdjecia, alt } = Astro.props;
+const { zdjecia, alt, produktId } = Astro.props;
 
 const jezyk = (Astro.currentLocale ?? domyslnyJezyk) as Jezyk;
 const t = useTranslations(jezyk);
@@ -27,8 +32,10 @@ const t = useTranslations(jezyk);
           class="foto"
           data-galeria-slajd
           data-index={i}
+          transition:name={i === 0 && produktId ? `produkt-foto-${produktId}` : undefined}
         />
       ))}
+      <div class="zoom" data-galeria-zoom aria-hidden="true"></div>
     </button>
 
     {zdjecia.length > 1 && (
@@ -102,13 +109,34 @@ const t = useTranslations(jezyk);
     transition: opacity var(--dur) var(--ease);
   }
 
-  [data-aktywny="0"] .foto[data-index="0"],
-  [data-aktywny="1"] .foto[data-index="1"],
-  [data-aktywny="2"] .foto[data-index="2"],
-  [data-aktywny="3"] .foto[data-index="3"],
-  [data-aktywny="4"] .foto[data-index="4"],
-  [data-aktywny="5"] .foto[data-index="5"] {
+  /* Stan początkowy / fallback bez JS — pierwsze zdjęcie widoczne. Dla
+     produktów z więcej niż jednym zdjęciem przełączanie między nimi robi
+     JS bezpośrednio przez style.opacity (patrz ustawAktywny w skrypcie
+     niżej), bo CSS nie ma selektora "atrybut X == atrybut Y" — lista
+     samych reguł [data-aktywny="N"] .foto[data-index="N"] musiałaby być
+     ręcznie rozszerzana przy każdym produkcie z większą galerią. */
+  .foto[data-index="0"] {
     opacity: 1;
+  }
+
+  /* Lupa na hover — tylko urządzenia z myszką/precyzyjnym wskaźnikiem
+     (touch nie ma "hover", więc tam ten efekt zostaje całkowicie wyłączony,
+     nie tylko niewidoczny). Kliknięcie nadal otwiera lightbox — lupa to
+     szybki podgląd, lightbox to pełne zbliżenie na cały ekran. */
+  .zoom {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background-repeat: no-repeat;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--dur) var(--ease);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .galeria-glowna:hover .zoom {
+      opacity: 1;
+    }
   }
 
   .miniatury {
@@ -230,14 +258,37 @@ const t = useTranslations(jezyk);
       const zamknij = galeria.querySelector<HTMLButtonElement>("[data-galeria-zamknij]");
       const poprzednie = galeria.querySelector<HTMLButtonElement>("[data-galeria-poprzednie]");
       const nastepne = galeria.querySelector<HTMLButtonElement>("[data-galeria-nastepne]");
+      const zoom = galeria.querySelector<HTMLElement>("[data-galeria-zoom]");
+      const ZOOM_SKALA = 2.2;
 
       let aktywny = 0;
+
+      function syncZoomObrazek() {
+        if (!zoom) return;
+        const slajd = slajdy[aktywny];
+        zoom.style.backgroundImage = `url(${slajd.currentSrc || slajd.src})`;
+        zoom.style.backgroundSize = `${ZOOM_SKALA * 100}%`;
+      }
 
       function ustawAktywny(index: number) {
         aktywny = (index + slajdy.length) % slajdy.length;
         galeria.dataset.aktywny = String(aktywny);
+        slajdy.forEach((s, i) => {
+          s.style.opacity = i === aktywny ? "1" : "0";
+        });
         miniatury.forEach((m) => {
           m.setAttribute("aria-selected", String(Number(m.dataset.index) === aktywny));
+        });
+        syncZoomObrazek();
+      }
+
+      if (zoom && otworz) {
+        syncZoomObrazek();
+        otworz.addEventListener("mousemove", (event: MouseEvent) => {
+          const rect = otworz.getBoundingClientRect();
+          const x = ((event.clientX - rect.left) / rect.width) * 100;
+          const y = ((event.clientY - rect.top) / rect.height) * 100;
+          zoom.style.backgroundPosition = `${x}% ${y}%`;
         });
       }
 
