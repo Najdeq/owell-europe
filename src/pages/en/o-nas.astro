@@ -100,22 +100,22 @@ const visualKeyframes = `
     <Section bg="raised">
       <Container>
         <div class="zaplecze">
-          <div class="zaplecze-media">
-            <Image
-              src={magazyn}
-              alt="Owell logistics centre, aerial view"
-              width={1740}
-              height={742}
-              class="zaplecze-img"
-            />
-          </div>
+          <Image
+            src={magazyn}
+            alt="Owell logistics centre, aerial view"
+            width={1740}
+            height={742}
+            class="zaplecze-img"
+          />
 
-          <div class="zaplecze-tekst">
+          <div class="zaplecze-overlay">
+            <div class="zaplecze-text">
             <p class="zaplecze-eyebrow" data-reveal>Facilities</p>
             <h2 class="zaplecze-tytul" data-reveal data-reveal-delay="80">Our own logistics centre</h2>
             <p class="zaplecze-opis" data-reveal data-reveal-delay="160">
               30,000 m² under one roof — from goods receiving, through storage, to packing and shipping. Our own facility means we control the whole process: orders placed before 6:30 PM ship the same day, and we track stock in real time, so we never promise a product we don't actually have on the shelf.
             </p>
+            </div>
           </div>
         </div>
       </Container>
@@ -215,6 +215,36 @@ const visualKeyframes = `
       max-width: 30rem;
     }
 
+    .zaplecze {
+      min-height: 26rem;
+    }
+
+    .zaplecze-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .zaplecze-overlay {
+      position: relative;
+      display: flex;
+      align-items: center;
+      min-height: 100%;
+      padding: var(--sp-16);
+      background: linear-gradient(
+        to right,
+        var(--bg-0) 0%,
+        var(--bg-0) 42%,
+        transparent 78%
+      );
+    }
+
+    .zaplecze-text {
+      max-width: 30rem;
+    }
+
     .visual:hover .visual-overlay {
       opacity: 0;
     }
@@ -231,12 +261,7 @@ const visualKeyframes = `
     }
   }
   .zaplecze {
-    display: flex;
-    flex-direction: column;
-    gap: var(--sp-8);
-  }
-
-  .zaplecze-media {
+    position: relative;
     border-radius: var(--radius-lg);
     border: 1px solid var(--hairline);
     overflow: hidden;
@@ -248,6 +273,17 @@ const visualKeyframes = `
     height: auto;
   }
 
+  .zaplecze-overlay {
+    padding: var(--sp-8);
+    background-color: var(--bg-0);
+  }
+
+  .zaplecze-text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+  }
+
   .zaplecze-eyebrow {
     font-family: var(--font-mono);
     font-size: var(--fs-micro);
@@ -257,7 +293,6 @@ const visualKeyframes = `
   }
 
   .zaplecze-tytul {
-    margin-top: var(--sp-3);
     font-family: var(--font-display);
     font-size: var(--fs-h2);
     font-weight: 600;
@@ -267,8 +302,6 @@ const visualKeyframes = `
   }
 
   .zaplecze-opis {
-    margin-top: var(--sp-4);
-    max-width: var(--maxw-prose);
     font-size: var(--fs-lead);
     line-height: var(--lh-body);
     color: var(--text-2);
