@@ -18,6 +18,7 @@ import ProduktGaleria from "../../../components/ProduktGaleria.astro";
 import KalkulatorPojemnosci from "../../../components/ui/KalkulatorPojemnosci.astro";
 import OstatnioOgladane from "../../../components/OstatnioOgladane.astro";
 import StickyZakup from "../../../components/StickyZakup.astro";
+import LicznikWysylki from "../../../components/LicznikWysylki.astro";
 import { useTranslations } from "../../../i18n/utils.ts";
 
 import fotoOw1360b from "../../../assets/produkty/hero/ow-1360b.jpg";
@@ -284,6 +285,8 @@ const faqSchema = {
             <p class="gwarancja-nota">
               {t("produkt.gwarancjaNota").replace("{n}", String(d.gwarancjaMiesiace))}
             </p>
+
+            <LicznikWysylki />
           </div>
         </div>
       </Container>

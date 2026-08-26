@@ -1,0 +1,89 @@
+---
+import { domyslnyJezyk, type Jezyk } from "../i18n/ui.ts";
+import { useTranslations } from "../i18n/utils.ts";
+
+const jezyk = (Astro.currentLocale ?? domyslnyJezyk) as Jezyk;
+const t = useTranslations(jezyk);
+---
+
+<p
+  class="licznik-wysylki"
+  data-licznik-wysylki
+  data-przed={t("produkt.licznikWysylkaPrzed")}
+  data-po={t("produkt.licznikWysylkaPo")}
+  data-godz={t("produkt.licznikWysylkaGodz")}
+  data-min={t("produkt.licznikWysylkaMin")}
+  data-zamkniete={t("produkt.licznikWysylkaZamkniete")}
+>
+  {t("produkt.licznikWysylkaStatyczny")}
+</p>
+
+<style>
+  .licznik-wysylki {
+    margin-top: var(--sp-3);
+    font-size: var(--fs-micro);
+    color: var(--text-2);
+  }
+
+  .licznik-wysylki :global(strong) {
+    color: var(--gold);
+    font-weight: 600;
+  }
+</style>
+
+<script>
+  // Godzina graniczna 18:30 czasu polskiego (Europe/Warsaw) — musi się
+  // zgadzać z tekstem powtarzanym w wielu miejscach serwisu (Gwarancja.astro,
+  // FAQ, gdzie-kupic). Liczona jawnie w tej strefie, nie w czasie lokalnym
+  // odwiedzającego — inaczej gość z innej strefy zobaczyłby zły odliczany
+  // czas.
+  const GODZINA_CUTOFF = 18;
+  const MINUTA_CUTOFF = 30;
+
+  function formatujPozostalyCzas(minuty: number, godzLabel: string, minLabel: string) {
+    const h = Math.floor(minuty / 60);
+    const m = minuty % 60;
+    return h > 0 ? `${h} ${godzLabel} ${m} ${minLabel}` : `${m} ${minLabel}`;
+  }
+
+  function tickWszystkie() {
+    const elementy = document.querySelectorAll<HTMLElement>("[data-licznik-wysylki]");
+    if (elementy.length === 0) return;
+
+    const teraz = new Date();
+    const czesci = new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Europe/Warsaw",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    }).formatToParts(teraz);
+    const hh = Number(czesci.find((p) => p.type === "hour")?.value ?? "0");
+    const mm = Number(czesci.find((p) => p.type === "minute")?.value ?? "0");
+    const minutyOdPolnocy = hh * 60 + mm;
+    const cutoff = GODZINA_CUTOFF * 60 + MINUTA_CUTOFF;
+    const pozostalo = cutoff - minutyOdPolnocy;
+
+    elementy.forEach((el) => {
+      if (pozostalo > 0) {
+        const czas = formatujPozostalyCzas(pozostalo, el.dataset.godz ?? "", el.dataset.min ?? "");
+        el.innerHTML = `${el.dataset.przed ?? ""} <strong>${czas}</strong>${el.dataset.po ?? ""}.`;
+      } else {
+        el.textContent = el.dataset.zamkniete ?? "";
+      }
+    });
+  }
+
+  function setupLicznikWysylki() {
+    tickWszystkie();
+    // Jeden globalny interval na całą stronę (nie per-element) — window
+    // przeżywa nawigacje Astro, więc podpinamy go tylko raz; każdy tick
+    // sam odpytuje DOM o aktualnie obecne elementy.
+    if (!window.__owellLicznikWysylkiBound) {
+      window.__owellLicznikWysylkiBound = true;
+      window.setInterval(tickWszystkie, 60000);
+    }
+  }
+
+  setupLicznikWysylki();
+  document.addEventListener("astro:page-load", setupLicznikWysylki);
+</script>
