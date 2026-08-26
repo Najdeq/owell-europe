@@ -11,8 +11,6 @@ const t = useTranslations(jezyk);
   data-licznik-wysylki
   data-przed={t("produkt.licznikWysylkaPrzed")}
   data-po={t("produkt.licznikWysylkaPo")}
-  data-godz={t("produkt.licznikWysylkaGodz")}
-  data-min={t("produkt.licznikWysylkaMin")}
   data-zamkniete={t("produkt.licznikWysylkaZamkniete")}
 >
   {t("produkt.licznikWysylkaStatyczny")}
@@ -25,9 +23,11 @@ const t = useTranslations(jezyk);
     color: var(--text-2);
   }
 
-  .licznik-wysylki :global(strong) {
+  .licznik-wysylki :global(.licznik-zegar) {
     color: var(--gold);
     font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
   }
 </style>
 
@@ -40,10 +40,13 @@ const t = useTranslations(jezyk);
   const GODZINA_CUTOFF = 18;
   const MINUTA_CUTOFF = 30;
 
-  function formatujPozostalyCzas(minuty: number, godzLabel: string, minLabel: string) {
-    const h = Math.floor(minuty / 60);
-    const m = minuty % 60;
-    return h > 0 ? `${h} ${godzLabel} ${m} ${minLabel}` : `${m} ${minLabel}`;
+  function formatujZegar(sekundy: number) {
+    const h = Math.floor(sekundy / 3600);
+    const m = Math.floor((sekundy % 3600) / 60);
+    const s = sekundy % 60;
+    const mm = String(m).padStart(2, "0");
+    const ss = String(s).padStart(2, "0");
+    return h > 0 ? `${h}:${mm}:${ss}` : `${m}:${ss}`;
   }
 
   function tickWszystkie() {
@@ -55,18 +58,20 @@ const t = useTranslations(jezyk);
       timeZone: "Europe/Warsaw",
       hour: "2-digit",
       minute: "2-digit",
+      second: "2-digit",
       hour12: false,
     }).formatToParts(teraz);
     const hh = Number(czesci.find((p) => p.type === "hour")?.value ?? "0");
     const mm = Number(czesci.find((p) => p.type === "minute")?.value ?? "0");
-    const minutyOdPolnocy = hh * 60 + mm;
-    const cutoff = GODZINA_CUTOFF * 60 + MINUTA_CUTOFF;
-    const pozostalo = cutoff - minutyOdPolnocy;
+    const ss = Number(czesci.find((p) => p.type === "second")?.value ?? "0");
+    const sekundyOdPolnocy = hh * 3600 + mm * 60 + ss;
+    const cutoff = (GODZINA_CUTOFF * 60 + MINUTA_CUTOFF) * 60;
+    const pozostalo = cutoff - sekundyOdPolnocy;
 
     elementy.forEach((el) => {
       if (pozostalo > 0) {
-        const czas = formatujPozostalyCzas(pozostalo, el.dataset.godz ?? "", el.dataset.min ?? "");
-        el.innerHTML = `${el.dataset.przed ?? ""} <strong>${czas}</strong>${el.dataset.po ?? ""}.`;
+        const zegar = formatujZegar(pozostalo);
+        el.innerHTML = `${el.dataset.przed ?? ""} <span class="licznik-zegar">${zegar}</span>${el.dataset.po ?? ""}.`;
       } else {
         el.textContent = el.dataset.zamkniete ?? "";
       }
@@ -77,10 +82,11 @@ const t = useTranslations(jezyk);
     tickWszystkie();
     // Jeden globalny interval na całą stronę (nie per-element) — window
     // przeżywa nawigacje Astro, więc podpinamy go tylko raz; każdy tick
-    // sam odpytuje DOM o aktualnie obecne elementy.
+    // sam odpytuje DOM o aktualnie obecne elementy. Co sekundę, żeby zegar
+    // faktycznie widocznie tykał, nie tylko cichutko przeskakiwał raz na minutę.
     if (!window.__owellLicznikWysylkiBound) {
       window.__owellLicznikWysylkiBound = true;
-      window.setInterval(tickWszystkie, 60000);
+      window.setInterval(tickWszystkie, 1000);
     }
   }
 

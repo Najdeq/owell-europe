@@ -160,8 +160,6 @@ export const ui = {
       licznikWysylkaStatyczny: "Zamówienia złożone do 18:30 wysyłamy tego samego dnia.",
       licznikWysylkaPrzed: "Zamów w ciągu",
       licznikWysylkaPo: ", żeby wysłać dziś",
-      licznikWysylkaGodz: "godz.",
-      licznikWysylkaMin: "min",
       licznikWysylkaZamkniete: "Dzisiejsze okno wysyłki (do 18:30) już się zamknęło — zamówienie wyślemy najbliższego dnia roboczego.",
     },
     consent: {
@@ -327,8 +325,6 @@ export const ui = {
       licznikWysylkaStatyczny: "Orders placed before 6:30 PM ship the same day.",
       licznikWysylkaPrzed: "Order within",
       licznikWysylkaPo: " to ship today",
-      licznikWysylkaGodz: "h",
-      licznikWysylkaMin: "min",
       licznikWysylkaZamkniete: "Today's shipping window (until 6:30 PM) has closed — your order will ship the next business day.",
     },
     consent: {
@@ -494,8 +490,6 @@ export const ui = {
       licznikWysylkaStatyczny: "Bis 18:30 Uhr aufgegebene Bestellungen versenden wir noch am selben Tag.",
       licznikWysylkaPrzed: "Bestellen Sie innerhalb von",
       licznikWysylkaPo: ", um noch heute zu versenden",
-      licznikWysylkaGodz: "Std.",
-      licznikWysylkaMin: "Min.",
       licznikWysylkaZamkniete: "Das heutige Versandfenster (bis 18:30 Uhr) ist bereits geschlossen — Ihre Bestellung versenden wir am nächsten Werktag.",
     },
     consent: {
@@ -661,8 +655,6 @@ export const ui = {
       licznikWysylkaStatyczny: "Заказы, оформленные до 18:30, отправляем в тот же день.",
       licznikWysylkaPrzed: "Оформите заказ в течение",
       licznikWysylkaPo: ", чтобы мы отправили его сегодня",
-      licznikWysylkaGodz: "ч",
-      licznikWysylkaMin: "мин",
       licznikWysylkaZamkniete: "Сегодняшнее окно отправки (до 18:30) уже закрыто — заказ будет отправлен в ближайший рабочий день.",
     },
     consent: {
@@ -828,8 +820,6 @@ export const ui = {
       licznikWysylkaStatyczny: "Les commandes passées avant 18:30 sont expédiées le jour même.",
       licznikWysylkaPrzed: "Commandez dans",
       licznikWysylkaPo: " pour une expédition aujourd'hui",
-      licznikWysylkaGodz: "h",
-      licznikWysylkaMin: "min",
       licznikWysylkaZamkniete: "La fenêtre d'expédition d'aujourd'hui (jusqu'à 18:30) est fermée — votre commande sera expédiée le prochain jour ouvré.",
     },
     consent: {
@@ -995,8 +985,6 @@ export const ui = {
       licznikWysylkaStatyczny: "Los pedidos realizados antes de las 18:30 se envían el mismo día.",
       licznikWysylkaPrzed: "Pide en las próximas",
       licznikWysylkaPo: " para enviarlo hoy",
-      licznikWysylkaGodz: "h",
-      licznikWysylkaMin: "min",
       licznikWysylkaZamkniete: "La ventana de envío de hoy (hasta las 18:30) ya se ha cerrado — tu pedido se enviará el próximo día laborable.",
     },
     consent: {
@@ -1162,8 +1150,6 @@ export const ui = {
       licznikWysylkaStatyczny: "Objednávky zadané do 18:30 odesíláme týž den.",
       licznikWysylkaPrzed: "Objednejte do",
       licznikWysylkaPo: ", aby odeslání proběhlo ještě dnes",
-      licznikWysylkaGodz: "h",
-      licznikWysylkaMin: "min",
       licznikWysylkaZamkniete: "Dnešní okno pro odeslání (do 18:30) je již uzavřeno — objednávku odešleme nejbližší pracovní den.",
     },
     consent: {
@@ -1329,8 +1315,6 @@ export const ui = {
       licznikWysylkaStatyczny: "Gli ordini effettuati entro le 18:30 vengono spediti lo stesso giorno.",
       licznikWysylkaPrzed: "Ordina entro",
       licznikWysylkaPo: " per la spedizione oggi",
-      licznikWysylkaGodz: "h",
-      licznikWysylkaMin: "min",
       licznikWysylkaZamkniete: "La finestra di spedizione di oggi (fino alle 18:30) si è chiusa — il tuo ordine verrà spedito il prossimo giorno lavorativo.",
     },
     consent: {
