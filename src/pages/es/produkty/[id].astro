@@ -384,28 +384,6 @@ const faqSchema = {
       <Container>
         <div class="gpsr">
           <Eyebrow>{t("produkt.naglowekGpsrEyebrow")}</Eyebrow>
-          <h2 class="naglowek naglowek--gpsr">{t("produkt.naglowekGpsr")}</h2>
-
-          <dl class="dane dane--gpsr">
-            <div class="dana">
-              <dt>{t("produkt.etykietaProducent")}</dt>
-              <dd>{d.gpsr.producent}</dd>
-            </div>
-            <div class="dana">
-              <dt>{t("produkt.etykietaAdres")}</dt>
-              <dd>{d.gpsr.adres}</dd>
-            </div>
-            <div class="dana">
-              <dt>{t("produkt.etykietaKontakt")}</dt>
-              <dd><a href={`mailto:${d.gpsr.emailProducenta}`}>{d.gpsr.emailProducenta}</a></dd>
-            </div>
-            {d.gpsr.osobaOdpowiedzialnaUE && (
-              <div class="dana">
-                <dt>{t("produkt.etykietaOsobaUE")}</dt>
-                <dd>{d.gpsr.osobaOdpowiedzialnaUE}</dd>
-              </div>
-            )}
-          </dl>
 
           {d.gpsr.ostrzezenia && d.gpsr.ostrzezenia.length > 0 && (
             <ul class="ostrzezenia">
@@ -522,10 +500,6 @@ const faqSchema = {
     font-size: var(--fs-h3);
     font-weight: 600;
     color: var(--text);
-  }
-
-  .naglowek--gpsr {
-    margin-top: var(--sp-3);
   }
 
   .dwie-kolumny {
@@ -703,7 +677,7 @@ const faqSchema = {
   }
 
   .ostrzezenia {
-    margin-top: var(--sp-6);
+    margin-top: var(--sp-4);
     padding-left: var(--sp-6);
   }
 
@@ -715,7 +689,7 @@ const faqSchema = {
   }
 
   .gpsr-nota {
-    margin-top: var(--sp-6);
+    margin-top: var(--sp-4);
     font-size: var(--fs-micro);
     line-height: var(--lh-body);
     color: var(--text-muted);
