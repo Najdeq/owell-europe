@@ -236,9 +236,13 @@ const waHref = `https://wa.me/${site.kontakt.whatsappWa}`;
 
     // Automatyczne otwarcie popupu raz na sesję przeglądarki (nie przy
     // każdym wejściu/nawigacji) — zaproszenie do kontaktu, a nie natręctwo.
+    // Na wąskich ekranach popup jest na tyle duży względem wysokości
+    // widocznego obszaru, że potrafi nachodzić na treść strony (np. na
+    // nagłówek hero) — tam zostaje tylko ręczne otwarcie przez dotknięcie
+    // przycisku.
     var AUTO_OPEN_KEY = "owell-wa-auto-shown";
     try {
-      if (!sessionStorage.getItem(AUTO_OPEN_KEY)) {
+      if (!sessionStorage.getItem(AUTO_OPEN_KEY) && window.innerWidth >= 640) {
         sessionStorage.setItem(AUTO_OPEN_KEY, "true");
         window.setTimeout(function () {
           syncOffset();
