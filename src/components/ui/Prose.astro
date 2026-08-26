@@ -21,6 +21,9 @@ const { class: className } = Astro.props;
   .prose :global(h2) {
     margin-top: var(--sp-12);
     margin-bottom: var(--sp-4);
+    /* Nagłówek nie chowa się pod stałym nagłówkiem strony po skoku
+       z linku ze spisu treści (SpisTresci.astro). */
+    scroll-margin-top: calc(var(--header-h, 65px) + var(--sp-4));
     font-family: var(--font-display);
     font-size: var(--fs-h3);
     font-weight: 600;

@@ -9,6 +9,7 @@ import Container from "../../../components/ui/Container.astro";
 import Section from "../../../components/ui/Section.astro";
 import Prose from "../../../components/ui/Prose.astro";
 import PowiazaneProdukty from "../../../components/PowiazaneProdukty.astro";
+import SpisTresci from "../../../components/SpisTresci.astro";
 import { site } from "../../../data/site.ts";
 
 export async function getStaticPaths() {
@@ -17,7 +18,7 @@ export async function getStaticPaths() {
 }
 
 const { wpis } = Astro.props;
-const { Content } = await render(wpis);
+const { Content, headings } = await render(wpis);
 
 const l = (sciezka: string) => getRelativeLocaleUrl("fr", sciezka);
 
@@ -73,6 +74,8 @@ const articleSchema = {
         {wpis.data.okladka && (
           <img src={wpis.data.okladka} alt="" class="okladka" width="1200" height="675" />
         )}
+
+        <SpisTresci headings={headings} tytul="Sommaire" />
 
         <Prose>
           <Content />

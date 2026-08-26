@@ -1,0 +1,76 @@
+---
+interface Naglowek {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  headings: Naglowek[];
+  tytul: string;
+}
+
+const { headings, tytul } = Astro.props;
+
+// Tylko H2 — H3 (jeśli się pojawią) są za drobne, żeby zaśmiecać spis
+// treści. Przy 0-1 sekcji spis niczego nie ułatwia, więc się nie renderuje.
+const sekcje = headings.filter((h) => h.depth === 2);
+---
+
+{sekcje.length >= 2 && (
+  <nav class="spis-tresci" aria-label={tytul}>
+    <p class="spis-tresci-tytul">{tytul}</p>
+    <ol>
+      {sekcje.map((h) => (
+        <li><a href={`#${h.slug}`}>{h.text}</a></li>
+      ))}
+    </ol>
+  </nav>
+)}
+
+<style>
+  .spis-tresci {
+    max-width: var(--maxw-prose);
+    margin-top: var(--sp-8);
+    padding: var(--sp-5) var(--sp-6);
+    background-color: var(--bg-2);
+    border: 1px solid var(--hairline-soft);
+    border-radius: var(--radius-lg);
+  }
+
+  .spis-tresci-tytul {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+  }
+
+  .spis-tresci ol {
+    margin-top: var(--sp-3);
+    padding-left: var(--sp-5);
+    counter-reset: spis-tresci;
+  }
+
+  .spis-tresci li {
+    counter-increment: spis-tresci;
+    margin-top: var(--sp-2);
+  }
+
+  .spis-tresci li::marker {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    color: var(--gold);
+  }
+
+  .spis-tresci a {
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+    text-decoration: none;
+  }
+
+  .spis-tresci a:hover {
+    color: var(--gold-bright);
+  }
+</style>
