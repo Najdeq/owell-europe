@@ -8,7 +8,7 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://owelleurope.com',
+  site: 'https://owelleurope.pl',
   output: 'static',
 
   // Polski zostaje bez przedrostka (/, /produkty...), żeby nie przekierowywać
