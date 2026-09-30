@@ -80,6 +80,7 @@ const scriptSrc = [
   // sondę i loguje błąd CSP w konsoli przy każdym wczytaniu GA4.
   "data:",
   "https://www.googletagmanager.com",
+  "https://www.clarity.ms",
   ...[...hashe].sort().map((h) => `'sha256-${h}'`),
 ].join(" ");
 
@@ -89,7 +90,7 @@ const csp = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data:",
   "font-src 'self' data:",
-  "connect-src 'self' https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com",
+  "connect-src 'self' https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com https://www.clarity.ms https://*.clarity.ms",
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",

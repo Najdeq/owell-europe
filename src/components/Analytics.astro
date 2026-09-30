@@ -1,8 +1,9 @@
 ---
 const gaId = import.meta.env.PUBLIC_GA_ID ?? "";
+const clarityId = import.meta.env.PUBLIC_CLARITY_ID ?? "";
 ---
 
-<script define:vars={{ gaId }}>
+<script define:vars={{ gaId, clarityId }}>
   // Cała logika musi się powtórzyć po astro:page-load (nowa strona = nowe
   // linki [data-marketplace] w DOM), dlatego jest owinięta w nazwaną funkcję
   // zamiast jednorazowego IIFE podpiętego pod DOMContentLoaded.
@@ -47,9 +48,33 @@ const gaId = import.meta.env.PUBLIC_GA_ID ?? "";
       window.__owellLastTrackedPath = currentPagePath();
     }
 
-    function maybeInjectGA() {
+    function injectClarity() {
+      // Brak zmiennej środowiskowej = nic się nie ładuje, bez błędu w konsoli
+      // (ten sam wzorzec co injectGA powyżej).
+      if (!clarityId) return;
+      if (window.__owellClarityInjected) return;
+      window.__owellClarityInjected = true;
+
+      (function (c, l, a, r, i) {
+        c[a] =
+          c[a] ||
+          function () {
+            (c[a].q = c[a].q || []).push(arguments);
+          };
+        var t = l.createElement(r);
+        t.async = 1;
+        t.src = "https://www.clarity.ms/tag/" + i;
+        var y = l.getElementsByTagName(r)[0];
+        y.parentNode.insertBefore(t, y);
+      })(window, document, "clarity", "script", clarityId);
+    }
+
+    function maybeInjectAnalytics() {
       var consent = readConsent();
-      if (consent && consent.analytics) injectGA();
+      if (consent && consent.analytics) {
+        injectGA();
+        injectClarity();
+      }
     }
 
     // Od włączenia View Transitions (astro:transitions) nawigacja między
@@ -133,7 +158,7 @@ const gaId = import.meta.env.PUBLIC_GA_ID ?? "";
       });
     }
 
-    maybeInjectGA();
+    maybeInjectAnalytics();
     trackPageView();
     setupMarketplaceLinks();
 
@@ -143,7 +168,10 @@ const gaId = import.meta.env.PUBLIC_GA_ID ?? "";
     if (!window.__owellConsentListenerBound) {
       window.__owellConsentListenerBound = true;
       window.addEventListener("owell:consent-change", function (event) {
-        if (event.detail && event.detail.analytics) injectGA();
+        if (event.detail && event.detail.analytics) {
+          injectGA();
+          injectClarity();
+        }
         setupMarketplaceLinks();
       });
     }
