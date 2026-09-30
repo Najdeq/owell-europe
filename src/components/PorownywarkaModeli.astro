@@ -1,0 +1,141 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { domyslnyJezyk, type Jezyk } from "../i18n/ui.ts";
+import { useTranslations } from "../i18n/utils.ts";
+
+interface Props {
+  modele: CollectionEntry<"produkty">[];
+}
+
+const { modele } = Astro.props;
+
+const jezyk = (Astro.currentLocale ?? domyslnyJezyk) as Jezyk;
+const t = useTranslations(jezyk);
+const l = (sciezka: string) => getRelativeLocaleUrl(jezyk, sciezka);
+
+// Suma wszystkich etykiet danych technicznych z porównywanych modeli, w
+// kolejności pierwszego pojawienia się — tak, żeby wspólne specyfikacje
+// (moc, zasilanie...) szły na górze, a te unikalne dla jednego modelu na
+// dole, zamiast losowej kolejności. Modele w tej samej podkategorii rzadko
+// mają identyczny zestaw pól (patrz warianty grzejnika), stąd brakująca
+// wartość renderuje się jako "—", nie pusta komórka.
+const etykiety: string[] = [];
+const wartosciPoModelu = modele.map((m) => {
+  const mapa = new Map<string, string>();
+  for (const { etykieta, wartosc } of m.data.dane) {
+    mapa.set(etykieta, wartosc);
+    if (!etykiety.includes(etykieta)) etykiety.push(etykieta);
+  }
+  return mapa;
+});
+---
+
+{modele.length >= 2 && (
+  <div class="porownanie" data-reveal>
+    <h2 class="porownanie-tytul">{t("common.porownajModele")}</h2>
+    <div class="tabela-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col"></th>
+            {modele.map((m) => (
+              <th scope="col">
+                <a href={l(`/produkty/${m.id}`)}>
+                  <span class="th-kod">{m.data.model}</span>
+                  <span class="th-nazwa">{m.data.nazwa}</span>
+                </a>
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {etykiety.map((etykieta) => (
+            <tr>
+              <th scope="row">{etykieta}</th>
+              {wartosciPoModelu.map((mapa) => (
+                <td>{mapa.get(etykieta) ?? "—"}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+)}
+
+<style>
+  .porownanie {
+    margin-top: var(--sp-16);
+    padding-top: var(--sp-8);
+    border-top: 1px solid var(--hairline-soft);
+  }
+
+  .porownanie-tytul {
+    font-family: var(--font-display);
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .tabela-wrap {
+    margin-top: var(--sp-6);
+    overflow-x: auto;
+    border: 1px solid var(--hairline-soft);
+    border-radius: var(--radius-lg);
+  }
+
+  table {
+    width: 100%;
+    min-width: 32rem;
+    border-collapse: collapse;
+    font-size: var(--fs-small);
+  }
+
+  thead th {
+    padding: var(--sp-4);
+    text-align: left;
+    background-color: var(--bg-2);
+    vertical-align: top;
+  }
+
+  thead th a {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-1);
+    text-decoration: none;
+  }
+
+  .th-kod {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--gold);
+  }
+
+  thead th a:hover .th-kod {
+    color: var(--gold-bright);
+  }
+
+  .th-nazwa {
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  tbody th {
+    padding: var(--sp-3) var(--sp-4);
+    font-weight: 400;
+    text-align: left;
+    color: var(--text-2);
+    border-top: 1px solid var(--hairline-soft);
+    white-space: nowrap;
+  }
+
+  tbody td {
+    padding: var(--sp-3) var(--sp-4);
+    color: var(--text);
+    border-top: 1px solid var(--hairline-soft);
+  }
+</style>
