@@ -1,5 +1,6 @@
 ---
 import { getCollection, type CollectionEntry } from "astro:content";
+import { getImage } from "astro:assets";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import Base from "../../../layouts/Base.astro";
 import Header from "../../../components/Header.astro";
@@ -100,6 +101,7 @@ const fotki: Record<string, ImageMetadata> = {
   "ow-4096": fotoOw4096,
 };
 const foto = fotki[produkt.id];
+const ogImageUrl = foto ? (await getImage({ src: foto, width: 1200, height: 1200 })).src : undefined;
 const kalkulator = kalkulatorPojemnosci[produkt.id];
 const zdjeciaProduktu = foto ? [foto, ...(galeriaDodatkowa[produkt.id] ?? [])] : [];
 
@@ -136,7 +138,7 @@ const productSchema = {
     address: { "@type": "PostalAddress", streetAddress: d.gpsr.adres },
     email: d.gpsr.emailProducenta,
   },
-  ...(foto ? { image: new URL(foto.src, Astro.site).toString() } : {}),
+  ...(ogImageUrl ? { image: new URL(ogImageUrl, Astro.site).toString() } : {}),
   additionalProperty: d.dane.map((x) => ({
     "@type": "PropertyValue",
     name: x.etykieta,
@@ -229,7 +231,7 @@ const faqSchema = {
 };
 ---
 
-<Base title={`${d.nazwa} (${d.model}) — Owell`} description={d.tagline}>
+<Base title={`${d.nazwa} (${d.model}) — Owell`} description={d.tagline} ogImage={ogImageUrl}>
   <BreadcrumbSchema slot="head" items={breadcrumbs} />
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(productSchema)} />
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(faqSchema)} />

@@ -1,5 +1,6 @@
 ---
 import { getCollection, type CollectionEntry } from "astro:content";
+import { getImage } from "astro:assets";
 import Base from "../../layouts/Base.astro";
 import Header from "../../components/Header.astro";
 import Footer from "../../components/Footer.astro";
@@ -72,6 +73,11 @@ const fotki: Record<string, ImageMetadata> = {
   "ow-4096": fotoOw4096,
 };
 const foto = fotki[produkt.id];
+// foto.src NIE jest gotowym adresem pliku w trybie imageService:'compile' —
+// prawdziwe, faktycznie wyemitowane pliki (zhaszowane, w konkretnym
+// rozmiarze) dostaje się tylko przez getImage()/<Image>. Użycie foto.src
+// wprost (jak było tu wcześniej w productSchema) dawało URL zwracający 404.
+const ogImageUrl = foto ? (await getImage({ src: foto, width: 1200, height: 1200 })).src : undefined;
 const zdjeciaProduktu = foto ? [foto, ...(galeriaDodatkowa[produkt.id] ?? [])] : [];
 const kalkulator = kalkulatorPojemnosci[produkt.id];
 
@@ -115,7 +121,7 @@ const productSchema = {
     address: { "@type": "PostalAddress", streetAddress: d.gpsr.adres },
     email: d.gpsr.emailProducenta,
   },
-  ...(foto ? { image: new URL(foto.src, Astro.site).toString() } : {}),
+  ...(ogImageUrl ? { image: new URL(ogImageUrl, Astro.site).toString() } : {}),
   additionalProperty: d.dane.map((x) => ({
     "@type": "PropertyValue",
     name: x.etykieta,
@@ -208,6 +214,7 @@ const faqSchema = {
 <Base
   title={`${d.nazwa} (${d.model}) — Owell`}
   description={d.tagline}
+  ogImage={ogImageUrl}
 >
   <BreadcrumbSchema slot="head" items={breadcrumbs} />
   <script
