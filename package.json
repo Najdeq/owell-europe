@@ -10,7 +10,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "prebuild": "node scripts/instrukcje.mjs",
+    "prebuild": "node scripts/instrukcje.mjs && node scripts/blur.mjs",
     "postbuild": "node scripts/csp.mjs"
   },
   "dependencies": {
@@ -23,5 +23,8 @@
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.1.6",
     "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "sharp": "^0.35.2"
   }
 }

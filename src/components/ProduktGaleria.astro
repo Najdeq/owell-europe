@@ -2,6 +2,7 @@
 import { Image } from "astro:assets";
 import { domyslnyJezyk, type Jezyk } from "../i18n/ui.ts";
 import { useTranslations } from "../i18n/utils.ts";
+import blurData from "../data/blur.json";
 
 interface Props {
   zdjecia: ImageMetadata[];
@@ -17,23 +18,44 @@ const { zdjecia, alt, produktId } = Astro.props;
 
 const jezyk = (Astro.currentLocale ?? domyslnyJezyk) as Jezyk;
 const t = useTranslations(jezyk);
+
+// Klucz rozmytej miniaturki (blur.json, patrz scripts/blur.mjs) odtwarzamy
+// z produktId + index, bez przekazywania osobnej listy kluczy: pierwsze
+// zdjęcie to zawsze "ow-xxxx" (hero), kolejne "ow-xxxx-1", "ow-xxxx-2"...
+// — dokładnie ta konwencja nazw plików w src/assets/produkty/galeria/.
+const blurSrc = (index: number) => {
+  if (!produktId) return undefined;
+  const klucz = index === 0 ? produktId : `${produktId}-${index}`;
+  return (blurData as Record<string, string>)[klucz];
+};
 ---
 
 {zdjecia.length > 0 && (
   <div class="galeria" data-galeria data-aktywny="0">
     <button type="button" class="galeria-glowna" data-galeria-otworz aria-label={t("produkt.galeriaPowieksz")}>
       {zdjecia.map((z, i) => (
-        <Image
-          src={z}
-          alt={i === 0 ? alt : ""}
-          width={900}
-          height={900}
-          loading={i === 0 ? "eager" : "lazy"}
-          class="foto"
-          data-galeria-slajd
-          data-index={i}
-          transition:name={i === 0 && produktId ? `produkt-foto-${produktId}` : undefined}
-        />
+        <>
+          {blurSrc(i) && (
+            <div
+              class="foto-blur"
+              data-galeria-blur
+              data-index={i}
+              style={`background-image:url(${blurSrc(i)})`}
+              aria-hidden="true"
+            />
+          )}
+          <Image
+            src={z}
+            alt={i === 0 ? alt : ""}
+            width={900}
+            height={900}
+            loading={i === 0 ? "eager" : "lazy"}
+            class="foto"
+            data-galeria-slajd
+            data-index={i}
+            transition:name={i === 0 && produktId ? `produkt-foto-${produktId}` : undefined}
+          />
+        </>
       ))}
       <div class="zoom" data-galeria-zoom aria-hidden="true"></div>
     </button>
@@ -116,6 +138,26 @@ const t = useTranslations(jezyk);
      samych reguł [data-aktywny="N"] .foto[data-index="N"] musiałaby być
      ręcznie rozszerzana przy każdym produkcie z większą galerią. */
   .foto[data-index="0"] {
+    opacity: 1;
+  }
+
+  /* Rozmyta miniaturka (blur-up) pod właściwym zdjęciem — wpieczona w HTML
+     jako base64 (scripts/blur.mjs), więc wypełnia kadr natychmiast, zanim
+     prawdziwe zdjęcie się doczyta. Żadnego JS na "load" nie trzeba: realne
+     zdjęcie jest nieprzezroczyste i w pełni zasłania to, co pod nim, więc
+     samo się "odsłania" dopiero gdy ma już co pokazać. */
+  .foto-blur {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    filter: blur(16px);
+    transform: scale(1.15);
+    opacity: 0;
+    transition: opacity var(--dur) var(--ease);
+  }
+
+  .foto-blur[data-index="0"] {
     opacity: 1;
   }
 
@@ -236,7 +278,8 @@ const t = useTranslations(jezyk);
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .foto {
+    .foto,
+    .foto-blur {
       transition: none;
     }
   }
@@ -252,6 +295,7 @@ const t = useTranslations(jezyk);
 
       const miniatury = Array.from(galeria.querySelectorAll<HTMLButtonElement>("[data-galeria-miniatura]"));
       const slajdy = Array.from(galeria.querySelectorAll<HTMLImageElement>("[data-galeria-slajd]"));
+      const bluryTla = Array.from(galeria.querySelectorAll<HTMLElement>("[data-galeria-blur]"));
       const otworz = galeria.querySelector<HTMLButtonElement>("[data-galeria-otworz]");
       const lightbox = galeria.querySelector<HTMLElement>("[data-galeria-lightbox]");
       const lightboxImg = galeria.querySelector<HTMLImageElement>("[data-galeria-lightbox-img]");
@@ -275,6 +319,12 @@ const t = useTranslations(jezyk);
         galeria.dataset.aktywny = String(aktywny);
         slajdy.forEach((s, i) => {
           s.style.opacity = i === aktywny ? "1" : "0";
+        });
+        // Dopasowanie po data-index, nie po pozycji w tablicy — nie każde
+        // zdjęcie musi mieć wpis w blur.json (np. gdyby ktoś dorzucił plik
+        // ręcznie, z pominięciem npm run build od razu).
+        bluryTla.forEach((b) => {
+          b.style.opacity = Number(b.dataset.index) === aktywny ? "1" : "0";
         });
         miniatury.forEach((m) => {
           m.setAttribute("aria-selected", String(Number(m.dataset.index) === aktywny));
