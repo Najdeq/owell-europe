@@ -12,15 +12,30 @@ const { produktId } = Astro.props;
 const jezyk = (Astro.currentLocale ?? domyslnyJezyk) as Jezyk;
 const t = useTranslations(jezyk);
 
-// SVG wygenerowany z góry przez scripts/qr.mjs (npm prebuild) — patrz
-// komentarz tam po wyjaśnienie, dlaczego nie generujemy tego w locie.
-const svg = (qrData as Record<string, string>)[`${jezyk}:${produktId}`];
+// { svg, url } wygenerowane z góry przez scripts/qr.mjs (npm prebuild) —
+// patrz komentarz tam po wyjaśnienie, dlaczego nie generujemy tego w locie.
+const wpis = (qrData as Record<string, { svg: string; url: string }>)[`${jezyk}:${produktId}`];
 ---
 
-{svg && (
+{wpis && (
   <div class="qr-blok">
-    <div class="qr-karta" set:html={svg} />
-    <p class="qr-opis">{t("produkt.qrOpis")}</p>
+    <div class="qr-karta" set:html={wpis.svg} />
+    <div class="qr-tekst">
+      <p class="qr-opis">{t("produkt.qrOpis")}</p>
+      <button
+        type="button"
+        class="qr-udostepnij"
+        data-qr-udostepnij
+        data-qr-url={wpis.url}
+        data-qr-tytul={t("produkt.qrUdostepnijTytul")}
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 15V4M12 4 8.5 7.5M12 4l3.5 3.5" />
+          <path d="M5 13v5.5A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5V13" />
+        </svg>
+        {t("produkt.qrUdostepnij")}
+      </button>
+    </div>
   </div>
 )}
 
@@ -47,10 +62,133 @@ const svg = (qrData as Record<string, string>)[`${jezyk}:${produktId}`];
     height: 100%;
   }
 
+  .qr-tekst {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--sp-2);
+  }
+
   .qr-opis {
     max-width: 14rem;
     font-size: var(--fs-micro);
     line-height: var(--lh-body);
     color: var(--text-2);
   }
+
+  .qr-udostepnij {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    padding: 0;
+    background: transparent;
+    border: none;
+    font-size: var(--fs-micro);
+    font-weight: 500;
+    color: var(--gold);
+    cursor: pointer;
+    transition: color var(--dur) var(--ease);
+  }
+
+  .qr-udostepnij:hover {
+    color: var(--gold-bright);
+  }
+
+  .qr-udostepnij svg {
+    width: 14px;
+    height: 14px;
+  }
 </style>
+
+<script>
+  // Zamienia SVG kodu QR na PNG (canvas) i albo otwiera natywne menu
+  // udostępniania (telefon: WhatsApp, SMS, e-mail — Web Share API z
+  // plikiem), albo, gdy przeglądarka tego nie wspiera (głównie desktop),
+  // po prostu pobiera plik PNG do ręcznego wysłania.
+  async function udostepnijQR(button: HTMLButtonElement) {
+    const karta = button.closest<HTMLElement>(".qr-blok")?.querySelector<HTMLElement>(".qr-karta");
+    const svgEl = karta?.querySelector("svg");
+    if (!svgEl) return;
+
+    const url = button.dataset.qrUrl ?? "";
+    const tytul = button.dataset.qrTytul ?? "";
+    const nazwaPliku = "owell-qr.png";
+
+    const svgTekst = new XMLSerializer().serializeToString(svgEl);
+    const svgBlob = new Blob([svgTekst], { type: "image/svg+xml" });
+    const svgUrl = URL.createObjectURL(svgBlob);
+
+    const obrazek = new Image();
+    const wczytany = new Promise<void>((resolve, reject) => {
+      obrazek.onload = () => resolve();
+      obrazek.onerror = () => reject(new Error("Nie udało się wczytać SVG"));
+    });
+    obrazek.src = svgUrl;
+
+    try {
+      await wczytany;
+    } catch (e) {
+      URL.revokeObjectURL(svgUrl);
+      return;
+    }
+
+    const rozmiar = 512;
+    const canvas = document.createElement("canvas");
+    canvas.width = rozmiar;
+    canvas.height = rozmiar;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) {
+      URL.revokeObjectURL(svgUrl);
+      return;
+    }
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, rozmiar, rozmiar);
+    ctx.drawImage(obrazek, 0, 0, rozmiar, rozmiar);
+    URL.revokeObjectURL(svgUrl);
+
+    canvas.toBlob(async (blob) => {
+      if (!blob) return;
+      const plik = new File([blob], nazwaPliku, { type: "image/png" });
+
+      const nav = navigator as Navigator & {
+        canShare?: (data: { files: File[] }) => boolean;
+        share?: (data: { files: File[]; title: string; text: string }) => Promise<void>;
+      };
+
+      if (nav.canShare && nav.canShare({ files: [plik] }) && nav.share) {
+        try {
+          await nav.share({ files: [plik], title: tytul, text: url });
+          return;
+        } catch (e) {
+          // AbortError = użytkownik anulował, nic wtedy nie robimy; inny
+          // błąd spada do pobrania pliku niżej.
+          if (e instanceof Error && e.name === "AbortError") return;
+        }
+      }
+
+      // Element musi być w drzewie dokumentu, żeby .click() niezawodnie
+      // wywołał pobranie w każdej przeglądarce — element odłączony od DOM
+      // bywa po cichu ignorowany. Zdjęcie URL.revokeObjectURL na kolejny
+      // tick, nie od razu — zbyt wczesne unieważnienie potrafi przerwać
+      // dopiero co wystartowane pobieranie.
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = nazwaPliku;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    }, "image/png");
+  }
+
+  function setupKodQR() {
+    document.querySelectorAll<HTMLButtonElement>("[data-qr-udostepnij]").forEach((btn) => {
+      if (btn.dataset.owellBound === "true") return;
+      btn.dataset.owellBound = "true";
+      btn.addEventListener("click", () => udostepnijQR(btn));
+    });
+  }
+
+  setupKodQR();
+  document.addEventListener("astro:page-load", setupKodQR);
+</script>

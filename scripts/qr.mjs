@@ -18,7 +18,9 @@ import QRCode from "qrcode";
  *
  * Klucz w JSON-ie to "{jezyk}:{idProduktu}" (np. "pl:ow-4096") — nie ścieżka
  * URL, żeby KodQR.astro nie musiał zgadywać dokładnej postaci
- * Astro.url.pathname (ze/bez ukośnika na końcu itp.).
+ * Astro.url.pathname (ze/bez ukośnika na końcu itp.). Wartość to
+ * { svg, url } — sam adres trzymamy obok SVG, bo przycisk "Udostępnij"
+ * (Web Share API) wysyła oprócz obrazka też tekst z linkiem.
  */
 const SITE = "https://owelleurope.pl"; // musi się zgadzać z `site` w astro.config.mjs
 const JEZYKI = ["pl", "en", "de", "ru", "fr", "es", "cs", "it"];
@@ -40,7 +42,7 @@ for (const id of idy) {
       margin: 0,
       color: { dark: "#0F0E0C", light: "#FFFFFF" },
     });
-    wynik[`${jezyk}:${id}`] = svg;
+    wynik[`${jezyk}:${id}`] = { svg, url };
   }
 }
 

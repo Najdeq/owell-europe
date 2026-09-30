@@ -80,7 +80,10 @@ const scriptSrc = [
   // sondę i loguje błąd CSP w konsoli przy każdym wczytaniu GA4.
   "data:",
   "https://www.googletagmanager.com",
-  "https://www.clarity.ms",
+  // *.clarity.ms, nie tylko www. — Clarity po wczytaniu tagu doładowuje
+  // kolejny skrypt z scripts.clarity.ms, którego nie dało się przewidzieć
+  // bez faktycznego złapania błędu CSP w konsoli.
+  "https://*.clarity.ms",
   ...[...hashe].sort().map((h) => `'sha256-${h}'`),
 ].join(" ");
 
@@ -88,9 +91,12 @@ const csp = [
   "default-src 'self'",
   `script-src ${scriptSrc}`,
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data:",
+  // blob: — KodQR.astro renderuje SVG na <canvas> (przycisk "Udostępnij"/
+  // pobierz PNG), co wymaga wczytania go jako <img> spod URL-a blob:.
+  // *.clarity.ms — Clarity woła piksel śledzący (c.clarity.ms/c.gif).
+  "img-src 'self' data: blob: https://*.clarity.ms",
   "font-src 'self' data:",
-  "connect-src 'self' https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com https://www.clarity.ms https://*.clarity.ms",
+  "connect-src 'self' https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com https://*.clarity.ms",
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",

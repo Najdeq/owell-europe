@@ -165,6 +165,8 @@ export const ui = {
       kopiujModel: "Kopiuj model",
       kopiujEan: "Kopiuj kod EAN",
       qrOpis: "Zeskanuj, aby otworzyć tę stronę na telefonie",
+      qrUdostepnij: "Udostępnij",
+      qrUdostepnijTytul: "Kod QR produktu Owell",
     },
     consent: {
       bannerTitle: "Ta strona używa plików cookies",
@@ -334,6 +336,8 @@ export const ui = {
       kopiujModel: "Copy model",
       kopiujEan: "Copy EAN code",
       qrOpis: "Scan to open this page on your phone",
+      qrUdostepnij: "Share",
+      qrUdostepnijTytul: "Owell product QR code",
     },
     consent: {
       bannerTitle: "This site uses cookies",
@@ -503,6 +507,8 @@ export const ui = {
       kopiujModel: "Modell kopieren",
       kopiujEan: "EAN-Code kopieren",
       qrOpis: "Scannen, um diese Seite auf dem Smartphone zu öffnen",
+      qrUdostepnij: "Teilen",
+      qrUdostepnijTytul: "Owell Produkt-QR-Code",
     },
     consent: {
       bannerTitle: "Diese Website verwendet Cookies",
@@ -672,6 +678,8 @@ export const ui = {
       kopiujModel: "Копировать модель",
       kopiujEan: "Копировать код EAN",
       qrOpis: "Отсканируйте, чтобы открыть эту страницу на телефоне",
+      qrUdostepnij: "Поделиться",
+      qrUdostepnijTytul: "QR-код продукта Owell",
     },
     consent: {
       bannerTitle: "Этот сайт использует файлы cookie",
@@ -841,6 +849,8 @@ export const ui = {
       kopiujModel: "Copier le modèle",
       kopiujEan: "Copier le code EAN",
       qrOpis: "Scannez pour ouvrir cette page sur votre téléphone",
+      qrUdostepnij: "Partager",
+      qrUdostepnijTytul: "Code QR du produit Owell",
     },
     consent: {
       bannerTitle: "Ce site utilise des cookies",
@@ -1010,6 +1020,8 @@ export const ui = {
       kopiujModel: "Copiar modelo",
       kopiujEan: "Copiar código EAN",
       qrOpis: "Escanea para abrir esta página en tu móvil",
+      qrUdostepnij: "Compartir",
+      qrUdostepnijTytul: "Código QR del producto Owell",
     },
     consent: {
       bannerTitle: "Este sitio usa cookies",
@@ -1179,6 +1191,8 @@ export const ui = {
       kopiujModel: "Kopírovat model",
       kopiujEan: "Kopírovat kód EAN",
       qrOpis: "Naskenujte a otevřete tuto stránku v telefonu",
+      qrUdostepnij: "Sdílet",
+      qrUdostepnijTytul: "QR kód produktu Owell",
     },
     consent: {
       bannerTitle: "Tento web používá soubory cookie",
@@ -1348,6 +1362,8 @@ export const ui = {
       kopiujModel: "Copia modello",
       kopiujEan: "Copia codice EAN",
       qrOpis: "Scansiona per aprire questa pagina sul telefono",
+      qrUdostepnij: "Condividi",
+      qrUdostepnijTytul: "Codice QR del prodotto Owell",
     },
     consent: {
       bannerTitle: "Questo sito utilizza cookie",
