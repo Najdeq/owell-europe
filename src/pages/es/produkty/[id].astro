@@ -19,6 +19,7 @@ import KalkulatorPojemnosci from "../../../components/ui/KalkulatorPojemnosci.as
 import OstatnioOgladane from "../../../components/OstatnioOgladane.astro";
 import StickyZakup from "../../../components/StickyZakup.astro";
 import LicznikWysylki from "../../../components/LicznikWysylki.astro";
+import KopiujDoSchowka from "../../../components/ui/KopiujDoSchowka.astro";
 import { useTranslations } from "../../../i18n/utils.ts";
 
 import fotoOw1360b from "../../../assets/produkty/hero/ow-1360b.jpg";
@@ -332,12 +333,12 @@ const faqSchema = {
               ))}
               <div class="dana">
                 <dt>{t("produkt.etykietaModel")}</dt>
-                <dd>{d.model}</dd>
+                <dd><KopiujDoSchowka wartosc={d.model} etykieta={t("produkt.kopiujModel")} /></dd>
               </div>
               {d.ean && (
                 <div class="dana">
                   <dt>{t("produkt.etykietaEan")}</dt>
-                  <dd>{d.ean}</dd>
+                  <dd><KopiujDoSchowka wartosc={d.ean} etykieta={t("produkt.kopiujEan")} /></dd>
                 </div>
               )}
             </dl>

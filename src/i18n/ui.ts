@@ -161,6 +161,8 @@ export const ui = {
       licznikWysylkaPrzed: "Zamów w ciągu",
       licznikWysylkaPo: ", żeby wysłać dziś",
       licznikWysylkaZamkniete: "Dzisiejsze okno wysyłki (do 18:30) już się zamknęło — zamówienie wyślemy najbliższego dnia roboczego.",
+      kopiujModel: "Kopiuj model",
+      kopiujEan: "Kopiuj kod EAN",
     },
     consent: {
       bannerTitle: "Ta strona używa plików cookies",
@@ -326,6 +328,8 @@ export const ui = {
       licznikWysylkaPrzed: "Order within",
       licznikWysylkaPo: " to ship today",
       licznikWysylkaZamkniete: "Today's shipping window (until 6:30 PM) has closed — your order will ship the next business day.",
+      kopiujModel: "Copy model",
+      kopiujEan: "Copy EAN code",
     },
     consent: {
       bannerTitle: "This site uses cookies",
@@ -491,6 +495,8 @@ export const ui = {
       licznikWysylkaPrzed: "Bestellen Sie innerhalb von",
       licznikWysylkaPo: ", um noch heute zu versenden",
       licznikWysylkaZamkniete: "Das heutige Versandfenster (bis 18:30 Uhr) ist bereits geschlossen — Ihre Bestellung versenden wir am nächsten Werktag.",
+      kopiujModel: "Modell kopieren",
+      kopiujEan: "EAN-Code kopieren",
     },
     consent: {
       bannerTitle: "Diese Website verwendet Cookies",
@@ -656,6 +662,8 @@ export const ui = {
       licznikWysylkaPrzed: "Оформите заказ в течение",
       licznikWysylkaPo: ", чтобы мы отправили его сегодня",
       licznikWysylkaZamkniete: "Сегодняшнее окно отправки (до 18:30) уже закрыто — заказ будет отправлен в ближайший рабочий день.",
+      kopiujModel: "Копировать модель",
+      kopiujEan: "Копировать код EAN",
     },
     consent: {
       bannerTitle: "Этот сайт использует файлы cookie",
@@ -821,6 +829,8 @@ export const ui = {
       licznikWysylkaPrzed: "Commandez dans",
       licznikWysylkaPo: " pour une expédition aujourd'hui",
       licznikWysylkaZamkniete: "La fenêtre d'expédition d'aujourd'hui (jusqu'à 18:30) est fermée — votre commande sera expédiée le prochain jour ouvré.",
+      kopiujModel: "Copier le modèle",
+      kopiujEan: "Copier le code EAN",
     },
     consent: {
       bannerTitle: "Ce site utilise des cookies",
@@ -986,6 +996,8 @@ export const ui = {
       licznikWysylkaPrzed: "Pide en las próximas",
       licznikWysylkaPo: " para enviarlo hoy",
       licznikWysylkaZamkniete: "La ventana de envío de hoy (hasta las 18:30) ya se ha cerrado — tu pedido se enviará el próximo día laborable.",
+      kopiujModel: "Copiar modelo",
+      kopiujEan: "Copiar código EAN",
     },
     consent: {
       bannerTitle: "Este sitio usa cookies",
@@ -1151,6 +1163,8 @@ export const ui = {
       licznikWysylkaPrzed: "Objednejte do",
       licznikWysylkaPo: ", aby odeslání proběhlo ještě dnes",
       licznikWysylkaZamkniete: "Dnešní okno pro odeslání (do 18:30) je již uzavřeno — objednávku odešleme nejbližší pracovní den.",
+      kopiujModel: "Kopírovat model",
+      kopiujEan: "Kopírovat kód EAN",
     },
     consent: {
       bannerTitle: "Tento web používá soubory cookie",
@@ -1316,6 +1330,8 @@ export const ui = {
       licznikWysylkaPrzed: "Ordina entro",
       licznikWysylkaPo: " per la spedizione oggi",
       licznikWysylkaZamkniete: "La finestra di spedizione di oggi (fino alle 18:30) si è chiusa — il tuo ordine verrà spedito il prossimo giorno lavorativo.",
+      kopiujModel: "Copia modello",
+      kopiujEan: "Copia codice EAN",
     },
     consent: {
       bannerTitle: "Questo sito utilizza cookie",

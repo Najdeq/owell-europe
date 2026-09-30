@@ -1,0 +1,102 @@
+---
+interface Props {
+  wartosc: string;
+  etykieta: string;
+}
+
+const { wartosc, etykieta } = Astro.props;
+---
+
+<span class="kopiuj-wrap">
+  {wartosc}
+  <button type="button" class="kopiuj-btn" data-kopiuj data-kopiuj-wartosc={wartosc} aria-label={etykieta}>
+    <svg class="ikona ikona-kopiuj" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <rect x="8.5" y="8.5" width="11" height="11" rx="1.5" />
+      <path d="M15.5 8.5V6a1.5 1.5 0 0 0-1.5-1.5H6A1.5 1.5 0 0 0 4.5 6v8A1.5 1.5 0 0 0 6 15.5h2.5" />
+    </svg>
+    <svg class="ikona ikona-ptaszek" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M5 13l4 4L19 7" />
+    </svg>
+  </button>
+</span>
+
+<style>
+  .kopiuj-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+  }
+
+  .kopiuj-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    color: var(--steel);
+    cursor: pointer;
+    transition: color var(--dur) var(--ease);
+  }
+
+  .kopiuj-btn:hover {
+    color: var(--gold-bright);
+  }
+
+  .ikona {
+    width: 14px;
+    height: 14px;
+  }
+
+  .ikona-ptaszek {
+    display: none;
+  }
+
+  .kopiuj-btn.skopiowano {
+    color: var(--gold);
+  }
+
+  .kopiuj-btn.skopiowano .ikona-kopiuj {
+    display: none;
+  }
+
+  .kopiuj-btn.skopiowano .ikona-ptaszek {
+    display: block;
+  }
+</style>
+
+<script>
+  // Nasłuch przez delegację na document (stały, przeżywa nawigacje Astro),
+  // podpięty raz — dzięki fladze na window, nie na body (body jest
+  // wymieniane przy każdej nawigacji View Transitions, więc flaga na nim
+  // zawsze wyglądałaby na "nowa" i podpinałaby kolejne listenery).
+  function setupKopiuj() {
+    if (window.__owellKopiujBound) return;
+    window.__owellKopiujBound = true;
+
+    document.addEventListener("click", async (event) => {
+      const btn = (event.target as HTMLElement)?.closest<HTMLButtonElement>("[data-kopiuj]");
+      if (!btn) return;
+      const wartosc = btn.dataset.kopiujWartosc;
+      if (!wartosc) return;
+
+      try {
+        await navigator.clipboard.writeText(wartosc);
+      } catch (e) {
+        return;
+      }
+
+      btn.classList.add("skopiowano");
+      const poprzedni = Number(btn.dataset.kopiujTimeout);
+      if (poprzedni) window.clearTimeout(poprzedni);
+      const nowy = window.setTimeout(() => btn.classList.remove("skopiowano"), 1600);
+      btn.dataset.kopiujTimeout = String(nowy);
+    });
+  }
+
+  setupKopiuj();
+  document.addEventListener("astro:page-load", setupKopiuj);
+</script>

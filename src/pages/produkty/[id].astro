@@ -18,6 +18,7 @@ import KalkulatorPojemnosci from "../../components/ui/KalkulatorPojemnosci.astro
 import OstatnioOgladane from "../../components/OstatnioOgladane.astro";
 import StickyZakup from "../../components/StickyZakup.astro";
 import LicznikWysylki from "../../components/LicznikWysylki.astro";
+import KopiujDoSchowka from "../../components/ui/KopiujDoSchowka.astro";
 
 import fotoOw1360b from "../../assets/produkty/hero/ow-1360b.jpg";
 import fotoOw1360w from "../../assets/produkty/hero/ow-1360w.jpg";
@@ -319,12 +320,12 @@ const faqSchema = {
               ))}
               <div class="dana">
                 <dt>Model</dt>
-                <dd>{d.model}</dd>
+                <dd><KopiujDoSchowka wartosc={d.model} etykieta="Kopiuj model" /></dd>
               </div>
               {d.ean && (
                 <div class="dana">
                   <dt>Kod EAN</dt>
-                  <dd>{d.ean}</dd>
+                  <dd><KopiujDoSchowka wartosc={d.ean} etykieta="Kopiuj kod EAN" /></dd>
                 </div>
               )}
             </dl>
