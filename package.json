@@ -10,7 +10,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "prebuild": "node scripts/instrukcje.mjs && node scripts/blur.mjs",
+    "prebuild": "node scripts/instrukcje.mjs && node scripts/blur.mjs && node scripts/qr.mjs",
     "postbuild": "node scripts/csp.mjs"
   },
   "dependencies": {
@@ -25,6 +25,8 @@
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
+    "@types/qrcode": "^1.5.6",
+    "qrcode": "^1.5.4",
     "sharp": "^0.35.2"
   }
 }

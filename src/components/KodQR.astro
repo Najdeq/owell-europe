@@ -1,0 +1,56 @@
+---
+import { domyslnyJezyk, type Jezyk } from "../i18n/ui.ts";
+import { useTranslations } from "../i18n/utils.ts";
+import qrData from "../data/qr.json";
+
+interface Props {
+  produktId: string;
+}
+
+const { produktId } = Astro.props;
+
+const jezyk = (Astro.currentLocale ?? domyslnyJezyk) as Jezyk;
+const t = useTranslations(jezyk);
+
+// SVG wygenerowany z góry przez scripts/qr.mjs (npm prebuild) — patrz
+// komentarz tam po wyjaśnienie, dlaczego nie generujemy tego w locie.
+const svg = (qrData as Record<string, string>)[`${jezyk}:${produktId}`];
+---
+
+{svg && (
+  <div class="qr-blok">
+    <div class="qr-karta" set:html={svg} />
+    <p class="qr-opis">{t("produkt.qrOpis")}</p>
+  </div>
+)}
+
+<style>
+  .qr-blok {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-4);
+    margin-top: var(--sp-6);
+  }
+
+  .qr-karta {
+    flex: none;
+    width: 72px;
+    height: 72px;
+    padding: var(--sp-2);
+    background-color: #fff;
+    border-radius: var(--radius-sm);
+  }
+
+  .qr-karta :global(svg) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .qr-opis {
+    max-width: 14rem;
+    font-size: var(--fs-micro);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+</style>

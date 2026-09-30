@@ -20,6 +20,7 @@ import KalkulatorPojemnosci from "../../../components/ui/KalkulatorPojemnosci.as
 import OstatnioOgladane from "../../../components/OstatnioOgladane.astro";
 import StickyZakup from "../../../components/StickyZakup.astro";
 import LicznikWysylki from "../../../components/LicznikWysylki.astro";
+import KodQR from "../../../components/KodQR.astro";
 import KopiujDoSchowka from "../../../components/ui/KopiujDoSchowka.astro";
 import { useTranslations } from "../../../i18n/utils.ts";
 
@@ -290,6 +291,8 @@ const faqSchema = {
             </p>
 
             <LicznikWysylki />
+
+            <KodQR produktId={produkt.id} />
           </div>
         </div>
       </Container>

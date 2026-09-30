@@ -164,6 +164,7 @@ export const ui = {
       licznikWysylkaZamkniete: "Dzisiejsze okno wysyłki (do 18:30) już się zamknęło — zamówienie wyślemy najbliższego dnia roboczego.",
       kopiujModel: "Kopiuj model",
       kopiujEan: "Kopiuj kod EAN",
+      qrOpis: "Zeskanuj, aby otworzyć tę stronę na telefonie",
     },
     consent: {
       bannerTitle: "Ta strona używa plików cookies",
@@ -332,6 +333,7 @@ export const ui = {
       licznikWysylkaZamkniete: "Today's shipping window (until 6:30 PM) has closed — your order will ship the next business day.",
       kopiujModel: "Copy model",
       kopiujEan: "Copy EAN code",
+      qrOpis: "Scan to open this page on your phone",
     },
     consent: {
       bannerTitle: "This site uses cookies",
@@ -500,6 +502,7 @@ export const ui = {
       licznikWysylkaZamkniete: "Das heutige Versandfenster (bis 18:30 Uhr) ist bereits geschlossen — Ihre Bestellung versenden wir am nächsten Werktag.",
       kopiujModel: "Modell kopieren",
       kopiujEan: "EAN-Code kopieren",
+      qrOpis: "Scannen, um diese Seite auf dem Smartphone zu öffnen",
     },
     consent: {
       bannerTitle: "Diese Website verwendet Cookies",
@@ -668,6 +671,7 @@ export const ui = {
       licznikWysylkaZamkniete: "Сегодняшнее окно отправки (до 18:30) уже закрыто — заказ будет отправлен в ближайший рабочий день.",
       kopiujModel: "Копировать модель",
       kopiujEan: "Копировать код EAN",
+      qrOpis: "Отсканируйте, чтобы открыть эту страницу на телефоне",
     },
     consent: {
       bannerTitle: "Этот сайт использует файлы cookie",
@@ -836,6 +840,7 @@ export const ui = {
       licznikWysylkaZamkniete: "La fenêtre d'expédition d'aujourd'hui (jusqu'à 18:30) est fermée — votre commande sera expédiée le prochain jour ouvré.",
       kopiujModel: "Copier le modèle",
       kopiujEan: "Copier le code EAN",
+      qrOpis: "Scannez pour ouvrir cette page sur votre téléphone",
     },
     consent: {
       bannerTitle: "Ce site utilise des cookies",
@@ -1004,6 +1009,7 @@ export const ui = {
       licznikWysylkaZamkniete: "La ventana de envío de hoy (hasta las 18:30) ya se ha cerrado — tu pedido se enviará el próximo día laborable.",
       kopiujModel: "Copiar modelo",
       kopiujEan: "Copiar código EAN",
+      qrOpis: "Escanea para abrir esta página en tu móvil",
     },
     consent: {
       bannerTitle: "Este sitio usa cookies",
@@ -1172,6 +1178,7 @@ export const ui = {
       licznikWysylkaZamkniete: "Dnešní okno pro odeslání (do 18:30) je již uzavřeno — objednávku odešleme nejbližší pracovní den.",
       kopiujModel: "Kopírovat model",
       kopiujEan: "Kopírovat kód EAN",
+      qrOpis: "Naskenujte a otevřete tuto stránku v telefonu",
     },
     consent: {
       bannerTitle: "Tento web používá soubory cookie",
@@ -1340,6 +1347,7 @@ export const ui = {
       licznikWysylkaZamkniete: "La finestra di spedizione di oggi (fino alle 18:30) si è chiusa — il tuo ordine verrà spedito il prossimo giorno lavorativo.",
       kopiujModel: "Copia modello",
       kopiujEan: "Copia codice EAN",
+      qrOpis: "Scansiona per aprire questa pagina sul telefono",
     },
     consent: {
       bannerTitle: "Questo sito utilizza cookie",
