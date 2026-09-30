@@ -66,11 +66,14 @@ const { class: className } = Astro.props;
 </style>
 
 <script>
+  // Motyw musi przeżyć nawigacje View Transitions (astro:transitions).
+  // Astro przy podmianie strony zastępuje atrybuty <html> tymi z nowo
+  // pobranego dokumentu — a świeżo wyrenderowany HTML z serwera nigdy nie
+  // ma data-theme="light" (ten atrybut dokłada wyłącznie JS na starcie).
+  // Efekt bez poniższego: jasny motyw znikał przy pierwszym kliknięciu w
+  // dowolny link. astro:after-swap odpala się tuż po podmianie DOM, jeszcze
+  // przed odmalowaniem klatki, więc przywrócenie motywu tutaj nie miga.
   const STORAGE_KEY = "owell-theme";
-
-  const buttons = document.querySelectorAll<HTMLButtonElement>(
-    "[data-theme-toggle]"
-  );
 
   const applyTheme = (theme: "light" | "dark") => {
     if (theme === "light") {
@@ -84,23 +87,47 @@ const { class: className } = Astro.props;
 
     const label =
       theme === "light" ? "Przełącz na ciemny motyw" : "Przełącz na jasny motyw";
-    buttons.forEach((btn) => btn.setAttribute("aria-label", label));
+    document
+      .querySelectorAll<HTMLButtonElement>("[data-theme-toggle]")
+      .forEach((btn) => btn.setAttribute("aria-label", label));
   };
 
-  const currentTheme = () =>
-    document.documentElement.getAttribute("data-theme") === "light"
-      ? "light"
-      : "dark";
+  const savedTheme = (): "light" | "dark" => {
+    try {
+      return localStorage.getItem(STORAGE_KEY) === "light" ? "light" : "dark";
+    } catch (e) {
+      return "dark";
+    }
+  };
 
-  applyTheme(currentTheme());
+  function restoreTheme() {
+    applyTheme(savedTheme());
+  }
 
-  buttons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const next = currentTheme() === "light" ? "dark" : "light";
-      applyTheme(next);
-      try {
-        localStorage.setItem(STORAGE_KEY, next);
-      } catch (e) {}
-    });
-  });
+  function setupThemeToggle() {
+    restoreTheme();
+
+    document
+      .querySelectorAll<HTMLButtonElement>("[data-theme-toggle]")
+      .forEach((button) => {
+        if (button.dataset.owellBound === "true") return;
+        button.dataset.owellBound = "true";
+
+        button.addEventListener("click", () => {
+          const current =
+            document.documentElement.getAttribute("data-theme") === "light"
+              ? "light"
+              : "dark";
+          const next = current === "light" ? "dark" : "light";
+          applyTheme(next);
+          try {
+            localStorage.setItem(STORAGE_KEY, next);
+          } catch (e) {}
+        });
+      });
+  }
+
+  setupThemeToggle();
+  document.addEventListener("astro:after-swap", restoreTheme);
+  document.addEventListener("astro:page-load", setupThemeToggle);
 </script>
