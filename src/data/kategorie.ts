@@ -59,7 +59,7 @@ export const kategorie: Kategoria[] = [
     nazwa: "Maszynka do strzyżenia włosów",
     grupa: "pielegnacja",
     opis: "Strzyżenie włosów w domu, między wizytami u fryzjera.",
-    produkty: ["ow-2856"],
+    produkty: ["ow-2856", "ow-2851"],
   },
   {
     slug: "strzyzarka-dla-zwierzat",
@@ -67,6 +67,13 @@ export const kategorie: Kategoria[] = [
     grupa: "pielegnacja",
     opis: "Pielęgnacja sierści psów i kotów w domowych warunkach.",
     produkty: ["ow-2859"],
+  },
+  {
+    slug: "golarki-i-trymery",
+    nazwa: "Golarki i trymery",
+    grupa: "pielegnacja",
+    opis: "Golenie, przycinanie i usuwanie zbędnych włosków w domu — głowa, broda, twarz i ciało.",
+    produkty: ["ow-2960", "ow-2954", "ow-2976"],
   },
   {
     slug: "lodowka-turystyczna",
