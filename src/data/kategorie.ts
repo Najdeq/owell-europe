@@ -103,4 +103,11 @@ export const kategorie: Kategoria[] = [
     opis: "Ogrzewanie łóżka i ciała zimą, z regulacją temperatury.",
     produkty: ["ow-7449", "ow-7450"],
   },
+  {
+    slug: "akcesoria-kominkowe",
+    nazwa: "Akcesoria kominkowe",
+    grupa: "dom",
+    opis: "Stojaki na drewno i narzędzia do kominka — porządek przy palenisku przez cały sezon grzewczy.",
+    produkty: ["ow-6882"],
+  },
 ];

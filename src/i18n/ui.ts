@@ -85,7 +85,7 @@ export const ui = {
       kuchnia: "Opiekacze, czajniki, blendery i drobny sprzęt do gotowania — urządzenia, których używasz codziennie, nie od święta. Prosta obsługa i materiały odporne na częste mycie.",
       pielegnacja: "Maszynka do włosów i strzyżarka do zwierząt — sprzęt do regularnej pielęgnacji w domu. Ostrza i akumulator dobrane pod kątem częstego użytku, nie jednorazowego zabiegu.",
       "agd-turystyczne": "Lodówka turystyczna i pralko-wirówka — kompaktowe urządzenia do samochodu, kempingu i małych przestrzeni. Mniejsze niż sprzęt domowy, ale zaprojektowane z tą samą uwagą na trwałość.",
-      dom: "Grzejnik, czyścik parowy i koce elektryczne — sprzęt do codziennego komfortu w domu, poza kuchnią i pielęgnacją.",
+      dom: "Grzejnik, czyścik parowy, koce elektryczne i stojak kominkowy — sprzęt do codziennego komfortu w domu, poza kuchnią i pielęgnacją.",
     },
     podkategorie: {
       "czajnik-elektryczny": { nazwa: "Czajnik elektryczny", opis: "Szybkie gotowanie wody z regulacją temperatury — do kawy, herbaty i innych naparów." },
@@ -100,6 +100,7 @@ export const ui = {
       "grzejnik-elektryczny": { nazwa: "Grzejnik elektryczny", opis: "Dogrzewanie pomieszczeń w chłodniejsze dni, bez instalacji i bez czekania." },
       "czyscik-parowy": { nazwa: "Czyścik parowy", opis: "Czyszczenie powierzchni parą, bez chemii i szorowania." },
       "koce-i-poduszki-elektryczne": { nazwa: "Koce i poduszki elektryczne", opis: "Ogrzewanie łóżka i ciała zimą, z regulacją temperatury." },
+      "akcesoria-kominkowe": { nazwa: "Akcesoria kominkowe", opis: "Stojaki na drewno i narzędzia do kominka — porządek przy palenisku przez cały sezon grzewczy." },
     },
     hero: {
       eyebrow: "Małe AGD · Projektowane w Europie",
@@ -256,7 +257,7 @@ export const ui = {
       kuchnia: "Toasters, kettles, blenders and small cooking appliances — devices you use every day, not just on special occasions. Simple to use, with materials that hold up to frequent cleaning.",
       pielegnacja: "Hair clipper and pet clipper — equipment for regular grooming at home. Blades and battery chosen for frequent use, not a one-off job.",
       "agd-turystyczne": "Travel fridge and washer-spinner — compact devices for the car, camping or tight spaces. Smaller than home appliances, but built with the same attention to durability.",
-      dom: "Heater, steam cleaner and electric blankets — equipment for everyday comfort at home, beyond the kitchen and grooming.",
+      dom: "Heater, steam cleaner, electric blankets and a fireplace rack — equipment for everyday comfort at home, beyond the kitchen and grooming.",
     },
     podkategorie: {
       "czajnik-elektryczny": { nazwa: "Electric kettle", opis: "Fast water boiling with temperature control — for coffee, tea and other brews." },
@@ -271,6 +272,7 @@ export const ui = {
       "grzejnik-elektryczny": { nazwa: "Electric heater", opis: "Warming up rooms on colder days, no installation, no waiting." },
       "czyscik-parowy": { nazwa: "Steam cleaner", opis: "Cleaning surfaces with steam, no chemicals, no scrubbing." },
       "koce-i-poduszki-elektryczne": { nazwa: "Electric blankets & heating pads", opis: "Warming the bed and body in winter, with temperature control." },
+      "akcesoria-kominkowe": { nazwa: "Fireplace accessories", opis: "Firewood racks and fireplace tools — keeping the hearth tidy all through the heating season." },
     },
     hero: {
       eyebrow: "Small appliances · Designed in Europe",
@@ -427,7 +429,7 @@ export const ui = {
       kuchnia: "Toaster, Wasserkocher, Mixer und kleine Küchengeräte — Geräte, die Sie täglich nutzen, nicht nur zu besonderen Anlässen. Einfache Bedienung und Materialien, die häufiges Reinigen vertragen.",
       pielegnacja: "Haarschneidemaschine und Tierschermaschine — Ausstattung für die regelmäßige Pflege zu Hause. Klingen und Akku für häufigen Gebrauch ausgelegt, nicht für den Einmaleinsatz.",
       "agd-turystyczne": "Reisekühlbox und Waschschleuder — kompakte Geräte fürs Auto, Camping oder kleine Räume. Kleiner als Haushaltsgeräte, aber mit derselben Sorgfalt für Langlebigkeit gebaut.",
-      dom: "Heizgerät, Dampfreiniger und Heizdecken — Ausstattung für den täglichen Komfort zu Hause, jenseits von Küche und Pflege.",
+      dom: "Heizgerät, Dampfreiniger, Heizdecken und Kaminholzregal — Ausstattung für den täglichen Komfort zu Hause, jenseits von Küche und Pflege.",
     },
     podkategorie: {
       "czajnik-elektryczny": { nazwa: "Wasserkocher", opis: "Schnelles Wasserkochen mit Temperaturregelung — für Kaffee, Tee und andere Aufgüsse." },
@@ -442,6 +444,7 @@ export const ui = {
       "grzejnik-elektryczny": { nazwa: "Elektroheizgerät", opis: "Räume an kälteren Tagen aufwärmen, ohne Installation und ohne Wartezeit." },
       "czyscik-parowy": { nazwa: "Dampfreiniger", opis: "Oberflächen mit Dampf reinigen, ohne Chemie und Schrubben." },
       "koce-i-poduszki-elektryczne": { nazwa: "Heizdecken & Heizkissen", opis: "Bett und Körper im Winter wärmen, mit Temperaturregelung." },
+      "akcesoria-kominkowe": { nazwa: "Kaminzubehör", opis: "Brennholzregale und Kaminbesteck — Ordnung am Kamin während der ganzen Heizsaison." },
     },
     hero: {
       eyebrow: "Kleine Haushaltsgeräte · Entwickelt in Europa",
@@ -598,7 +601,7 @@ export const ui = {
       kuchnia: "Тостеры, чайники, блендеры и мелкая техника для готовки — устройства, которыми вы пользуетесь каждый день, а не только по особым случаям. Простое управление и материалы, устойчивые к частому мытью.",
       pielegnacja: "Машинка для стрижки волос и триммер для животных — техника для регулярного ухода дома. Лезвия и аккумулятор рассчитаны на частое использование, а не разовую задачу.",
       "agd-turystyczne": "Дорожный холодильник и стирально-отжимная машина — компактные устройства для автомобиля, кемпинга или небольших помещений. Меньше, чем бытовая техника, но с той же надёжностью.",
-      dom: "Обогреватель, пароочиститель и электроодеяла — техника для повседневного комфорта дома, помимо кухни и ухода.",
+      dom: "Обогреватель, пароочиститель, электроодеяла и каминная дровница — техника для повседневного комфорта дома, помимо кухни и ухода.",
     },
     podkategorie: {
       "czajnik-elektryczny": { nazwa: "Электрический чайник", opis: "Быстрое кипячение воды с контролем температуры — для кофе, чая и других напитков." },
@@ -613,6 +616,7 @@ export const ui = {
       "grzejnik-elektryczny": { nazwa: "Электрический обогреватель", opis: "Обогрев помещений в холодные дни, без установки и ожидания." },
       "czyscik-parowy": { nazwa: "Пароочиститель", opis: "Очистка поверхностей паром, без химии и трения." },
       "koce-i-poduszki-elektryczne": { nazwa: "Электроодеяла и грелки", opis: "Обогрев постели и тела зимой, с регулировкой температуры." },
+      "akcesoria-kominkowe": { nazwa: "Каминные аксессуары", opis: "Дровницы и каминные инструменты — порядок у камина весь отопительный сезон." },
     },
     hero: {
       eyebrow: "Малая бытовая техника · Разработано в Европе",
@@ -769,7 +773,7 @@ export const ui = {
       kuchnia: "Grille-pain, bouilloires, blenders et petits appareils de cuisson — des appareils que vous utilisez chaque jour, pas seulement pour les grandes occasions. Utilisation simple, matériaux résistants au lavage fréquent.",
       pielegnacja: "Tondeuse à cheveux et tondeuse pour animaux — des équipements pour un entretien régulier à la maison. Lames et batterie pensées pour un usage fréquent, pas pour une utilisation ponctuelle.",
       "agd-turystyczne": "Glacière de voyage et mini-laveuse essoreuse — des appareils compacts pour la voiture, le camping ou les petits espaces. Plus petits que l'électroménager domestique, mais conçus avec le même soin de durabilité.",
-      dom: "Chauffage d'appoint, nettoyeur vapeur et couvertures chauffantes — des équipements pour le confort quotidien à la maison, au-delà de la cuisine et du soin.",
+      dom: "Chauffage d'appoint, nettoyeur vapeur, couvertures chauffantes et range-bûches — des équipements pour le confort quotidien à la maison, au-delà de la cuisine et du soin.",
     },
     podkategorie: {
       "czajnik-elektryczny": { nazwa: "Bouilloire électrique", opis: "Ébullition rapide de l'eau avec réglage de température — pour le café, le thé et d'autres infusions." },
@@ -784,6 +788,7 @@ export const ui = {
       "grzejnik-elektryczny": { nazwa: "Chauffage électrique", opis: "Réchauffer les pièces les jours plus froids, sans installation et sans attendre." },
       "czyscik-parowy": { nazwa: "Nettoyeur vapeur", opis: "Nettoyer les surfaces à la vapeur, sans produits chimiques ni frottement." },
       "koce-i-poduszki-elektryczne": { nazwa: "Couvertures et coussins chauffants", opis: "Réchauffer le lit et le corps en hiver, avec réglage de la température." },
+      "akcesoria-kominkowe": { nazwa: "Accessoires de cheminée", opis: "Range-bûches et serviteurs de cheminée — un foyer bien rangé pendant toute la saison de chauffe." },
     },
     hero: {
       eyebrow: "Petit électroménager · Conçu en Europe",
@@ -940,7 +945,7 @@ export const ui = {
       kuchnia: "Tostadoras, hervidores, batidoras y pequeños aparatos de cocina — dispositivos que usas cada día, no solo en ocasiones especiales. Manejo sencillo y materiales resistentes a la limpieza frecuente.",
       pielegnacja: "Cortapelos y cortapelos para mascotas — equipos para el cuidado regular en casa. Cuchillas y batería pensadas para un uso frecuente, no para una tarea puntual.",
       "agd-turystyczne": "Nevera de viaje y lavadora-secadora portátil — dispositivos compactos para el coche, el camping o espacios reducidos. Más pequeños que los electrodomésticos del hogar, pero fabricados con la misma atención a la durabilidad.",
-      dom: "Calefactor, limpiador a vapor y mantas eléctricas — equipos para el confort diario en casa, más allá de la cocina y el cuidado personal.",
+      dom: "Calefactor, limpiador a vapor, mantas eléctricas y leñero para chimenea — equipos para el confort diario en casa, más allá de la cocina y el cuidado personal.",
     },
     podkategorie: {
       "czajnik-elektryczny": { nazwa: "Hervidor eléctrico", opis: "Hervido rápido del agua con control de temperatura — para café, té y otras infusiones." },
@@ -955,6 +960,7 @@ export const ui = {
       "grzejnik-elektryczny": { nazwa: "Calefactor eléctrico", opis: "Calentar habitaciones en días más fríos, sin instalación ni espera." },
       "czyscik-parowy": { nazwa: "Limpiador a vapor", opis: "Limpiar superficies con vapor, sin productos químicos ni frotar." },
       "koce-i-poduszki-elektryczne": { nazwa: "Mantas y almohadillas eléctricas", opis: "Calentar la cama y el cuerpo en invierno, con control de temperatura." },
+      "akcesoria-kominkowe": { nazwa: "Accesorios para chimenea", opis: "Leñeros y utensilios para chimenea — orden junto al fuego durante toda la temporada de calefacción." },
     },
     hero: {
       eyebrow: "Pequeños electrodomésticos · Diseñados en Europa",
@@ -1111,7 +1117,7 @@ export const ui = {
       kuchnia: "Toustovače, rychlovarné konvice, mixéry a drobné spotřebiče do kuchyně — zařízení, která používáte každý den, ne jen při zvláštních příležitostech. Jednoduché ovládání a materiály odolné vůči častému mytí.",
       pielegnacja: "Zastřihovač vlasů a zastřihovač pro zvířata — vybavení pro pravidelnou péči doma. Čepele a baterie zvolené pro časté používání, ne jednorázový zásah.",
       "agd-turystyczne": "Cestovní lednice a cestovní pračka se ždímačkou — kompaktní zařízení do auta, na kempink nebo do malých prostor. Menší než domácí spotřebiče, ale se stejným důrazem na odolnost.",
-      dom: "Topení, parní čistič a elektrické deky — vybavení pro každodenní pohodlí doma, mimo kuchyň a péči o tělo.",
+      dom: "Topení, parní čistič, elektrické deky a stojan na dřevo ke krbu — vybavení pro každodenní pohodlí doma, mimo kuchyň a péči o tělo.",
     },
     podkategorie: {
       "czajnik-elektryczny": { nazwa: "Rychlovarná konvice", opis: "Rychlý ohřev vody s regulací teploty — na kávu, čaj a další nápoje." },
@@ -1126,6 +1132,7 @@ export const ui = {
       "grzejnik-elektryczny": { nazwa: "Elektrické topení", opis: "Přitápění místností v chladnějších dnech, bez instalace a bez čekání." },
       "czyscik-parowy": { nazwa: "Parní čistič", opis: "Čištění povrchů párou, bez chemie a bez drhnutí." },
       "koce-i-poduszki-elektryczne": { nazwa: "Elektrické deky a podušky", opis: "Zahřátí postele a těla v zimě, s regulací teploty." },
+      "akcesoria-kominkowe": { nazwa: "Krbové příslušenství", opis: "Stojany na dřevo a krbové nářadí — pořádek u krbu po celou topnou sezónu." },
     },
     hero: {
       eyebrow: "Drobné spotřebiče · Navrženo v Evropě",
@@ -1282,7 +1289,7 @@ export const ui = {
       kuchnia: "Tostapane, bollitori, frullatori e piccoli elettrodomestici da cucina — dispositivi che usi ogni giorno, non solo nelle occasioni speciali. Uso semplice e materiali resistenti ai lavaggi frequenti.",
       pielegnacja: "Tagliacapelli e tosatrice per animali — attrezzature per la cura regolare in casa. Lame e batteria pensate per un uso frequente, non per un intervento occasionale.",
       "agd-turystyczne": "Frigo da viaggio e lavatrice-centrifuga portatile — dispositivi compatti per l'auto, il campeggio o gli spazi ridotti. Più piccoli degli elettrodomestici da casa, ma costruiti con la stessa cura per la durata.",
-      dom: "Termoventilatore, pulitore a vapore e coperte elettriche — attrezzature per il comfort quotidiano in casa, oltre alla cucina e alla cura della persona.",
+      dom: "Termoventilatore, pulitore a vapore, coperte elettriche e portalegna per camino — attrezzature per il comfort quotidiano in casa, oltre alla cucina e alla cura della persona.",
     },
     podkategorie: {
       "czajnik-elektryczny": { nazwa: "Bollitore elettrico", opis: "Ebollizione rapida dell'acqua con controllo della temperatura — per caffè, tè e altre infusioni." },
@@ -1297,6 +1304,7 @@ export const ui = {
       "grzejnik-elektryczny": { nazwa: "Termoventilatore elettrico", opis: "Riscaldare gli ambienti nei giorni più freddi, senza installazione e senza attese." },
       "czyscik-parowy": { nazwa: "Pulitore a vapore", opis: "Pulire le superfici con il vapore, senza prodotti chimici e senza sfregare." },
       "koce-i-poduszki-elektryczne": { nazwa: "Coperte e termofori elettrici", opis: "Riscaldare il letto e il corpo in inverno, con controllo della temperatura." },
+      "akcesoria-kominkowe": { nazwa: "Accessori per camino", opis: "Portalegna e attrezzi per camino — ordine accanto al fuoco per tutta la stagione di riscaldamento." },
     },
     hero: {
       eyebrow: "Piccoli elettrodomestici · Progettati in Europa",
