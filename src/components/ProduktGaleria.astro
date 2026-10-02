@@ -28,6 +28,11 @@ const blurSrc = (index: number) => {
   const klucz = index === 0 ? produktId : `${produktId}-${index}`;
   return (blurData as Record<string, string>)[klucz];
 };
+
+// „zdjęcie 3 z 9" — każdy slajd dostaje własny alt (Google Images indeksuje
+// je osobno), a lightbox przejmuje go ze slajdu.
+const nrZdjecia = (i: number) =>
+  t("produkt.galeriaZdjecie").replace("{n}", String(i + 1)).replace("{m}", String(zdjecia.length));
 ---
 
 {zdjecia.length > 0 && (
@@ -46,9 +51,12 @@ const blurSrc = (index: number) => {
           )}
           <Image
             src={z}
-            alt={i === 0 ? alt : ""}
+            alt={i === 0 ? alt : `${alt} — ${nrZdjecia(i)}`}
             width={900}
             height={900}
+            widths={[450, 900]}
+            sizes="(max-width: 640px) 100vw, 540px"
+            quality={72}
             loading={i === 0 ? "eager" : "lazy"}
             class="foto"
             data-galeria-slajd
@@ -70,6 +78,7 @@ const blurSrc = (index: number) => {
             data-index={i}
             role="tab"
             aria-selected={i === 0 ? "true" : "false"}
+            aria-label={nrZdjecia(i)}
           >
             <Image src={z} alt="" width={140} height={140} loading="lazy" />
           </button>

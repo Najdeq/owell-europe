@@ -15,6 +15,7 @@ import { site } from "../../../data/site.ts";
 import instrukcje from "../../../data/instrukcje.json";
 import { galeria as galeriaDodatkowa } from "../../../data/galeria.ts";
 import { kalkulatorPojemnosci } from "../../../data/kalkulatorPojemnosci.ts";
+import { kategorie } from "../../../data/kategorie.ts";
 import ProduktGaleria from "../../../components/ProduktGaleria.astro";
 import KalkulatorPojemnosci from "../../../components/ui/KalkulatorPojemnosci.astro";
 import OstatnioOgladane from "../../../components/OstatnioOgladane.astro";
@@ -127,9 +128,20 @@ const ctaPlatforma = kupHref ? "Sklep internetowy" : "WhatsApp";
 
 const nazwaKategorii = t(`kategorie.${d.kategoria}`);
 
+// Podkategoria (np. „Golarki i trymery") — typ urządzenia, po którym klient
+// faktycznie szuka. Trafia do okruszków i do BreadcrumbList.
+const podkategoria = kategorie.find((k) => k.produkty.includes(produkt.id));
+const nazwaPodkategorii = podkategoria
+  ? t.raw<{ nazwa: string }>(`podkategorie.${podkategoria.slug}`)?.nazwa ?? podkategoria.nazwa
+  : undefined;
+const urlPodkategorii = podkategoria ? l(`/produkty/kategoria/${podkategoria.slug}`) : undefined;
+
 const breadcrumbs = [
   { name: "Owell", path: l("/") },
   { name: t("produkt.breadcrumbProdukty"), path: l("/produkty") },
+  ...(podkategoria && nazwaPodkategorii && urlPodkategorii
+    ? [{ name: nazwaPodkategorii, path: urlPodkategorii }]
+    : []),
   { name: d.nazwa, path: l(`/produkty/${produkt.id}`) },
 ];
 
@@ -266,6 +278,12 @@ const faqSchema = {
           <a href={l("/produkty")}>{t("produkt.breadcrumbProdukty")}</a>
           <span aria-hidden="true">/</span>
           <a href={`${l("/produkty")}#${d.kategoria}`}>{nazwaKategorii}</a>
+          {urlPodkategorii && (
+            <>
+              <span aria-hidden="true">/</span>
+              <a href={urlPodkategorii}>{nazwaPodkategorii}</a>
+            </>
+          )}
         </nav>
 
         <div class="top">
