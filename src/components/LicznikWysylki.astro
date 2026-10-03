@@ -56,6 +56,7 @@ const t = useTranslations(jezyk);
     const teraz = new Date();
     const czesci = new Intl.DateTimeFormat("en-GB", {
       timeZone: "Europe/Warsaw",
+      weekday: "short",
       hour: "2-digit",
       minute: "2-digit",
       second: "2-digit",
@@ -68,7 +69,14 @@ const t = useTranslations(jezyk);
     const cutoff = (GODZINA_CUTOFF * 60 + MINUTA_CUTOFF) * 60;
     const pozostalo = cutoff - sekundyOdPolnocy;
 
+    // Wysyłka idzie tylko w dni robocze — w sobotę i niedzielę licznik
+    // obiecywałby „wysyłkę dziś", której nie będzie, więc chowamy go w całości.
+    const dzien = czesci.find((p) => p.type === "weekday")?.value;
+    const weekend = dzien === "Sat" || dzien === "Sun";
+
     elementy.forEach((el) => {
+      el.hidden = weekend;
+      if (weekend) return;
       if (pozostalo > 0) {
         const zegar = formatujZegar(pozostalo);
         el.innerHTML = `${el.dataset.przed ?? ""} <span class="licznik-zegar">${zegar}</span>${el.dataset.po ?? ""}.`;
