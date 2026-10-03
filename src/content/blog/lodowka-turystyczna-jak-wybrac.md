@@ -1,5 +1,6 @@
 ---
 tytul: "Lodówka turystyczna: kompresorowa czy termoelektryczna? Jak wybrać"
+tytulSeo: "Lodówka turystyczna: kompresorowa czy termoelektryczna?"
 opis: "Dwie różne technologie chłodzenia, dwa różne zastosowania. Wyjaśniamy, czym się różnią i kiedy termoelektryczna (Peltiera) w zupełności wystarczy."
 data: 2026-08-01
 okladka: "/blog/lodowka-turystyczna.jpg"

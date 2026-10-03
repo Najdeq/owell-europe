@@ -1,0 +1,160 @@
+---
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Container from "../ui/Container.astro";
+import Section from "../ui/Section.astro";
+import Eyebrow from "../ui/Eyebrow.astro";
+import { zdjecia } from "../../data/zdjecia.ts";
+import { domyslnyJezyk, type Jezyk } from "../../i18n/ui.ts";
+import { useTranslations } from "../../i18n/utils.ts";
+
+/**
+ * Modele dodane w ostatnich DNI_NOWOSCI dniach (pole `dodano` w pliku
+ * produktu). Liczone względem daty builda — strona jest statyczna, więc
+ * sekcja odświeża się przy każdym wdrożeniu, a gdy nie ma nowości, znika.
+ */
+const DNI_NOWOSCI = 90;
+const MAKS = 4;
+
+const jezyk = (Astro.currentLocale ?? domyslnyJezyk) as Jezyk;
+const t = useTranslations(jezyk);
+const l = (sciezka: string) => getRelativeLocaleUrl(jezyk, sciezka);
+
+const kolekcjeTlumaczen = { en: "produkty-en", de: "produkty-de", ru: "produkty-ru", fr: "produkty-fr", es: "produkty-es", cs: "produkty-cs", it: "produkty-it" } as const;
+const nazwaKolekcji = kolekcjeTlumaczen[jezyk as keyof typeof kolekcjeTlumaczen];
+const tlumaczenia = nazwaKolekcji
+  ? new Map((await getCollection(nazwaKolekcji)).map((x) => [x.id, x.data]))
+  : new Map();
+
+const granica = Date.now() - DNI_NOWOSCI * 24 * 60 * 60 * 1000;
+const nowosci = (await getCollection("produkty"))
+  .filter((p) => p.data.opublikowany && p.data.dodano && p.data.dodano.getTime() >= granica)
+  // Najnowsze najpierw; przy tej samej dacie — później dodany do katalogu.
+  .sort((a, b) => b.data.dodano!.getTime() - a.data.dodano!.getTime() || b.data.kolejnosc - a.data.kolejnosc)
+  .slice(0, MAKS)
+  .map((p) => ({ ...p, tagline: tlumaczenia.get(p.id)?.tagline ?? p.data.tagline }));
+---
+
+{nowosci.length > 0 && (
+  <Section bg="raised">
+    <Container>
+      <Eyebrow data-reveal>{t("common.nowosciEtykieta")}</Eyebrow>
+      <h2 class="section-title" data-reveal data-reveal-delay="80">{t("common.nowosciTytul")}</h2>
+
+      <div class="nowosci">
+        {nowosci.map((p, i) => (
+          <a href={l(`/produkty/${p.id}`)} class="karta" data-reveal data-reveal-delay={String(i * 80)}>
+            <div class="karta-foto">
+              {zdjecia[p.id] && (
+                <Image src={zdjecia[p.id]} alt={p.data.nazwa} width={480} height={480} loading="lazy" class="foto" />
+              )}
+              <span class="znacznik">{t("common.nowosc")}</span>
+            </div>
+            <span class="karta-model">{p.data.model}</span>
+            <span class="karta-tagline">{p.tagline}</span>
+          </a>
+        ))}
+      </div>
+    </Container>
+  </Section>
+)}
+
+<style>
+  .section-title {
+    margin-top: var(--sp-4);
+    max-width: var(--maxw-prose);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .nowosci {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--sp-5);
+    margin-top: var(--sp-10);
+  }
+
+  @media (min-width: 900px) {
+    .nowosci {
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--sp-6);
+    }
+  }
+
+  .karta {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+    text-decoration: none;
+  }
+
+  .karta-foto {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background-color: var(--photo-bg);
+    border: 1px solid var(--hairline-soft);
+    transition: border-color var(--dur) var(--ease);
+  }
+
+  .karta:hover .karta-foto {
+    border-color: var(--gold);
+  }
+
+  .foto {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--dur) var(--ease);
+  }
+
+  .karta:hover .foto {
+    transform: scale(1.04);
+  }
+
+  .znacznik {
+    position: absolute;
+    top: var(--sp-3);
+    left: var(--sp-3);
+    padding: 0.2rem 0.5rem;
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--gold);
+    background-color: var(--bg-0);
+    border: 1px solid var(--gold);
+    border-radius: var(--radius);
+  }
+
+  .karta-model {
+    margin-top: var(--sp-2);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+  }
+
+  .karta-tagline {
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--text);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .foto,
+    .karta-foto {
+      transition: none;
+    }
+
+    .karta:hover .foto {
+      transform: none;
+    }
+  }
+</style>

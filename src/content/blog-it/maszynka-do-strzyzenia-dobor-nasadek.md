@@ -1,5 +1,6 @@
 ---
 tytul: "Tagliacapelli a casa: come scegliere il pettine giusto senza rovinare il taglio"
+tytulSeo: "Come scegliere il pettine del tagliacapelli — Owell"
 opis: "Il pettine sbagliato, o tagliare nella direzione sbagliata, può rovinare un taglio in pochi secondi. Spieghiamo come funziona davvero il sistema di regolazione della lunghezza e a cosa fare attenzione quando ci si taglia i capelli a casa."
 data: 2026-08-07
 okladka: "/blog/maszynka-nasadki.jpg"

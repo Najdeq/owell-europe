@@ -1,5 +1,6 @@
 ---
 tytul: "Hair clippers at home: how to pick the right guard and not ruin your haircut"
+tytulSeo: "How to choose hair clipper guards — Owell"
 opis: "The wrong guard, or cutting in the wrong direction, can ruin a haircut in seconds. We explain how the length-adjustment system actually works and what to watch for when cutting hair at home."
 data: 2026-08-07
 okladka: "/blog/maszynka-nasadki.jpg"

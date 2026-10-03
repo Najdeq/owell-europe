@@ -1,5 +1,6 @@
 ---
 tytul: "Cestovní chladnička: kompresorová, nebo termoelektrická? Jak vybrat"
+tytulSeo: "Cestovní chladnička: kompresorová, nebo termoelektrická?"
 opis: "Dvě odlišné chladicí technologie, dvě odlišná využití. Vysvětlujeme, v čem se liší a kdy vám termoelektrická (Peltierova) chladnička plně postačí."
 data: 2026-08-01
 okladka: "/blog/lodowka-turystyczna.jpg"

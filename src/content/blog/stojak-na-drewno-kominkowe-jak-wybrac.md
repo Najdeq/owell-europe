@@ -1,5 +1,6 @@
 ---
 tytul: "Stojak na drewno kominkowe: jak wybrać i jak przechowywać drewno przy kominku"
+tytulSeo: "Stojak na drewno kominkowe: jak wybrać — Owell"
 opis: "Ile drewna trzymać w domu, dlaczego mokre polana to strata ciepła i na co patrzeć przy wyborze stojaka. Praktyczny poradnik na sezon grzewczy."
 data: 2026-10-02
 okladka: "/blog/stojak-na-drewno.jpg"

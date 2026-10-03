@@ -1,5 +1,6 @@
 ---
 tytul: "GPSR: co to je a proč by měl každý spotřebič obsahovat tuto kartu"
+tytulSeo: "GPSR: co to je a co dává kupujícím — Owell"
 opis: "Od prosince 2024 musí každý výrobek prodávaný v EU zveřejňovat identitu výrobce. Vysvětlujeme, co to v praxi znamená pro kupující."
 data: 2026-07-20
 okladka: "/blog/gpsr-co-to-jest.jpg"

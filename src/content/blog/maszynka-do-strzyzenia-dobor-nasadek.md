@@ -1,5 +1,6 @@
 ---
 tytul: "Maszynka do strzyżenia włosów w domu: jak dobrać nasadki i nie zniszczyć fryzury"
+tytulSeo: "Jak dobrać nasadki do maszynki do strzyżenia — Owell"
 opis: "Zła nasadka albo zły kierunek strzyżenia potrafią zepsuć fryzurę w kilka sekund. Wyjaśniamy, jak działa system długości cięcia i na co uważać, strzygąc w domu."
 data: 2026-08-07
 okladka: "/blog/maszynka-nasadki.jpg"

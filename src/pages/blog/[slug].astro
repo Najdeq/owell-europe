@@ -49,7 +49,7 @@ const articleSchema = {
 };
 ---
 
-<Base title={`${wpis.data.tytul} — Owell`} description={wpis.data.opis} ogImage={wpis.data.okladka}>
+<Base title={wpis.data.tytulSeo ?? `${wpis.data.tytul} — Owell`} description={wpis.data.opis} ogImage={wpis.data.okladka}>
   <BreadcrumbSchema slot="head" items={breadcrumbs} />
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
 

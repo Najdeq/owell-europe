@@ -1,5 +1,6 @@
 ---
 tytul: "GPSR : qu'est-ce que c'est et pourquoi chaque appareil devrait comporter cette fiche"
+tytulSeo: "GPSR : qu'est-ce que c'est et à quoi ça sert — Owell"
 opis: "Depuis décembre 2024, tout produit vendu dans l'UE doit divulguer l'identité du fabricant. Nous expliquons ce que cela signifie concrètement pour les acheteurs."
 data: 2026-07-20
 okladka: "/blog/gpsr-co-to-jest.jpg"

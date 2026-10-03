@@ -1,0 +1,125 @@
+---
+import { getCollection } from "astro:content";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { domyslnyJezyk, type Jezyk } from "../i18n/ui.ts";
+import { useTranslations } from "../i18n/utils.ts";
+
+/**
+ * Odwrotność PowiazaneProdukty: na stronie produktu pokazuje wpisy z bloga,
+ * które mają ten produkt w polu `produkty`. Klient, który się waha, dostaje
+ * poradnik, a Google — powiązanie tematyczne w obie strony. Szuka tylko we
+ * wpisach w języku strony, więc bez tłumaczenia wpisu ramka się nie pokaże
+ * (zamiast linkować z /en/ do polskiego tekstu).
+ */
+interface Props {
+  produktId: string;
+}
+
+const { produktId } = Astro.props;
+
+const jezyk = (Astro.currentLocale ?? domyslnyJezyk) as Jezyk;
+const t = useTranslations(jezyk);
+const l = (sciezka: string) => getRelativeLocaleUrl(jezyk, sciezka);
+
+const kolekcja = (jezyk === domyslnyJezyk ? "blog" : `blog-${jezyk}`) as "blog";
+const poradniki = (await getCollection(kolekcja, (w) => w.data.opublikowany && w.data.produkty.includes(produktId)))
+  .sort((a, b) => b.data.data.getTime() - a.data.data.getTime());
+---
+
+{poradniki.length > 0 && (
+  <aside class="poradniki" aria-label={t("produkt.poradnik")}>
+    {poradniki.map((w) => (
+      <a href={l(`/blog/${w.id}`)} class="poradnik">
+        {w.data.okladka && (
+          <img src={w.data.okladka} alt="" width="160" height="90" loading="lazy" decoding="async" class="poradnik-foto" />
+        )}
+        <span class="poradnik-tresc">
+          <span class="poradnik-etykieta">{t("produkt.poradnik")}</span>
+          <span class="poradnik-tytul">{w.data.tytul}</span>
+          <span class="poradnik-link">{t("produkt.poradnikCzytaj")}</span>
+        </span>
+      </a>
+    ))}
+  </aside>
+)}
+
+<style>
+  .poradniki {
+    display: grid;
+    gap: var(--sp-4);
+    margin-top: var(--sp-8);
+  }
+
+  .poradnik {
+    display: flex;
+    gap: var(--sp-5);
+    align-items: center;
+    padding: var(--sp-4);
+    border: 1px solid var(--hairline-soft);
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    transition:
+      border-color var(--dur) var(--ease),
+      transform var(--dur) var(--ease);
+  }
+
+  .poradnik:hover {
+    border-color: var(--gold);
+    transform: translateY(-2px);
+  }
+
+  .poradnik-foto {
+    flex: none;
+    width: 7.5rem;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: var(--radius);
+  }
+
+  .poradnik-tresc {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-1);
+    min-width: 0;
+  }
+
+  .poradnik-etykieta {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+  }
+
+  .poradnik-tytul {
+    font-family: var(--font-display);
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--text);
+  }
+
+  .poradnik-link {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--gold);
+  }
+
+  @media (max-width: 480px) {
+    .poradnik-foto {
+      width: 5.5rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .poradnik {
+      transition: none;
+    }
+
+    .poradnik:hover {
+      transform: none;
+    }
+  }
+</style>

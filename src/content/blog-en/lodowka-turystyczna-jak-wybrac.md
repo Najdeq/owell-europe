@@ -1,5 +1,6 @@
 ---
 tytul: "Travel fridge: compressor or thermoelectric? How to choose"
+tytulSeo: "Travel fridge: compressor or thermoelectric? — Owell"
 opis: "Two different cooling technologies, two different uses. We explain how they differ and when a thermoelectric (Peltier) fridge is all you need."
 data: 2026-08-01
 okladka: "/blog/lodowka-turystyczna.jpg"

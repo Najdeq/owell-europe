@@ -1,5 +1,6 @@
 ---
 tytul: "GPSR: cos'è e perché ogni elettrodomestico dovrebbe avere questa scheda"
+tytulSeo: "GPSR: cos'è e cosa significa per chi compra — Owell"
 opis: "Da dicembre 2024, ogni prodotto venduto nell'UE deve dichiarare l'identità del produttore. Spieghiamo cosa significa in pratica per gli acquirenti."
 data: 2026-07-20
 okladka: "/blog/gpsr-co-to-jest.jpg"

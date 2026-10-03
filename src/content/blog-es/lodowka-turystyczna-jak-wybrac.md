@@ -1,5 +1,6 @@
 ---
 tytul: "Nevera de viaje: ¿por compresor o termoeléctrica? Cómo elegir"
+tytulSeo: "Nevera de viaje: ¿compresor o termoeléctrica? — Owell"
 opis: "Dos tecnologías de refrigeración distintas, dos usos distintos. Explicamos en qué se diferencian y cuándo una nevera termoeléctrica (Peltier) es todo lo que necesitas."
 data: 2026-08-01
 okladka: "/blog/lodowka-turystyczna.jpg"

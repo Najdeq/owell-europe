@@ -1,5 +1,6 @@
 ---
 tytul: "Tondeuse à cheveux à la maison : bien choisir son sabot sans rater sa coupe"
+tytulSeo: "Bien choisir les sabots de sa tondeuse — Owell"
 opis: "Un mauvais sabot, ou une coupe dans le mauvais sens, peut ruiner une coupe en quelques secondes. Nous expliquons comment fonctionne réellement le système de réglage de longueur et à quoi faire attention lorsqu'on coupe les cheveux à la maison."
 data: 2026-08-07
 okladka: "/blog/maszynka-nasadki.jpg"

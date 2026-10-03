@@ -1,5 +1,6 @@
 ---
 tytul: "Kühlbox: Kompressor oder thermoelektrisch? So triffst du die richtige Wahl"
+tytulSeo: "Kühlbox: Kompressor oder thermoelektrisch? — Owell"
 opis: "Zwei unterschiedliche Kühltechnologien, zwei unterschiedliche Einsatzzwecke. Wir erklären die Unterschiede und wann eine thermoelektrische (Peltier-)Kühlbox völlig ausreicht."
 data: 2026-08-01
 okladka: "/blog/lodowka-turystyczna.jpg"

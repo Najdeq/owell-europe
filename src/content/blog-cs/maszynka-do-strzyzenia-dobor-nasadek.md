@@ -1,5 +1,6 @@
 ---
 tytul: "Stříhání vlasů doma: jak vybrat správný nástavec a nezničit si účes"
+tytulSeo: "Jak vybrat nástavec na zastřihovač vlasů — Owell"
 opis: "Špatně zvolený nástavec nebo stříhání ve špatném směru dokáže zničit účes během pár vteřin. Vysvětlujeme, jak ve skutečnosti funguje systém nastavení délky a na co si dát pozor při stříhání vlasů doma."
 data: 2026-08-07
 okladka: "/blog/maszynka-nasadki.jpg"

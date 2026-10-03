@@ -1,5 +1,6 @@
 ---
 tytul: "Haarschneidemaschine zu Hause: den richtigen Aufsatz wählen, ohne den Haarschnitt zu ruinieren"
+tytulSeo: "Haarschneider-Aufsätze richtig wählen — Owell"
 opis: "Der falsche Aufsatz oder das Schneiden in die falsche Richtung kann einen Haarschnitt in Sekunden ruinieren. Wir erklären, wie das Längeneinstellsystem wirklich funktioniert und worauf beim Schneiden zu Hause zu achten ist."
 data: 2026-08-07
 okladka: "/blog/maszynka-nasadki.jpg"

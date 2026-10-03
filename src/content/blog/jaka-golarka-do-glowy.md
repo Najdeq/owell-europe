@@ -1,5 +1,6 @@
 ---
 tytul: "Jaka golarka do głowy? Maszynka, golarka foliowa czy rotacyjna z kilkoma głowicami"
+tytulSeo: "Jaka golarka do głowy? Poradnik wyboru — Owell"
 opis: "Golenie głowy na zero w domu da się zrobić trzema rodzajami sprzętu — i każdy daje inny efekt. Wyjaśniamy, czym się różnią i jak golić, żeby nie podrażnić skóry."
 data: 2026-10-02
 okladka: "/blog/golarka-do-glowy.jpg"

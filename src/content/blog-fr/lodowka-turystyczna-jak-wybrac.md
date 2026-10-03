@@ -1,5 +1,6 @@
 ---
 tytul: "Glacière de voyage : compresseur ou thermoélectrique ? Comment choisir"
+tytulSeo: "Glacière : compresseur ou thermoélectrique ? — Owell"
 opis: "Deux technologies de refroidissement différentes, deux usages différents. Nous expliquons leurs différences et dans quels cas une glacière thermoélectrique (à effet Peltier) suffit."
 data: 2026-08-01
 okladka: "/blog/lodowka-turystyczna.jpg"

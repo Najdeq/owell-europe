@@ -1,5 +1,6 @@
 ---
 tytul: "Cortapelos en casa: cómo elegir el peine guía adecuado y no estropear el corte"
+tytulSeo: "Cómo elegir el peine guía del cortapelos — Owell"
 opis: "Un peine guía equivocado, o cortar en la dirección incorrecta, puede estropear un corte en cuestión de segundos. Explicamos cómo funciona realmente el sistema de ajuste de longitud y en qué fijarte al cortarte el pelo en casa."
 data: 2026-08-07
 okladka: "/blog/maszynka-nasadki.jpg"

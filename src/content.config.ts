@@ -51,6 +51,10 @@ const produkty = defineCollection({
     gdzieKupic: z.string().optional(),
     kolejnosc: z.number(),
     opublikowany: z.boolean().default(true),
+    // Data dodania modelu na stronę. Produkty dodane w ostatnich 90 dniach
+    // trafiają do sekcji „Nowości" na stronie głównej (Nowosci.astro) —
+    // same z niej znikają, bez ręcznego sprzątania.
+    dodano: z.coerce.date().optional(),
   }),
 });
 
@@ -98,6 +102,9 @@ const blogCollection = (base: string) =>
     loader: glob({ pattern: "**/*.md", base }),
     schema: z.object({
       tytul: z.string(),
+      // Krótsza wersja do <title> (wyniki Google ucinają po ~60 znakach).
+      // Nagłówek H1 na stronie dalej używa pełnego `tytul`.
+      tytulSeo: z.string().optional(),
       // Krótki opis pod tytułem na liście wpisów i w meta description —
       // osobno od treści, żeby nie ucinać pierwszego akapitu na siłę.
       opis: z.string(),

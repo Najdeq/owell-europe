@@ -1,5 +1,6 @@
 ---
 tytul: "Frigo da viaggio: a compressore o termoelettrico? Come scegliere"
+tytulSeo: "Frigo da viaggio: compressore o termoelettrico? — Owell"
 opis: "Due tecnologie di raffreddamento diverse, due usi diversi. Spieghiamo in cosa si differenziano e quando un frigo termoelettrico (Peltier) è tutto ciò di cui hai bisogno."
 data: 2026-08-01
 okladka: "/blog/lodowka-turystyczna.jpg"

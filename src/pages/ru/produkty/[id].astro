@@ -17,6 +17,7 @@ import { galeria as galeriaDodatkowa } from "../../../data/galeria.ts";
 import { kalkulatorPojemnosci } from "../../../data/kalkulatorPojemnosci.ts";
 import { kategorie } from "../../../data/kategorie.ts";
 import { tytulProduktu, opisProduktu } from "../../../i18n/metaProduktu.ts";
+import PowiazanePoradniki from "../../../components/PowiazanePoradniki.astro";
 import ProduktGaleria from "../../../components/ProduktGaleria.astro";
 import KalkulatorPojemnosci from "../../../components/ui/KalkulatorPojemnosci.astro";
 import OstatnioOgladane from "../../../components/OstatnioOgladane.astro";
@@ -358,6 +359,7 @@ const faqSchema = {
           <div>
             <h2 class="naglowek" data-reveal>{t("produkt.naglowekOpis")}</h2>
             {akapity.map((a) => <p class="akapit">{a}</p>)}
+            <PowiazanePoradniki produktId={produkt.id} />
           </div>
 
           <div>

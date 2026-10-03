@@ -1,5 +1,6 @@
 ---
 tytul: "Trymer damski czy depilator? Co wybrać do nóg, bikini i twarzy"
+tytulSeo: "Trymer damski czy depilator? Co wybrać — Owell"
 opis: "Trymer ścina włoski przy skórze, depilator wyrywa je z cebulkami. Wyjaśniamy, czym różnią się efekty, który sprzęt jest delikatniejszy i kiedy warto mieć oba."
 data: 2026-10-02
 okladka: "/blog/trymer-czy-depilator.jpg"
