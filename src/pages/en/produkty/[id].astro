@@ -16,6 +16,7 @@ import instrukcje from "../../../data/instrukcje.json";
 import { galeria as galeriaDodatkowa } from "../../../data/galeria.ts";
 import { kalkulatorPojemnosci } from "../../../data/kalkulatorPojemnosci.ts";
 import { kategorie } from "../../../data/kategorie.ts";
+import { tytulProduktu, opisProduktu } from "../../../i18n/metaProduktu.ts";
 import ProduktGaleria from "../../../components/ProduktGaleria.astro";
 import KalkulatorPojemnosci from "../../../components/ui/KalkulatorPojemnosci.astro";
 import OstatnioOgladane from "../../../components/OstatnioOgladane.astro";
@@ -118,6 +119,14 @@ const kalkulator = kalkulatorPojemnosci[produkt.id];
 const zdjeciaProduktu = foto ? [foto, ...(galeriaDodatkowa[produkt.id] ?? [])] : [];
 
 const instrukcja = instrukcje[produkt.id as keyof typeof instrukcje];
+
+// Tytuł i opis dla Google — typ produktu + model zamiast samego numeru
+// modelu (patrz src/i18n/metaProduktu.ts).
+const tytulMeta = tytulProduktu(d.tagline, d.model, "en");
+const opisMeta = opisProduktu(
+  d.tagline,
+  t(instrukcja ? "produkt.metaOpis" : "produkt.metaOpisBezInstrukcji").replace("{n}", String(d.gwarancjaMiesiace)),
+);
 
 const akapity = d.opis.split("\n\n").filter(Boolean);
 const kupHref = d.gdzieKupic ?? site.sklep;
@@ -250,7 +259,7 @@ const faqSchema = {
 };
 ---
 
-<Base title={`${d.nazwa} (${d.model}) — Owell`} description={d.tagline} ogImage={ogImageUrl}>
+<Base title={tytulMeta} description={opisMeta} ogImage={ogImageUrl}>
   <BreadcrumbSchema slot="head" items={breadcrumbs} />
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(productSchema)} />
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
