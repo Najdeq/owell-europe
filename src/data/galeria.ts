@@ -214,6 +214,20 @@ import foto_ow_2976_11 from "../assets/produkty/galeria/ow-2976-11.jpg";
 import foto_ow_2976_12 from "../assets/produkty/galeria/ow-2976-12.jpg";
 import foto_ow_2976_13 from "../assets/produkty/galeria/ow-2976-13.jpg";
 import foto_ow_2976_14 from "../assets/produkty/galeria/ow-2976-14.jpg";
+import foto_ow_2036_1 from "../assets/produkty/galeria/ow-2036-1.jpg";
+import foto_ow_2036_2 from "../assets/produkty/galeria/ow-2036-2.jpg";
+import foto_ow_2036_3 from "../assets/produkty/galeria/ow-2036-3.jpg";
+import foto_ow_2036_4 from "../assets/produkty/galeria/ow-2036-4.jpg";
+import foto_ow_2036_5 from "../assets/produkty/galeria/ow-2036-5.jpg";
+import foto_ow_2036_6 from "../assets/produkty/galeria/ow-2036-6.jpg";
+import foto_ow_2036_7 from "../assets/produkty/galeria/ow-2036-7.jpg";
+import foto_ow_2036_8 from "../assets/produkty/galeria/ow-2036-8.jpg";
+import foto_ow_2036_9 from "../assets/produkty/galeria/ow-2036-9.jpg";
+import foto_ow_2036_10 from "../assets/produkty/galeria/ow-2036-10.jpg";
+import foto_ow_2036_11 from "../assets/produkty/galeria/ow-2036-11.jpg";
+import foto_ow_2036_12 from "../assets/produkty/galeria/ow-2036-12.jpg";
+import foto_ow_2036_13 from "../assets/produkty/galeria/ow-2036-13.jpg";
+import foto_ow_2036_14 from "../assets/produkty/galeria/ow-2036-14.jpg";
 
 /**
  * Dodatkowe zdjęcia produktów (poza głównym z `zdjecia.ts`), do galerii na
@@ -247,4 +261,5 @@ export const galeria: Record<string, ImageMetadata[]> = {
   "ow-2960": [foto_ow_2960_1, foto_ow_2960_2, foto_ow_2960_3, foto_ow_2960_4, foto_ow_2960_5, foto_ow_2960_6, foto_ow_2960_7, foto_ow_2960_8, foto_ow_2960_9, foto_ow_2960_10, foto_ow_2960_11, foto_ow_2960_12, foto_ow_2960_13],
   "ow-2954": [foto_ow_2954_1, foto_ow_2954_2, foto_ow_2954_3, foto_ow_2954_4, foto_ow_2954_5, foto_ow_2954_6, foto_ow_2954_7, foto_ow_2954_8, foto_ow_2954_9, foto_ow_2954_10, foto_ow_2954_11, foto_ow_2954_12, foto_ow_2954_13, foto_ow_2954_14],
   "ow-2976": [foto_ow_2976_1, foto_ow_2976_2, foto_ow_2976_3, foto_ow_2976_4, foto_ow_2976_5, foto_ow_2976_6, foto_ow_2976_7, foto_ow_2976_8, foto_ow_2976_9, foto_ow_2976_10, foto_ow_2976_11, foto_ow_2976_12, foto_ow_2976_13, foto_ow_2976_14],
+  "ow-2036": [foto_ow_2036_1, foto_ow_2036_2, foto_ow_2036_3, foto_ow_2036_4, foto_ow_2036_5, foto_ow_2036_6, foto_ow_2036_7, foto_ow_2036_8, foto_ow_2036_9, foto_ow_2036_10, foto_ow_2036_11, foto_ow_2036_12, foto_ow_2036_13, foto_ow_2036_14],
 };

@@ -76,6 +76,13 @@ export const kategorie: Kategoria[] = [
     produkty: ["ow-2960", "ow-2954", "ow-2976"],
   },
   {
+    slug: "stylizacja-wlosow",
+    nazwa: "Stylizacja włosów",
+    grupa: "pielegnacja",
+    opis: "Suszenie, modelowanie i kręcenie włosów w domu — jednym urządzeniem z wymiennymi nasadkami.",
+    produkty: ["ow-2036"],
+  },
+  {
     slug: "lodowka-turystyczna",
     nazwa: "Lodówka turystyczna",
     grupa: "agd-turystyczne",

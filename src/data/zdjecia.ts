@@ -20,6 +20,7 @@ import fotoOw2851 from "../assets/produkty/hero/ow-2851.jpg";
 import fotoOw2960 from "../assets/produkty/hero/ow-2960.jpg";
 import fotoOw2954 from "../assets/produkty/hero/ow-2954.jpg";
 import fotoOw2976 from "../assets/produkty/hero/ow-2976.jpg";
+import fotoOw2036 from "../assets/produkty/hero/ow-2036.jpg";
 
 /**
  * Zdjęcia produktów pod identyfikatorem z kolekcji. Trzymamy je w jednym
@@ -50,4 +51,5 @@ export const zdjecia: Record<string, ImageMetadata> = {
   "ow-2960": fotoOw2960,
   "ow-2954": fotoOw2954,
   "ow-2976": fotoOw2976,
+  "ow-2036": fotoOw2036,
 };
