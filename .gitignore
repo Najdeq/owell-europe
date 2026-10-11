@@ -26,3 +26,6 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Surowe pliki wideo przed kompresją (za duże do repo i Cloudflare Pages)
+wideo-zrodlo/

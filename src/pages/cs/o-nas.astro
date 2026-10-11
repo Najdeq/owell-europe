@@ -118,6 +118,24 @@ const visualKeyframes = `
             </div>
           </div>
         </div>
+
+        <!-- Film 1:00 z dźwiękiem, ok. 20 MB: preload="none" — pobiera się dopiero
+             po kliknięciu, więc nie spowalnia wejścia na stronę. Źródło (100 MB)
+             leży w wideo-zrodlo/ poza repo. -->
+        <figure class="zaplecze-wideo" data-reveal>
+          <video
+            controls
+            preload="none"
+            playsinline
+            poster="/video/owell-magazyn-poster.jpg"
+            width="1920"
+            height="1080"
+            aria-label="Video: procházka logistickým centrem Owell"
+          >
+            <source src="/video/owell-magazyn.mp4" type="video/mp4" />
+          </video>
+          <figcaption>Podívejte se do našeho logistického centra — 1 minuta, se zvukem.</figcaption>
+        </figure>
       </Container>
     </Section>
   </main>
@@ -128,6 +146,29 @@ const visualKeyframes = `
 <style set:html={visualKeyframes} is:global></style>
 
 <style>
+  .zaplecze-wideo {
+    margin-top: var(--sp-8);
+  }
+
+  .zaplecze-wideo video {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    background-color: var(--bg-0);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-lg);
+  }
+
+  .zaplecze-wideo figcaption {
+    margin-top: var(--sp-3);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+  }
+
   .page-title {
     margin-top: var(--sp-4);
     margin-bottom: var(--sp-12);
