@@ -109,7 +109,21 @@ let obecne = readFileSync(HEADERS_FILE, "utf-8");
 // wielokrotnym buildzie bez czyszczenia dist/)
 obecne = obecne.replace(/\n\s*Content-Security-Policy:.*(?=\n|$)/g, "");
 
-const zaktualizowane = obecne.trimEnd() + `\n  Content-Security-Policy: ${csp}\n`;
+// Cloudflare odrzuca CAŁE wdrożenie, gdy linia w _headers ma > 2000 znaków
+// („Invalid _headers configuration … [code: 100324]") — i robi to dopiero na
+// etapie deploya, lokalny build tego nie widzi. Zatrzymujemy build tutaj,
+// żeby błąd wyszedł przed pushem, a nie w panelu Cloudflare.
+const linia = `  Content-Security-Policy: ${csp}`;
+const LIMIT_CLOUDFLARE = 2000;
+if (linia.length > LIMIT_CLOUDFLARE) {
+  console.error(
+    `[csp] Linia CSP ma ${linia.length} znaków (limit Cloudflare: ${LIMIT_CLOUDFLARE}). ` +
+      `Za dużo inline-skryptów (${hashe.size} hashy) — wydziel je do plików albo ogranicz warianty.`
+  );
+  process.exit(1);
+}
+
+const zaktualizowane = obecne.trimEnd() + `\n${linia}\n`;
 writeFileSync(HEADERS_FILE, zaktualizowane, "utf-8");
 
 console.log(

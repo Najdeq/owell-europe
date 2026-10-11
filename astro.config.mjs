@@ -45,7 +45,16 @@ export default defineConfig({
   ...(process.argv.includes('build') ? { adapter: cloudflare({ imageService: 'compile' }) } : {}),
 
   vite: {
-    plugins: [tailwindcss()]
+    plugins: [tailwindcss()],
+    // Skrypty komponentów zawsze jako osobne pliki w /_astro/, nigdy wklejone
+    // w HTML. Domyślnie Astro wkleja te poniżej 4 KB — każdy taki skrypt
+    // wymagał osobnego sha256 w nagłówku CSP (scripts/csp.mjs), a Cloudflare
+    // odrzuca linię _headers dłuższą niż 2000 znaków. Przy ~30 hashach wdrożenie
+    // padło („Line exceeds limit of 2000 characters"). Pliki z własnej domeny
+    // pokrywa 'self', więc CSP nie rośnie z każdym nowym komponentem.
+    build: {
+      assetsInlineLimit: 0,
+    },
   },
 
   integrations: [sitemap()]
