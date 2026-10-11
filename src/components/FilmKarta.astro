@@ -1,0 +1,229 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { domyslnyJezyk, type Jezyk } from "../i18n/ui.ts";
+import { useTranslations } from "../i18n/utils.ts";
+
+/**
+ * Mała karta w lewym dolnym rogu strony głównej, zapraszająca do filmu
+ * z centrum logistycznego (/o-nas#film). Celowo NIE modal na środku ekranu:
+ * Google na mobile obniża strony z interstitialami zasłaniającymi treść,
+ * a na dole są już baner cookies i widżet WhatsApp (prawy róg).
+ *
+ * Pokazuje się po OPOZNIENIE_MS, dopiero gdy baner cookies jest zamknięty;
+ * po zamknięciu (✕) albo kliknięciu nie wraca — pamiętamy to w localStorage.
+ */
+const jezyk = (Astro.currentLocale ?? domyslnyJezyk) as Jezyk;
+const t = useTranslations(jezyk);
+const href = `${getRelativeLocaleUrl(jezyk, "/o-nas")}#film`;
+---
+
+<aside class="film-karta" data-film-karta hidden aria-label={t("common.filmKartaTytul")}>
+  <a href={href} class="film-link" data-film-link>
+    <span class="film-miniatura">
+      <img src="/video/owell-magazyn-poster.jpg" alt="" width="128" height="72" loading="lazy" decoding="async" />
+      <span class="film-play" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+      </span>
+    </span>
+    <span class="film-tekst">
+      <span class="film-tytul">{t("common.filmKartaTytul")}</span>
+      <span class="film-opis">{t("common.filmKartaOpis")}</span>
+    </span>
+  </a>
+  <button type="button" class="film-zamknij" data-film-zamknij aria-label={t("common.filmKartaZamknij")}>✕</button>
+</aside>
+
+<style>
+  .film-karta {
+    position: fixed;
+    left: var(--sp-6);
+    bottom: var(--sp-6);
+    z-index: 65;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--sp-2);
+    max-width: 22rem;
+    padding: var(--sp-3);
+    background-color: var(--bg-2);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 12px 32px rgb(0 0 0 / 0.25);
+    animation: film-wejscie 400ms var(--ease) both;
+  }
+
+  .film-karta[hidden] {
+    display: none;
+  }
+
+  @keyframes film-wejscie {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .film-link {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    min-width: 0;
+    text-decoration: none;
+  }
+
+  .film-miniatura {
+    position: relative;
+    flex: none;
+    width: 6rem;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .film-miniatura img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .film-play {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: var(--gold);
+    background: rgb(0 0 0 / 0.35);
+    transition: background-color var(--dur) var(--ease);
+  }
+
+  .film-play svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .film-link:hover .film-play {
+    background: rgb(0 0 0 / 0.15);
+  }
+
+  .film-tekst {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-1);
+    min-width: 0;
+  }
+
+  .film-tytul {
+    font-family: var(--font-display);
+    font-weight: 600;
+    line-height: 1.25;
+    color: var(--text);
+  }
+
+  .film-opis {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+  }
+
+  .film-zamknij {
+    flex: none;
+    width: 1.75rem;
+    height: 1.75rem;
+    display: grid;
+    place-items: center;
+    color: var(--text-2);
+    background: none;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+  }
+
+  .film-zamknij:hover {
+    color: var(--text);
+  }
+
+  .film-zamknij:focus-visible,
+  .film-link:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+  }
+
+  /* Na telefonie zostawiamy miejsce na okrągły przycisk WhatsApp (56 px)
+     w prawym rogu, żeby karta na niego nie nachodziła. */
+  @media (max-width: 640px) {
+    .film-karta {
+      left: var(--sp-4);
+      bottom: var(--sp-4);
+      max-width: calc(100vw - var(--sp-4) - 56px - var(--sp-6) - var(--sp-4));
+    }
+
+    .film-miniatura {
+      width: 4.5rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .film-karta {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  const KLUCZ = "owell-film-karta-zamknieta";
+  const OPOZNIENIE_MS = 6000;
+
+  function zamknieta() {
+    try {
+      return localStorage.getItem(KLUCZ) === "1";
+    } catch {
+      return false;
+    }
+  }
+
+  function zapamietaj() {
+    try {
+      localStorage.setItem(KLUCZ, "1");
+    } catch {
+      // brak dostępu do localStorage (tryb prywatny) — karta wróci przy kolejnej wizycie
+    }
+  }
+
+  function setupFilmKarta() {
+    const karta = document.querySelector<HTMLElement>("[data-film-karta]");
+    if (!karta || karta.dataset.owellBound === "true") return;
+    karta.dataset.owellBound = "true";
+    if (zamknieta()) return;
+
+    const banner = document.getElementById("consent-banner");
+    let timer: number | undefined;
+
+    function pokazJesliMozna() {
+      // Nie pokazujemy razem z banerem cookies — najpierw decyzja o zgodzie.
+      if (banner && !banner.hidden) return;
+      if (timer !== undefined) return;
+      timer = window.setTimeout(() => {
+        if (!zamknieta()) karta!.hidden = false;
+      }, OPOZNIENIE_MS);
+    }
+
+    pokazJesliMozna();
+    if (banner) {
+      new MutationObserver(pokazJesliMozna).observe(banner, { attributes: true, attributeFilter: ["hidden"] });
+    }
+
+    karta.querySelector("[data-film-zamknij]")?.addEventListener("click", () => {
+      karta.hidden = true;
+      zapamietaj();
+    });
+    karta.querySelector("[data-film-link]")?.addEventListener("click", zapamietaj);
+  }
+
+  setupFilmKarta();
+  document.addEventListener("astro:page-load", setupFilmKarta);
+</script>

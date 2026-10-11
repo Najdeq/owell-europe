@@ -125,7 +125,7 @@ const visualKeyframes = `
         <!-- Film 1:00 z dźwiękiem, ok. 20 MB: preload="none" — pobiera się dopiero
              po kliknięciu, więc nie spowalnia wejścia na stronę. Źródło (100 MB)
              leży w wideo-zrodlo/ poza repo. -->
-        <figure class="zaplecze-wideo" data-reveal>
+        <figure class="zaplecze-wideo" id="film" data-reveal>
           <video
             controls
             preload="none"
@@ -151,6 +151,8 @@ const visualKeyframes = `
 <style>
   .zaplecze-wideo {
     margin-top: var(--sp-8);
+    /* Kotwica #film (karta na stronie głównej) — nie chowaj filmu pod nagłówkiem. */
+    scroll-margin-top: calc(var(--header-h, 65px) + var(--sp-6));
   }
 
   .zaplecze-wideo video {
