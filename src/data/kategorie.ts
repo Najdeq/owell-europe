@@ -108,7 +108,7 @@ export const kategorie: Kategoria[] = [
     nazwa: "Czyścik parowy",
     grupa: "dom",
     opis: "Czyszczenie powierzchni parą, bez chemii i szorowania.",
-    produkty: ["ow-7101"],
+    produkty: ["ow-7101", "ow-7099", "ow-7100"],
   },
   {
     slug: "koce-i-poduszki-elektryczne",

@@ -49,6 +49,8 @@ import fotoOw2960 from "../../assets/produkty/hero/ow-2960.jpg";
 import fotoOw2954 from "../../assets/produkty/hero/ow-2954.jpg";
 import fotoOw2976 from "../../assets/produkty/hero/ow-2976.jpg";
 import fotoOw2036 from "../../assets/produkty/hero/ow-2036.jpg";
+import fotoOw7099 from "../../assets/produkty/hero/ow-7099.jpg";
+import fotoOw7100 from "../../assets/produkty/hero/ow-7100.jpg";
 
 export async function getStaticPaths() {
   const produkty = await getCollection("produkty");
@@ -88,6 +90,8 @@ const fotki: Record<string, ImageMetadata> = {
   "ow-2954": fotoOw2954,
   "ow-2976": fotoOw2976,
   "ow-2036": fotoOw2036,
+  "ow-7099": fotoOw7099,
+  "ow-7100": fotoOw7100,
 };
 const foto = fotki[produkt.id];
 // foto.src NIE jest gotowym adresem pliku w trybie imageService:'compile' —
