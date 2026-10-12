@@ -123,7 +123,33 @@ if (linia.length > LIMIT_CLOUDFLARE) {
   process.exit(1);
 }
 
-const zaktualizowane = obecne.trimEnd() + `\n${linia}\n`;
+// Panel Decap CMS (/admin) potrzebuje osobnej, luźniejszej polityki: ładuje
+// 5 MB skrypt z unpkg.com (przypięty sumą SRI w public/admin/index.html),
+// a bundle korzysta z eval/new Function. Pod ogólnym CSP przeglądarka
+// blokowała skrypt i panel był białą stroną (od dodania CSP 2026-08-24).
+// `! Content-Security-Policy` odpina nagłówek z reguły /*, żeby nie powstały
+// dwie polityki naraz (przeglądarka egzekwuje wtedy obie — przecięcie).
+// Luźniejsze zasady dotyczą WYŁĄCZNIE /admin, reszta strony ma ścisły CSP.
+const cspAdmin = [
+  "default-src 'self'",
+  "script-src 'self' https://unpkg.com 'unsafe-eval'",
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob: https:",
+  "font-src 'self' data:",
+  "connect-src 'self' https://api.github.com https://*.githubusercontent.com",
+  "frame-src 'self' blob:",
+  "worker-src 'self' blob:",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "frame-ancestors 'none'",
+].join("; ");
+// usuń ewentualny blok /admin z poprzedniego uruchomienia (idempotencja)
+obecne = obecne.replace(/\n\/admin\/\*\n(?:  .*\n?)*/g, "\n");
+
+const zaktualizowane =
+  obecne.trimEnd() +
+  `\n${linia}\n\n/admin/*\n  ! Content-Security-Policy\n  Content-Security-Policy: ${cspAdmin}\n`;
 writeFileSync(HEADERS_FILE, zaktualizowane, "utf-8");
 
 console.log(

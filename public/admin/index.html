@@ -9,6 +9,13 @@
   <body>
     <!-- Wersja przypięta na sztywno (nie @latest) — aktualizacja panelu nie
          powinna zależeć od tego, kiedy ktoś przypadkiem odświeży tę stronę. -->
-    <script src="https://unpkg.com/decap-cms@3.3.3/dist/decap-cms.js"></script>
+    <!-- integrity: przeglądarka uruchomi skrypt tylko, jeśli jest bajt w bajt
+         tym samym plikiem, który sprawdziliśmy — podmiana na unpkg.com nic nie da.
+         Przy zmianie wersji trzeba przeliczyć hash (sha384 pliku). -->
+    <script
+      src="https://unpkg.com/decap-cms@3.3.3/dist/decap-cms.js"
+      integrity="sha384-Ch3bpZcxxjHMuIde+QMTyDdxGqjtafFkpoGgvLjf50nHhptNH7bZyPTyKSkOvEo+"
+      crossorigin="anonymous"
+    ></script>
   </body>
 </html>
