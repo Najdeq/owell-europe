@@ -49,6 +49,9 @@ const visualKeyframes = `
 >
   <BreadcrumbSchema slot="head" items={breadcrumbs} />
 
+  <!-- Opis filmu dla Google (VideoObject) — bez tego Search Console zgłaszał
+       stronę jako „film niezindeksowany". -->
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify({"@context":"https://schema.org","@type":"VideoObject","name":"Прогулка по логистическому центру Owell","description":"Минута в логистическом центре Owell: приёмка товара, высотные стеллажи и паллеты, готовые к отправке.","thumbnailUrl":"https://owelleurope.pl/video/owell-magazyn-poster.jpg","uploadDate":"2026-10-11","duration":"PT1M","contentUrl":"https://owelleurope.pl/video/owell-magazyn.mp4","inLanguage":"ru"})} />
   <Header />
 
   <main id="content">
