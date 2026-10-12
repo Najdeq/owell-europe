@@ -105,6 +105,11 @@ const csp = [
 ].join("; ");
 
 let obecne = readFileSync(HEADERS_FILE, "utf-8");
+// Blok z pdf-kanoniczne.mjs musi zostać NA KOŃCU pliku (CSP doklejamy do
+// ostatniej reguły) — przy ponownym uruchomieniu samego csp.mjs odcinamy go;
+// postbuild i tak odtwarza go zaraz po nas.
+const znacznikPdf = obecne.indexOf("# pdf-kanoniczne");
+if (znacznikPdf !== -1) obecne = obecne.slice(0, znacznikPdf);
 // usuń ewentualną linijkę CSP z poprzedniego uruchomienia (idempotencja przy
 // wielokrotnym buildzie bez czyszczenia dist/)
 obecne = obecne.replace(/\n\s*Content-Security-Policy:.*(?=\n|$)/g, "");

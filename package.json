@@ -11,7 +11,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "prebuild": "node scripts/instrukcje.mjs && node scripts/blur.mjs && node scripts/qr.mjs",
-    "postbuild": "node scripts/linki.mjs && node scripts/csp.mjs"
+    "postbuild": "node scripts/linki.mjs && node scripts/csp.mjs && node scripts/pdf-kanoniczne.mjs"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.1.7",
