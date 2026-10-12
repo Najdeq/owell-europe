@@ -1,4 +1,5 @@
 import type { APIRoute } from "astro";
+import { envOAuth } from "./_env.ts";
 
 export const prerender = false;
 
@@ -33,10 +34,8 @@ const DOZWOLONE_ORIGINY = [
  * token potrafi zostać wysłany, zanim panel zdąży podpiąć nasłuchiwanie,
  * i logowanie ciche się nie powiedzie.
  */
-export const GET: APIRoute = async ({ locals, url, cookies }) => {
-  const env = (locals as { runtime?: { env?: Record<string, string> } }).runtime?.env ?? {};
-  const clientId = env.GITHUB_OAUTH_ID;
-  const clientSecret = env.GITHUB_OAUTH_SECRET;
+export const GET: APIRoute = async ({ url, cookies }) => {
+  const { clientId, clientSecret } = await envOAuth();
 
   const kodStanu = url.searchParams.get("state");
   const zapisanyStan = cookies.get("decap_oauth_state")?.value;

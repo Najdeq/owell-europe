@@ -1,4 +1,5 @@
 import type { APIRoute } from "astro";
+import { envOAuth } from "./_env.ts";
 
 // Endpoint działa na żądanie, nie jest prerenderowany razem z resztą
 // statycznej strony — panel CMS potrzebuje logiki serwerowej (przekierowanie
@@ -15,9 +16,8 @@ export const prerender = false;
  * `state` w ciasteczku HttpOnly zabezpiecza przed CSRF: callback odrzuci
  * odpowiedź, jeśli zwrócony `state` nie zgadza się z tym zapisanym tutaj.
  */
-export const GET: APIRoute = ({ locals, redirect, cookies, url }) => {
-  const env = (locals as { runtime?: { env?: Record<string, string> } }).runtime?.env ?? {};
-  const clientId = env.GITHUB_OAUTH_ID;
+export const GET: APIRoute = async ({ redirect, cookies, url }) => {
+  const { clientId } = await envOAuth();
 
   if (!clientId) {
     return new Response(
