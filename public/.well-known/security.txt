@@ -1,0 +1,6 @@
+# Zgłaszanie podatności w serwisie owelleurope.pl (RFC 9116).
+# Report security vulnerabilities in owelleurope.pl here.
+Contact: mailto:serwis@owelleurope.com
+Expires: 2027-10-12T00:00:00.000Z
+Preferred-Languages: pl, en
+Canonical: https://owelleurope.pl/.well-known/security.txt
