@@ -100,12 +100,17 @@ export const site = {
     ] as { mapa: string; nazwa: string }[],
   },
 
-  // Profile w mediach społecznościowych / inne oficjalne strony marki —
-  // schema.org Organization.sameAs.
-  sameAs: [
-    "https://www.instagram.com/owelleurope.eu/",
-    "https://www.tiktok.com/@owelleurope.eu",
-  ] as string[],
+  // Oficjalne profile marki — linki w stopce (kolumna „Kontakt") i
+  // schema.org Organization.sameAs (Google łączy profile z marką).
+  social: [
+    { nazwa: "Instagram", url: "https://www.instagram.com/owelleurope.pl/" },
+    { nazwa: "Facebook", url: "https://www.facebook.com/profile.php?id=61584189231484" },
+    { nazwa: "TikTok", url: "https://www.tiktok.com/@owelleurope.eu" },
+  ] as { nazwa: string; url: string }[],
+
+  get sameAs(): string[] {
+    return this.social.map((s) => s.url);
+  },
 
   kategorie: [
     {

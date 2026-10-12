@@ -102,6 +102,11 @@ const prawne = [
           <li>
             <a href={`mailto:${site.kontakt.emailSerwis}`}>{site.kontakt.emailSerwis}</a>
           </li>
+          {site.social.map((profil) => (
+            <li>
+              <a href={profil.url} target="_blank" rel="me noopener noreferrer">{profil.nazwa}</a>
+            </li>
+          ))}
         </ul>
       </div>
     </div>
