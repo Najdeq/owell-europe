@@ -5,6 +5,23 @@ import cloudflare from '@astrojs/cloudflare';
 import tailwindcss from '@tailwindcss/vite';
 
 import sitemap from '@astrojs/sitemap';
+import { readdirSync, readFileSync } from 'node:fs';
+
+// <lastmod> w sitemapie tylko tam, gdzie znamy prawdziwą datę: `dodano`
+// produktu i `data` wpisu na blogu (wszystkie wersje językowe danej strony
+// dostają tę samą). Data builda na każdym adresie byłaby nieprawdą — Google
+// przestaje wtedy ufać lastmod w całej sitemapie.
+function datyZFrontmattera(katalog, pole) {
+  const daty = new Map();
+  for (const plik of readdirSync(katalog)) {
+    if (!plik.endsWith('.md')) continue;
+    const m = readFileSync(`${katalog}/${plik}`, 'utf8').match(new RegExp(`^${pole}:\\s*["']?(\\d{4}-\\d{2}-\\d{2})`, 'm'));
+    if (m) daty.set(plik.replace(/\.md$/, ''), m[1]);
+  }
+  return daty;
+}
+const datyProduktow = datyZFrontmattera('./src/content/produkty', 'dodano');
+const datyWpisow = datyZFrontmattera('./src/content/blog', 'data');
 
 // https://astro.build/config
 export default defineConfig({
@@ -57,5 +74,14 @@ export default defineConfig({
     },
   },
 
-  integrations: [sitemap()]
+  integrations: [
+    sitemap({
+      serialize(item) {
+        const m = item.url.match(/\/(produkty|blog)\/([^/]+)\/$/);
+        const data = m && (m[1] === 'produkty' ? datyProduktow : datyWpisow).get(m[2]);
+        if (data) item.lastmod = new Date(data).toISOString();
+        return item;
+      },
+    }),
+  ]
 });

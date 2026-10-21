@@ -51,6 +51,7 @@ export const ui = {
       produktyZTegoWpisu: "Produkty z tego wpisu",
       zobaczProdukt: "Zobacz produkt →",
       calyKatalog: "Cały katalog",
+      kategoriaTytul: "{nazwa} Owell — modele i dane techniczne",
       filmKartaTytul: "Zobacz nasz magazyn od środka",
       filmKartaOpis: "1 min · film z dźwiękiem",
       filmKartaZamknij: "Zamknij",
@@ -112,6 +113,7 @@ export const ui = {
     },
     hero: {
       eyebrow: "Małe AGD · Projektowane w Europie",
+      h1: "Małe AGD Owell — do kuchni, pielęgnacji i domu",
       tytul:
         "Tworzymy produkty, z których sami chcielibyśmy korzystać. Od projektu, przez kontrolę jakości, aż po serwis — dbamy o każdy etap, aby zapewnić naszym klientom niezawodność i komfort użytkowania.",
       lead: "Małe AGD do kuchni, pielęgnacji i podróży — zaprojektowane do codziennego użytku, nie od święta. Każdy produkt ma pełne dane producenta, kartę GPSR i {gwarancja} miesiące gwarancji, bez wyjątków.",
@@ -236,6 +238,7 @@ export const ui = {
       produktyZTegoWpisu: "Products from this post",
       zobaczProdukt: "View product →",
       calyKatalog: "Full catalogue",
+      kategoriaTytul: "{nazwa} by Owell — models and specs",
       filmKartaTytul: "See our warehouse from the inside",
       filmKartaOpis: "1 min · video with sound",
       filmKartaZamknij: "Close",
@@ -297,6 +300,7 @@ export const ui = {
     },
     hero: {
       eyebrow: "Small appliances · Designed in Europe",
+      h1: "Owell small appliances — for kitchen, grooming and home",
       tytul:
         "We make products we'd want to use ourselves. From design, through quality control, to service — we take care of every step to give our customers reliability and everyday comfort.",
       lead: "Small appliances for the kitchen, grooming and travel — built for everyday use, not just special occasions. Every product comes with full manufacturer data, a GPSR safety card and {gwarancja} months of warranty, no exceptions.",
@@ -421,6 +425,7 @@ export const ui = {
       produktyZTegoWpisu: "Produkte aus diesem Beitrag",
       zobaczProdukt: "Produkt ansehen →",
       calyKatalog: "Gesamter Katalog",
+      kategoriaTytul: "{nazwa} von Owell — Modelle und technische Daten",
       filmKartaTytul: "Unser Lager von innen",
       filmKartaOpis: "1 Min. · Video mit Ton",
       filmKartaZamknij: "Schließen",
@@ -482,6 +487,7 @@ export const ui = {
     },
     hero: {
       eyebrow: "Kleine Haushaltsgeräte · Entwickelt in Europa",
+      h1: "Owell Kleingeräte — für Küche, Pflege und Zuhause",
       tytul:
         "Wir entwickeln Produkte, die wir selbst nutzen möchten. Von der Konstruktion über die Qualitätskontrolle bis zum Service — wir kümmern uns um jeden Schritt, damit unsere Kunden Zuverlässigkeit und Komfort im Alltag genießen.",
       lead: "Kleine Haushaltsgeräte für Küche, Pflege und Reise — für den täglichen Gebrauch gemacht, nicht nur für besondere Anlässe. Jedes Produkt kommt mit vollständigen Herstellerangaben, einer GPSR-Sicherheitskarte und {gwarancja} Monaten Garantie, ohne Ausnahme.",
@@ -606,6 +612,7 @@ export const ui = {
       produktyZTegoWpisu: "Товары из этой статьи",
       zobaczProdukt: "Смотреть товар →",
       calyKatalog: "Весь каталог",
+      kategoriaTytul: "{nazwa} Owell — модели и характеристики",
       filmKartaTytul: "Наш склад изнутри",
       filmKartaOpis: "1 мин · видео со звуком",
       filmKartaZamknij: "Закрыть",
@@ -667,6 +674,7 @@ export const ui = {
     },
     hero: {
       eyebrow: "Малая бытовая техника · Разработано в Европе",
+      h1: "Малая бытовая техника Owell — для кухни, ухода и дома",
       tytul:
         "Мы создаём продукты, которыми хотели бы пользоваться сами. От разработки и контроля качества до сервиса — мы заботимся о каждом этапе, чтобы обеспечить нашим клиентам надёжность и удобство.",
       lead: "Малая бытовая техника для кухни, ухода и путешествий — созданная для повседневного использования, а не только для особых случаев. Каждый продукт имеет полные данные производителя, карту GPSR и {gwarancja} месяцев гарантии, без исключений.",
@@ -791,6 +799,7 @@ export const ui = {
       produktyZTegoWpisu: "Produits de cet article",
       zobaczProdukt: "Voir le produit →",
       calyKatalog: "Tout le catalogue",
+      kategoriaTytul: "{nazwa} Owell — modèles et caractéristiques",
       filmKartaTytul: "Découvrez notre entrepôt de l'intérieur",
       filmKartaOpis: "1 min · vidéo avec son",
       filmKartaZamknij: "Fermer",
@@ -852,6 +861,7 @@ export const ui = {
     },
     hero: {
       eyebrow: "Petit électroménager · Conçu en Europe",
+      h1: "Petit électroménager Owell — cuisine, soin et maison",
       tytul:
         "Nous créons des produits que nous voudrions utiliser nous-mêmes. De la conception au service, en passant par le contrôle qualité — nous soignons chaque étape pour offrir à nos clients fiabilité et confort au quotidien.",
       lead: "Du petit électroménager pour la cuisine, le soin et le voyage — conçu pour un usage quotidien, pas seulement pour les grandes occasions. Chaque produit dispose des coordonnées complètes du fabricant, d'une fiche GPSR et de {gwarancja} mois de garantie, sans exception.",
@@ -976,6 +986,7 @@ export const ui = {
       produktyZTegoWpisu: "Productos de este artículo",
       zobaczProdukt: "Ver producto →",
       calyKatalog: "Todo el catálogo",
+      kategoriaTytul: "{nazwa} Owell — modelos y características",
       filmKartaTytul: "Conoce nuestro almacén por dentro",
       filmKartaOpis: "1 min · vídeo con sonido",
       filmKartaZamknij: "Cerrar",
@@ -1037,6 +1048,7 @@ export const ui = {
     },
     hero: {
       eyebrow: "Pequeños electrodomésticos · Diseñados en Europa",
+      h1: "Pequeños electrodomésticos Owell — cocina, cuidado personal y hogar",
       tytul:
         "Creamos productos que nosotros mismos querríamos usar. Desde el diseño, pasando por el control de calidad, hasta el servicio postventa — cuidamos cada etapa para ofrecer a nuestros clientes fiabilidad y comodidad diaria.",
       lead: "Pequeños electrodomésticos para cocina, cuidado personal y viaje — pensados para el uso diario, no solo para ocasiones especiales. Cada producto incluye los datos completos del fabricante, una ficha GPSR y {gwarancja} meses de garantía, sin excepciones.",
@@ -1161,6 +1173,7 @@ export const ui = {
       produktyZTegoWpisu: "Produkty z tohoto článku",
       zobaczProdukt: "Zobrazit produkt →",
       calyKatalog: "Celý katalog",
+      kategoriaTytul: "{nazwa} Owell — modely a technické údaje",
       filmKartaTytul: "Podívejte se do našeho skladu",
       filmKartaOpis: "1 min · video se zvukem",
       filmKartaZamknij: "Zavřít",
@@ -1222,6 +1235,7 @@ export const ui = {
     },
     hero: {
       eyebrow: "Drobné spotřebiče · Navrženo v Evropě",
+      h1: "Drobné spotřebiče Owell — do kuchyně, pro péči i domácnost",
       tytul:
         "Vytváříme produkty, které bychom sami rádi používali. Od návrhu přes kontrolu kvality až po servis — pečujeme o každý krok, abychom zákazníkům zajistili spolehlivost a každodenní pohodlí.",
       lead: "Drobné spotřebiče do kuchyně, na péči o tělo i na cesty — navržené pro každodenní použití, ne jen na výjimečné příležitosti. Každý produkt má kompletní údaje o výrobci, kartu GPSR a {gwarancja} měsíců záruky, bez výjimek.",
@@ -1346,6 +1360,7 @@ export const ui = {
       produktyZTegoWpisu: "Prodotti di questo articolo",
       zobaczProdukt: "Vedi il prodotto →",
       calyKatalog: "Tutto il catalogo",
+      kategoriaTytul: "{nazwa} Owell — modelli e caratteristiche",
       filmKartaTytul: "Scopri il nostro magazzino dall'interno",
       filmKartaOpis: "1 min · video con audio",
       filmKartaZamknij: "Chiudi",
@@ -1407,6 +1422,7 @@ export const ui = {
     },
     hero: {
       eyebrow: "Piccoli elettrodomestici · Progettati in Europa",
+      h1: "Piccoli elettrodomestici Owell — cucina, cura della persona e casa",
       tytul:
         "Creiamo prodotti che vorremmo usare noi stessi. Dalla progettazione, al controllo qualità, fino all'assistenza — curiamo ogni fase per garantire ai nostri clienti affidabilità e comfort quotidiano.",
       lead: "Piccoli elettrodomestici per cucina, cura della persona e viaggio — pensati per l'uso quotidiano, non solo per le occasioni speciali. Ogni prodotto include i dati completi del produttore, una scheda GPSR e {gwarancja} mesi di garanzia, senza eccezioni.",

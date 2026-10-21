@@ -1,15 +1,19 @@
 ---
 interface Props {
   class?: string;
+  // Tag HTML — domyślnie <p>. Na stronie głównej nadtytuł jest jedynym
+  // krótkim nagłówkiem z frazą „małe AGD", więc tam renderujemy go jako <h1>
+  // (wygląd się nie zmienia — Tailwind preflight zeruje style nagłówków).
+  as?: "p" | "h1" | "h2" | "span";
   [key: `data-${string}`]: string | boolean | undefined;
 }
 
-const { class: className, ...rest } = Astro.props;
+const { class: className, as: Tag = "p", ...rest } = Astro.props;
 ---
 
-<p class:list={["eyebrow", className]} {...rest}>
+<Tag class:list={["eyebrow", className]} {...rest}>
   <slot />
-</p>
+</Tag>
 
 <style>
   .eyebrow {

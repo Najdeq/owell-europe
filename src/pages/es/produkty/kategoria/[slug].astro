@@ -52,7 +52,7 @@ const breadcrumbs = [
 ---
 
 <Base
-  title={`${nazwaKategorii} — Owell`}
+  title={t("common.kategoriaTytul").replace("{nazwa}", nazwaKategorii)}
   description={`${opisKategorii} Descubre los modelos de ${nazwaKategorii.toLowerCase()} de Owell, con ficha GPSR completa y ${site.gwarancjaMiesiace} meses de garantía.`}
 >
   <BreadcrumbSchema slot="head" items={breadcrumbs} />

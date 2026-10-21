@@ -15,7 +15,7 @@ import instrukcje from "../../data/instrukcje.json";
 import { galeria as galeriaDodatkowa } from "../../data/galeria.ts";
 import { kalkulatorPojemnosci } from "../../data/kalkulatorPojemnosci.ts";
 import { kategorie } from "../../data/kategorie.ts";
-import { tytulProduktu, opisProduktu } from "../../i18n/metaProduktu.ts";
+import { tytulProduktu, opisProduktu, nazwaProduktu } from "../../i18n/metaProduktu.ts";
 import { useTranslations } from "../../i18n/utils.ts";
 import PowiazanePoradniki from "../../components/PowiazanePoradniki.astro";
 import ProduktGaleria from "../../components/ProduktGaleria.astro";
@@ -112,6 +112,7 @@ const instrukcja = instrukcje[produkt.id as keyof typeof instrukcje];
 // modelu (patrz src/i18n/metaProduktu.ts).
 const tPl = useTranslations("pl");
 const tytulMeta = tytulProduktu(d.tagline, d.model, "pl");
+const nazwaH1 = nazwaProduktu(d.tagline, d.model, "pl");
 const opisMeta = opisProduktu(
   d.tagline,
   tPl(instrukcja ? "produkt.metaOpis" : "produkt.metaOpisBezInstrukcji").replace("{n}", String(d.gwarancjaMiesiace)),
@@ -309,7 +310,7 @@ const faqSchema = {
 
           <div class="top-info">
             <Eyebrow data-reveal>{d.model}</Eyebrow>
-            <h1 class="tytul" data-reveal data-reveal-delay="80">{d.nazwa}</h1>
+            <h1 class="tytul" data-reveal data-reveal-delay="80">{nazwaH1}</h1>
             <p class="tagline" data-reveal data-reveal-delay="160">{d.tagline}</p>
 
             <div class="kup" data-cta-sentinel>

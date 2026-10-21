@@ -14,6 +14,9 @@ import PorownywarkaModeli from "../../../components/PorownywarkaModeli.astro";
 import { kategorie, type Kategoria } from "../../../data/kategorie.ts";
 import { zdjecia } from "../../../data/zdjecia.ts";
 import { site } from "../../../data/site.ts";
+import { useTranslations } from "../../../i18n/utils.ts";
+
+const t = useTranslations("pl");
 
 export async function getStaticPaths() {
   const wszystkie = await getCollection("produkty");
@@ -47,7 +50,7 @@ const breadcrumbs = [
 ---
 
 <Base
-  title={`${kategoria.nazwa} — Owell`}
+  title={t("common.kategoriaTytul").replace("{nazwa}", kategoria.nazwa)}
   description={`${kategoria.opis} Zobacz modele ${kategoria.nazwa.toLowerCase()} Owell z pełną kartą GPSR i ${site.gwarancjaMiesiace}-miesięczną gwarancją.`}
 >
   <BreadcrumbSchema slot="head" items={breadcrumbs} />

@@ -25,10 +25,12 @@ const fakty = [
 <Section bg="base" class="hero">
   <div class="hero-inner">
     <div class="hero-content">
-      <Eyebrow data-reveal>{t("hero.eyebrow")}</Eyebrow>
-      <h1 class="hero-title" data-reveal data-reveal-delay="80">
+      <!-- H1 = krótka fraza z „małe AGD" (audyt SEO 2026-10): wcześniej H1 było
+           ~30-słowne hasło niżej, które zostaje jako duży tekst, ale już jako <p>. -->
+      <Eyebrow as="h1" data-reveal>{t("hero.h1")}</Eyebrow>
+      <p class="hero-title" data-reveal data-reveal-delay="80">
         {t("hero.tytul")}
-      </h1>
+      </p>
       <p class="hero-lead" data-reveal data-reveal-delay="160">
         {t("hero.lead").replace("{gwarancja}", String(site.gwarancjaMiesiace))}
       </p>
@@ -50,7 +52,8 @@ const fakty = [
           <div class="fakt">
             <dt>{f.etykieta}</dt>
             <dd data-fakt-wartosc data-target={f.target} data-prefix={f.prefix} data-suffix={f.suffix}>
-              {f.prefix}0{f.suffix}
+              {/* Docelowa wartość już w HTML — bez JS (i dla Google) nie ma zer; animacja startuje od 0 w skrypcie. */}
+              {f.prefix}{f.target}{f.suffix}
             </dd>
           </div>
         ))}

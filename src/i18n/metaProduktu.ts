@@ -26,7 +26,7 @@ const spojniki: Record<Jezyk, string[]> = {
 // Powyżej tej długości Google zwykle ucina tytuł w wynikach.
 const MAKS_TYTUL = 62;
 
-export function tytulProduktu(tagline: string, model: string, jezyk: Jezyk): string {
+function typProduktu(tagline: string, jezyk: Jezyk) {
   // Przecinek lub dwukropek ZE SPACJĄ — sam przecinek to też separator
   // dziesiętny („1,7 l", „0,8–19 mm"), którego nie wolno rozcinać.
   const separator = tagline.search(/[,:]\s/);
@@ -39,7 +39,20 @@ export function tytulProduktu(tagline: string, model: string, jezyk: Jezyk): str
       uciety = true;
     }
   }
-  typ = typ.trim();
+  return { typ: typ.trim(), separator, uciety };
+}
+
+/**
+ * Nagłówek H1 karty produktu: „Myjka parowa 4w1 na kółkach 2000 W Owell OW 7100".
+ * Wcześniej H1 było samym „Owell OW 7100" — nikt tak nie szuka, a H1 to po
+ * <title> najsilniejszy sygnał, o czym jest strona.
+ */
+export function nazwaProduktu(tagline: string, model: string, jezyk: Jezyk): string {
+  return `${typProduktu(tagline, jezyk).typ} Owell ${model}`;
+}
+
+export function tytulProduktu(tagline: string, model: string, jezyk: Jezyk): string {
+  const { typ, separator, uciety } = typProduktu(tagline, jezyk);
 
   let tytul = `${typ} Owell ${model}`;
 
