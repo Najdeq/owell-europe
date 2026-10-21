@@ -119,11 +119,18 @@ const opisMeta = opisProduktu(
 );
 
 const akapity = d.opis.split("\n\n").filter(Boolean);
-const kupHref = d.gdzieKupic ?? site.sklep;
+// Kolejność celu przycisku zakupu: link do konkretnej oferty z pliku produktu
+// (`gdzieKupic`) → własny sklep → oficjalny sklep Owell na Allegro → WhatsApp.
+// Allegro jest dziś jedynym działającym kanałem sprzedaży, a kliknięcie
+// w sklep to główny KPI strony — wcześniej karta produktu kierowała tylko
+// na WhatsApp. Kontakt przez WhatsApp zostaje w widżecie w rogu ekranu.
+// (Tylko wersja PL — Allegro sprzedaje w Polsce; wersje językowe bez zmian.)
+const kupHref = d.gdzieKupic ?? site.sklep ?? site.allegro;
 const ctaHref = kupHref ?? `https://wa.me/${site.kontakt.whatsappWa}`;
-const ctaLabel = kupHref ? "Kup w sklepie" : "Zapytaj o dostępność";
-const ctaMarketplace = kupHref ? "sklep" : "whatsapp";
-const ctaPlatforma = kupHref ? "Sklep internetowy" : "WhatsApp";
+const naAllegro = ctaHref.includes("allegro.pl");
+const ctaLabel = naAllegro ? "Kup na Allegro" : kupHref ? "Kup w sklepie" : "Zapytaj o dostępność";
+const ctaMarketplace = naAllegro ? "allegro" : kupHref ? "sklep" : "whatsapp";
+const ctaPlatforma = naAllegro ? "Allegro" : kupHref ? "Sklep internetowy" : "WhatsApp";
 
 const nazwaKategorii =
   site.kategorie.find((k) => k.slug === d.kategoria)?.nazwa ?? "Produkty";

@@ -18,6 +18,9 @@ const wsparcie = [
   { label: t("footer.rejestracjaProduktu"), href: l("/rejestracja-produktu") },
   { label: t("footer.reklamacje"), href: l("/reklamacje") },
   { label: t("footer.faq"), href: l("/faq") },
+  // Strona /opinie istnieje na razie tylko po polsku (odsyła do ocen na
+  // Allegro, które działa w Polsce) — w innych językach link pominięty.
+  ...(jezyk === domyslnyJezyk ? [{ label: "Opinie", href: "/opinie" }] : []),
 ];
 
 const prawne = [

@@ -1,0 +1,118 @@
+---
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import BreadcrumbSchema from "../components/BreadcrumbSchema.astro";
+import Container from "../components/ui/Container.astro";
+import Section from "../components/ui/Section.astro";
+import Prose from "../components/ui/Prose.astro";
+import Button from "../components/ui/Button.astro";
+import Opinie from "../components/sections/Opinie.astro";
+import { site } from "../data/site.ts";
+
+/**
+ * Strona pod zapytania „Owell opinie" (audyt SEO 2026-10). Celowo NIE podaje
+ * liczb ani cytatów, których nie da się sprawdzić — odsyła do ocen w sklepie
+ * Owell na Allegro, gdzie wystawiają je kupujący. Prawdziwe opinie dopisane
+ * do `site.opinie` (z autorem, źródłem i datą) pokażą się tu automatycznie.
+ */
+const breadcrumbs = [
+  { name: "Owell", path: "/" },
+  { name: "Opinie", path: "/opinie" },
+];
+---
+
+<Base
+  title="Owell opinie — oceny kupujących i oficjalny sklep na Allegro"
+  description={`Gdzie sprawdzić opinie o produktach Owell: oceny kupujących w oficjalnym sklepie na Allegro. ${site.gwarancjaMiesiace} miesiące gwarancji, serwis mailowy i karta GPSR dla każdego modelu.`}
+>
+  <BreadcrumbSchema slot="head" items={breadcrumbs} />
+
+  <Header />
+
+  <main id="content">
+    <Section bg="base">
+      <Container>
+        <h1 class="page-title" data-reveal>Opinie o Owell</h1>
+
+        <Prose>
+          <p>
+            Owell sprzedaje przez oficjalny sklep na Allegro, gdzie występujemy bezpośrednio jako producent. To tam
+            kupujący wystawiają oceny po zakupie — każdą z nich może zobaczyć każdy, a sprzedawca nie może
+            jej sam usunąć ani edytować. Dlatego zamiast przepisywać opinie na tę stronę, odsyłamy do źródła.
+          </p>
+        </Prose>
+
+        {site.allegro && (
+          <div class="cta">
+            <Button
+              href={site.allegro}
+              variant="primary"
+              external
+              data-marketplace="allegro"
+              data-platforma="Allegro"
+              data-lokalizacja="strona-opinie"
+            >
+              Zobacz oceny i oferty na Allegro
+            </Button>
+          </div>
+        )}
+
+        <Prose>
+          <h2>Co sprawdzić, zanim kupisz</h2>
+          <p>
+            Opinie mówią, jak produkt sprawdza się u innych. Równie ważne jest to, co dzieje się, gdy coś pójdzie nie
+            tak. Przy każdym produkcie Owell możesz to zweryfikować sam:
+          </p>
+          <ul>
+            <li>
+              <strong>{site.gwarancjaMiesiace} miesiące gwarancji</strong> na każdy model — warunki opisuje
+              <a href="/gwarancja/">karta gwarancyjna</a>.
+            </li>
+            <li>
+              <strong>Serwis bez infolinii</strong> — zgłoszenia przyjmujemy bezpośrednio na
+              <a href={`mailto:${site.kontakt.emailSerwis}`}>{site.kontakt.emailSerwis}</a>.
+            </li>
+            <li>
+              <strong>Pełne dane producenta (GPSR)</strong> i ostrzeżenia bezpieczeństwa na stronie każdego produktu —
+              więcej o tym na stronie <a href="/bezpieczenstwo-produktu/">bezpieczeństwo produktu</a>.
+            </li>
+            <li>
+              <strong>Instrukcje obsługi w PDF</strong> do pobrania przed zakupem — zobacz
+              <a href="/instrukcje/">wszystkie instrukcje</a>.
+            </li>
+          </ul>
+
+          <h2>Masz już produkt Owell?</h2>
+          <p>
+            Jeśli jesteś zadowolony, wystaw ocenę na Allegro — to najlepsza wskazówka dla kolejnych kupujących. Jeśli
+            coś nie działa tak, jak powinno, napisz do nas najpierw na
+            <a href={`mailto:${site.kontakt.emailSerwis}`}>{site.kontakt.emailSerwis}</a> — rozwiążemy problem w ramach
+            gwarancji.
+          </p>
+        </Prose>
+      </Container>
+    </Section>
+
+    <Opinie />
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .page-title {
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-8);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .cta {
+    margin-block: var(--sp-8) var(--sp-4);
+  }
+</style>
