@@ -1,0 +1,208 @@
+---
+import { getCollection, render } from "astro:content";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Section from "./ui/Section.astro";
+import Container from "./ui/Container.astro";
+import Eyebrow from "./ui/Eyebrow.astro";
+import Prose from "./ui/Prose.astro";
+import { domyslnyJezyk, type Jezyk } from "../i18n/ui.ts";
+import { useTranslations } from "../i18n/utils.ts";
+import type { Kategoria } from "../data/kategorie.ts";
+
+/**
+ * Poradnik „jak wybrać" + FAQ pod listą modeli na stronie kategorii.
+ * Treść: src/content/kategorie[-xx]/<slug>.md. Bez pliku w języku strony
+ * sekcja się nie renderuje. FAQ trafia też do danych strukturalnych FAQPage.
+ * Pod spodem linki do wpisów z bloga, które podpinają produkty tej kategorii.
+ */
+interface Props {
+  kategoria: Kategoria;
+}
+
+const { kategoria } = Astro.props;
+
+const jezyk = (Astro.currentLocale ?? domyslnyJezyk) as Jezyk;
+const t = useTranslations(jezyk);
+const l = (sciezka: string) => getRelativeLocaleUrl(jezyk, sciezka);
+const pl = jezyk === domyslnyJezyk;
+
+const tresc = (await getCollection((pl ? "kategorie" : `kategorie-${jezyk}`) as "kategorie")).find(
+  (k) => k.id === kategoria.slug
+);
+const { Content } = tresc ? await render(tresc) : { Content: null };
+
+const poradniki = (
+  await getCollection((pl ? "blog" : `blog-${jezyk}`) as "blog", (w) => w.data.opublikowany)
+).filter((w) => w.data.produkty.some((id) => kategoria.produkty.includes(id)));
+
+const faqSchema = tresc && tresc.data.pytania.length > 0 && {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: tresc.data.pytania.map((p) => ({
+    "@type": "Question",
+    name: p.pytanie,
+    acceptedAnswer: { "@type": "Answer", text: p.odpowiedz },
+  })),
+};
+---
+
+{tresc && Content && (
+  <Section bg="raised">
+    <Container>
+      {faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
+
+      <Eyebrow data-reveal>{t("produkt.poradnik")}</Eyebrow>
+      <h2 class="naglowek" data-reveal data-reveal-delay="80">{tresc.data.naglowek}</h2>
+
+      <Prose class="poradnik-tresc">
+        <Content />
+      </Prose>
+
+      {tresc.data.pytania.length > 0 && (
+        <>
+          <h2 class="naglowek naglowek-faq">{t("common.kategoriaFaq")}</h2>
+          <div class="pytania">
+            {tresc.data.pytania.map((p) => (
+              <details class="pytanie">
+                <summary>{p.pytanie}</summary>
+                <p>{p.odpowiedz}</p>
+              </details>
+            ))}
+          </div>
+        </>
+      )}
+
+      {poradniki.length > 0 && (
+        <div class="na-blogu">
+          <p class="na-blogu-etykieta">{t("common.kategoriaNaBlogu")}</p>
+          <ul>
+            {poradniki.map((w) => (
+              <li>
+                <a href={l(`/blog/${w.id}`)}>{w.data.tytul}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </Container>
+  </Section>
+)}
+
+<style>
+  .naglowek {
+    margin-top: var(--sp-4);
+    max-width: var(--maxw-prose);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-display);
+    color: var(--text);
+  }
+
+  .naglowek-faq {
+    margin-top: var(--sp-16);
+    font-size: var(--fs-h3);
+  }
+
+  :global(.poradnik-tresc) {
+    margin-top: var(--sp-6);
+  }
+
+  .pytania {
+    max-width: var(--maxw-prose);
+    margin-top: var(--sp-6);
+  }
+
+  .pytanie {
+    border-top: 1px solid var(--hairline-soft);
+  }
+
+  .pytanie:last-of-type {
+    border-bottom: 1px solid var(--hairline-soft);
+  }
+
+  .pytanie summary {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--sp-4);
+    padding-block: var(--sp-5);
+    font-size: var(--fs-body);
+    font-weight: 500;
+    color: var(--text);
+    cursor: pointer;
+    list-style: none;
+    transition: color var(--dur) var(--ease);
+  }
+
+  .pytanie summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .pytanie summary::after {
+    content: "+";
+    flex: none;
+    font-family: var(--font-mono);
+    font-size: var(--fs-lead);
+    line-height: 1;
+    color: var(--gold);
+  }
+
+  .pytanie[open] summary::after {
+    content: "−";
+  }
+
+  .pytanie summary:hover {
+    color: var(--gold-bright);
+  }
+
+  .pytanie summary:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  .pytanie p {
+    max-width: 60ch;
+    padding-bottom: var(--sp-5);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--text-2);
+  }
+
+  .na-blogu {
+    max-width: var(--maxw-prose);
+    margin-top: var(--sp-12);
+    padding-top: var(--sp-6);
+    border-top: 1px solid var(--hairline-soft);
+  }
+
+  .na-blogu-etykieta {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-mono);
+    color: var(--steel);
+  }
+
+  .na-blogu ul {
+    margin-top: var(--sp-3);
+    display: grid;
+    gap: var(--sp-2);
+  }
+
+  .na-blogu a {
+    color: var(--gold);
+    text-underline-offset: 0.2em;
+  }
+
+  .na-blogu a:hover {
+    color: var(--gold-bright);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pytanie summary {
+      transition: none;
+    }
+  }
+</style>

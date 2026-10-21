@@ -126,6 +126,22 @@ const blogCollection = (base: string) =>
     }),
   });
 
+// Poradnik „jak wybrać" + FAQ na stronie kategorii (/produkty/kategoria/[slug]).
+// Plik = slug kategorii z src/data/kategorie.ts (np. czyscik-parowy.md).
+// Strony kategorii miały tylko jednozdaniowy opis — za mało treści, żeby
+// rankować na frazy typu „czyścik parowy" (audyt SEO 2026-10). Brak pliku
+// w danym języku = sekcja się nie pokazuje (zamiast polskiego tekstu na /de/).
+const kategorieTresc = (base: string) =>
+  defineCollection({
+    loader: glob({ pattern: "**/*.md", base }),
+    schema: z.object({
+      naglowek: z.string(),
+      pytania: z
+        .array(z.object({ pytanie: z.string(), odpowiedz: z.string() }))
+        .default([]),
+    }),
+  });
+
 const blog = blogCollection("./src/content/blog");
 const blogEn = blogCollection("./src/content/blog-en");
 const blogDe = blogCollection("./src/content/blog-de");
@@ -144,6 +160,14 @@ export const collections = {
   "produkty-es": produktyEs,
   "produkty-cs": produktyCs,
   "produkty-it": produktyIt,
+  kategorie: kategorieTresc("./src/content/kategorie"),
+  "kategorie-en": kategorieTresc("./src/content/kategorie-en"),
+  "kategorie-de": kategorieTresc("./src/content/kategorie-de"),
+  "kategorie-ru": kategorieTresc("./src/content/kategorie-ru"),
+  "kategorie-fr": kategorieTresc("./src/content/kategorie-fr"),
+  "kategorie-es": kategorieTresc("./src/content/kategorie-es"),
+  "kategorie-cs": kategorieTresc("./src/content/kategorie-cs"),
+  "kategorie-it": kategorieTresc("./src/content/kategorie-it"),
   blog,
   "blog-en": blogEn,
   "blog-de": blogDe,
