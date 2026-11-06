@@ -48,11 +48,18 @@ export const kategorie: Kategoria[] = [
     produkty: ["ow-4096"],
   },
   {
+    slug: "blender-do-smoothie",
+    nazwa: "Blender do smoothie",
+    grupa: "kuchnia",
+    opis: "Smoothie, koktajle i napoje z lodem przygotowane prosto w kubku, z którego pijesz.",
+    produkty: ["ow-3404"],
+  },
+  {
     slug: "opiekacz-do-kanapek",
     nazwa: "Opiekacz do kanapek",
     grupa: "kuchnia",
     opis: "Opiekanie kanapek i tostów w kilka minut, bez patelni i pilnowania.",
-    produkty: ["ow-3300", "ow-3097"],
+    produkty: ["ow-3300", "ow-3097", "ow-3302"],
   },
   {
     slug: "maszynka-do-strzyzenia-wlosow",

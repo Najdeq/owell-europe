@@ -249,6 +249,32 @@ import foto_ow_7100_8 from "../assets/produkty/galeria/ow-7100-8.jpg";
 import foto_ow_7100_9 from "../assets/produkty/galeria/ow-7100-9.jpg";
 import foto_ow_7100_10 from "../assets/produkty/galeria/ow-7100-10.jpg";
 import foto_ow_7100_11 from "../assets/produkty/galeria/ow-7100-11.jpg";
+import foto_ow_3302_1 from "../assets/produkty/galeria/ow-3302-1.jpg";
+import foto_ow_3302_2 from "../assets/produkty/galeria/ow-3302-2.jpg";
+import foto_ow_3302_3 from "../assets/produkty/galeria/ow-3302-3.jpg";
+import foto_ow_3302_4 from "../assets/produkty/galeria/ow-3302-4.jpg";
+import foto_ow_3302_5 from "../assets/produkty/galeria/ow-3302-5.jpg";
+import foto_ow_3302_6 from "../assets/produkty/galeria/ow-3302-6.jpg";
+import foto_ow_3302_7 from "../assets/produkty/galeria/ow-3302-7.jpg";
+import foto_ow_3302_8 from "../assets/produkty/galeria/ow-3302-8.jpg";
+import foto_ow_3302_9 from "../assets/produkty/galeria/ow-3302-9.jpg";
+import foto_ow_3302_10 from "../assets/produkty/galeria/ow-3302-10.jpg";
+import foto_ow_3302_11 from "../assets/produkty/galeria/ow-3302-11.jpg";
+import foto_ow_3302_12 from "../assets/produkty/galeria/ow-3302-12.jpg";
+import foto_ow_3302_13 from "../assets/produkty/galeria/ow-3302-13.jpg";
+import foto_ow_3302_14 from "../assets/produkty/galeria/ow-3302-14.jpg";
+import foto_ow_3404_1 from "../assets/produkty/galeria/ow-3404-1.jpg";
+import foto_ow_3404_2 from "../assets/produkty/galeria/ow-3404-2.jpg";
+import foto_ow_3404_3 from "../assets/produkty/galeria/ow-3404-3.jpg";
+import foto_ow_3404_4 from "../assets/produkty/galeria/ow-3404-4.jpg";
+import foto_ow_3404_5 from "../assets/produkty/galeria/ow-3404-5.jpg";
+import foto_ow_3404_6 from "../assets/produkty/galeria/ow-3404-6.jpg";
+import foto_ow_3404_7 from "../assets/produkty/galeria/ow-3404-7.jpg";
+import foto_ow_3404_8 from "../assets/produkty/galeria/ow-3404-8.jpg";
+import foto_ow_3404_9 from "../assets/produkty/galeria/ow-3404-9.jpg";
+import foto_ow_3404_10 from "../assets/produkty/galeria/ow-3404-10.jpg";
+import foto_ow_3404_11 from "../assets/produkty/galeria/ow-3404-11.jpg";
+import foto_ow_3404_12 from "../assets/produkty/galeria/ow-3404-12.jpg";
 
 /**
  * Dodatkowe zdjęcia produktów (poza głównym z `zdjecia.ts`), do galerii na
@@ -285,4 +311,6 @@ export const galeria: Record<string, ImageMetadata[]> = {
   "ow-2036": [foto_ow_2036_1, foto_ow_2036_2, foto_ow_2036_3, foto_ow_2036_4, foto_ow_2036_5, foto_ow_2036_6, foto_ow_2036_7, foto_ow_2036_8, foto_ow_2036_9, foto_ow_2036_10, foto_ow_2036_11, foto_ow_2036_12, foto_ow_2036_13, foto_ow_2036_14],
   "ow-7099": [foto_ow_7099_1, foto_ow_7099_2, foto_ow_7099_3, foto_ow_7099_4, foto_ow_7099_5, foto_ow_7099_6, foto_ow_7099_7, foto_ow_7099_8, foto_ow_7099_9, foto_ow_7099_10],
   "ow-7100": [foto_ow_7100_1, foto_ow_7100_2, foto_ow_7100_3, foto_ow_7100_4, foto_ow_7100_5, foto_ow_7100_6, foto_ow_7100_7, foto_ow_7100_8, foto_ow_7100_9, foto_ow_7100_10, foto_ow_7100_11],
+  "ow-3302": [foto_ow_3302_1, foto_ow_3302_2, foto_ow_3302_3, foto_ow_3302_4, foto_ow_3302_5, foto_ow_3302_6, foto_ow_3302_7, foto_ow_3302_8, foto_ow_3302_9, foto_ow_3302_10, foto_ow_3302_11, foto_ow_3302_12, foto_ow_3302_13, foto_ow_3302_14],
+  "ow-3404": [foto_ow_3404_1, foto_ow_3404_2, foto_ow_3404_3, foto_ow_3404_4, foto_ow_3404_5, foto_ow_3404_6, foto_ow_3404_7, foto_ow_3404_8, foto_ow_3404_9, foto_ow_3404_10, foto_ow_3404_11, foto_ow_3404_12],
 };
